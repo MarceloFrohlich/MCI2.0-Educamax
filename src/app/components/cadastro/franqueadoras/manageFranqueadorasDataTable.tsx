@@ -1,14 +1,19 @@
+'use client'
+
 import DataTable from "react-data-table-component";
 import { IFranqueadora } from "../../../types/cadastros/cadastros";
 import { customStyles } from "../../../components/utils/general";
 import DeleteModal from "../../../components/utils/deleteModal";
-import { franqueadorasMock } from "../../../mocks/franqueadoras";
 import CreateEditFranqueadoraModal from "./createEditFranqueadoraModal";
 
-const ManageFranqueadorasDataTable: React.FC = ({
-}) => {
+interface IManageFranqueadorasDataTableProps {
+    franqueadoras?: IFranqueadora[];
+}
 
-    const data = franqueadorasMock
+
+const ManageFranqueadorasDataTable: React.FC<IManageFranqueadorasDataTableProps> = ({
+    franqueadoras
+}) => {
 
     const columns = [
         {
@@ -35,7 +40,7 @@ const ManageFranqueadorasDataTable: React.FC = ({
         <div className="w-full max-h-[80vh] rounded-lg shadow-[0_10px_35px_rgba(93,120,183,0.22)]">
             <DataTable
                 columns={columns}
-                data={data}
+                data={franqueadoras || []}
                 responsive
                 pagination
                 customStyles={customStyles}
