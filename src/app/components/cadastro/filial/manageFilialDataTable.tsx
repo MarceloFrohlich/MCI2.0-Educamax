@@ -1,25 +1,19 @@
+'use client'
+
 import DataTable from "react-data-table-component";
 import { IFilial, IFranqueadora } from "../../../types/cadastros/cadastros";
 import { customStyles } from "../../utils/general";
 import DeleteModal from "../../utils/deleteModal";
-import { filiaisMock } from "../../../mocks/filiais";
 import CreateEditFilialModal from "./createEditFilialModal";
+import { deleteFilialAction } from "../../../actions/cadastros/filiais";
 
 interface IManageFilialDataTable {
     franqueadoras: IFranqueadora[]
+    filiais: IFilial[]
 }
 const ManageFilialDataTable: React.FC<IManageFilialDataTable> = ({
-    franqueadoras
+    franqueadoras, filiais
 }) => {
-    const data = filiaisMock
-
-    const getFranqueadoraNome = (franqueadora_uuid: string) => {
-        return (
-            franqueadoras.find(
-                franqueadora => franqueadora.id === franqueadora_uuid
-            )?.nome || '-'
-        )
-    }
 
     const columns = [
         {
@@ -31,9 +25,9 @@ const ManageFilialDataTable: React.FC<IManageFilialDataTable> = ({
         },
         {
             name: "Franqueadora pertencente",
-            selector: (row: IFilial) => getFranqueadoraNome(row.franqueadora_uuid),
+            selector: (row: IFilial) => row.franqueadora.nome,
             sortable: true,
-            cell: (row: IFilial) => getFranqueadoraNome(row.franqueadora_uuid),
+            cell: (row: IFilial) => row.franqueadora.nome,
             grow: 1.5,
         },
         {
@@ -41,7 +35,7 @@ const ManageFilialDataTable: React.FC<IManageFilialDataTable> = ({
             cell: (row: IFilial) => {
                 return <div className="flex">
                     <CreateEditFilialModal isEditMode={true} filialData={row} franqueadoras={franqueadoras} />
-                    <DeleteModal onConfirm={() => alert('clicou no delete')} />
+                    <DeleteModal action={deleteFilialAction} id={row.id_filial} />
                 </div>;
             },
             right: true,
@@ -53,7 +47,7 @@ const ManageFilialDataTable: React.FC<IManageFilialDataTable> = ({
         <div className="w-full max-h-[80vh] rounded-lg shadow-[0_10px_35px_rgba(93,120,183,0.22)]">
             <DataTable
                 columns={columns}
-                data={data}
+                data={filiais}
                 responsive
                 pagination
                 customStyles={customStyles}

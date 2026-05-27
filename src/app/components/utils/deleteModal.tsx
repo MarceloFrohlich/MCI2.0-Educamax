@@ -1,50 +1,96 @@
 'use client'
 
-import React from "react";
+import React, { useActionState, useEffect, useState } from "react";
 import { Trash2 } from "lucide-react";
-
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 import { Button } from "../../../components/ui/button";
 import GlobalDialog from "./globalDialog";
 import { DialogClose } from "../../../components/ui/dialog";
 
+interface IActionResponse {
+    success: boolean;
+    message: string;
+}
+
 interface IDeleteModalProps {
+    id: string;
+    action: (
+        prevState: IActionResponse,
+        formData: FormData
+    ) => Promise<IActionResponse>;
     title?: string;
     description?: string;
     trigger?: React.ReactNode;
     contentClassName?: string;
-
-    onConfirm: () => void | Promise<void>;
-    isLoading?: boolean;
-
     confirmText?: string;
     cancelText?: string;
 }
 
+const initialState: IActionResponse = {
+    success: false,
+    message: "",
+};
+
 const DeleteModal: React.FC<IDeleteModalProps> = ({
+    id,
+    action,
     title = "Confirmar exclusão",
     description = "Tem certeza que deseja excluir este item? Essa ação não poderá ser desfeita.",
     trigger,
     contentClassName,
-    onConfirm,
-    isLoading = false,
     confirmText = "Excluir",
     cancelText = "Cancelar",
 }) => {
+
+    const router = useRouter();
+
+    const [open, setOpen] = useState(false);
+
+    const [state, formAction, pending] =
+        useActionState(
+            action,
+            initialState
+        );
+useEffect(() => {
+
+    if (state?.success === true) {
+
+        toast.success(state.message);
+
+        setTimeout(() => {
+            setOpen(false);
+        }, 100);
+    }
+
+    if (state?.success === false) {
+        toast.error(state.message);
+    }
+
+}, [state]);
+
+    useEffect(() => {
+    console.log(state);
+}, [state]);
+
     return (
         <GlobalDialog
+            open={open}
+            onOpenChange={setOpen}
             title={title}
-            contentClassName={contentClassName ?? "sm:max-w-md"}
+            contentClassName={
+                contentClassName ?? "sm:max-w-md"
+            }
             trigger={
                 trigger ?? (
                     <Button
-                        
                         className="
-              h-auto
-              bg-transparent
-              w-auto
-              p-1
-              hover:cursor-pointer
-            "
+                            h-auto
+                            bg-transparent
+                            w-auto
+                            p-1
+                            hover:cursor-pointer
+                        "
                     >
                         <Trash2
                             className="text-red-600 size-4"
@@ -53,35 +99,56 @@ const DeleteModal: React.FC<IDeleteModalProps> = ({
                 )
             }
         >
-            <div className="mt-2">
-                <p className="text-sm text-slate-600">
-                    {description}
-                </p>
 
-                <div className="mt-6 flex justify-end gap-2">
-                    <DialogClose asChild>
+            <form action={formAction}>
+
+                <input
+                    type="hidden"
+                    name="id"
+                    value={id}
+                />
+
+                <div className="mt-2">
+                    <p className="text-sm text-slate-600">
+                        {description}
+                    </p>
+                    <div className="mt-6 flex justify-end gap-2">
+                        <DialogClose asChild>
+                            <Button
+                                type="button"
+                                className="
+                                    hover:cursor-pointer
+                                    bg-(--colorVariantBlue)
+                                    text-white
+                                    hover:bg-(--colorVariantBlue)/80
+                                    duration-300
+                                    border-none
+                                "
+                            >
+                                {cancelText}
+                            </Button>
+                        </DialogClose>
                         <Button
-                            className="hover:cursor-pointer bg-(--colorVariantBlue) text-white hover:bg-(--colorVariantBlue)/80 duration-300 border-none"
+                            type="submit"
+                            disabled={pending}
+                            className="
+                                bg-red-600
+                                text-white
+                                hover:bg-red-700
+                                hover:cursor-pointer
+                            "
                         >
-                            {cancelText}
+                            {pending
+                                ? "Excluindo..."
+                                : confirmText}
                         </Button>
-                    </DialogClose>
 
-                    <Button
-                        type="button"
-                        disabled={isLoading}
-                        onClick={onConfirm}
-                        className="
-              bg-red-600
-              text-white
-              hover:bg-red-700
-              hover:cursor-pointer
-            "
-                    >
-                        {isLoading ? "Excluindo..." : confirmText}
-                    </Button>
+                    </div>
+
                 </div>
-            </div>
+
+            </form>
+
         </GlobalDialog>
     );
 };

@@ -1,18 +1,12 @@
-'use client'
-
+import { getAllDepartamentos } from "../../../actions/cadastros/departamentos"
+import { getAllFiliais } from "../../../actions/cadastros/filiais"
 import CreateEditDepartamentoModal from "../../../components/cadastro/departamento/createEditDepartamentoModal"
 import ManageDepartamentosDataTable from "../../../components/cadastro/departamento/manageDepartamentoDataTable"
-import CreateEditFilialModal from "../../../components/cadastro/filial/createEditFilialModal"
-import ManageFilialDataTable from "../../../components/cadastro/filial/manageFilialDataTable"
-import { filiaisMock } from "../../../mocks/filiais"
-import { franqueadorasMock } from "../../../mocks/franqueadoras"
 
+const CadastroDepartamento: React.FC = async () => {
 
-
-const CadastroDepartamento: React.FC = () => {
-
-
-    const filiais = filiaisMock
+    const departamentos = await getAllDepartamentos()
+    const filiais = await getAllFiliais()
 
     return (
         <section className="mx-8 text-(--textBaseColor) relative z-50">
@@ -23,7 +17,7 @@ const CadastroDepartamento: React.FC = () => {
             </div>
 
             <div className="max-h-[50%]">
-                <ManageDepartamentosDataTable filiais={filiais} />
+                <ManageDepartamentosDataTable filiais={filiais} departamentos={departamentos} />
             </div>
         </section>
     )

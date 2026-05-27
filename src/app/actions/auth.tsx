@@ -3,6 +3,7 @@
 
 import { api } from "../services/api";
 import { cookies } from "next/headers";
+import { serverApi } from "../services/serverApi";
 
 export async function loginAction(_: any, formData: FormData) {
   const email = formData.get("email");
@@ -38,4 +39,29 @@ export async function loginAction(_: any, formData: FormData) {
         "Erro ao fazer login",
     };
   }
+}
+
+export async function sendRecoveryCodeAction(
+    _: IActionResponse,
+    formData: FormData
+) {
+    try {
+        await api.post("/auth/esqueci-senha", {
+            email: formData.get('emailRecovery'),
+        });
+
+    return {
+        success: true,
+        message: "Código enviado por email com sucesso",
+    };
+
+} catch (error: any) {
+    console.log("Error sending password:", error);
+    return {
+        success: false,
+        message:
+            error.response?.data?.message ||
+            "Erro ao enviar a senha",
+    };
+}
 }

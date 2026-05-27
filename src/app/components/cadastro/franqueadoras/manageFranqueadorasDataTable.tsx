@@ -5,6 +5,7 @@ import { IFranqueadora } from "../../../types/cadastros/cadastros";
 import { customStyles } from "../../../components/utils/general";
 import DeleteModal from "../../../components/utils/deleteModal";
 import CreateEditFranqueadoraModal from "./createEditFranqueadoraModal";
+import { deleteFranqueadoraAction } from "../../../actions/cadastros/franqueadoras";
 
 interface IManageFranqueadorasDataTableProps {
     franqueadoras?: IFranqueadora[];
@@ -28,7 +29,7 @@ const ManageFranqueadorasDataTable: React.FC<IManageFranqueadorasDataTableProps>
             cell: (row: IFranqueadora) => {
                 return <div className="flex">
                     <CreateEditFranqueadoraModal isEditMode={true} franqueadoraData={row} />
-                    <DeleteModal onConfirm={() => alert('clicou no delete')} />
+                    <DeleteModal action={deleteFranqueadoraAction} id={row.id_franqueadora} />
                 </div>;
             },
             right: true,

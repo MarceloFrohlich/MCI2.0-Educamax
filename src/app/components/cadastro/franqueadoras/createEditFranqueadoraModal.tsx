@@ -1,52 +1,49 @@
 'use client';
 
-import { useActionState, useEffect } from "react";
 import { toast } from "sonner";
 import { CiEdit } from "react-icons/ci";
-
 import { Button } from "../../../../components/ui/button";
 import GlobalDialog from "../../utils/globalDialog";
-
-
 import { IFranqueadora } from "../../../types/cadastros/cadastros";
 import { createFranqueadoraAction, updateFranqueadoraAction } from "../../../actions/cadastros/franqueadoras";
+import { useServerAction } from "../../../hooks/useServerAction";
+import { useEffect, useState } from "react";
 
 interface ICreateEditLeaderModalProps {
     isEditMode?: boolean;
     franqueadoraData?: IFranqueadora
 }
 
-const initialState = {
-    success: false,
-    message: "",
-};
-
 const CreateEditFranqueadoraModal: React.FC<ICreateEditLeaderModalProps> = ({
     isEditMode = false,
     franqueadoraData
 }) => {
-
+    const [open, setOpen] = useState(false);
     const action = isEditMode
         ? updateFranqueadoraAction
         : createFranqueadoraAction;
 
-    const [state, formAction, pending] = useActionState(
-        action,
-        initialState
-    );
+    const {
+        state,
+        formAction,
+        pending
+    } = useServerAction(action);
 
     useEffect(() => {
-        if (state.success) {
-            toast.success(state.message);
+
+        if (
+            state.success &&
+            isEditMode
+        ) {
+            setOpen(false);
         }
 
-        if (!state.success && state.message) {
-            toast.error(state.message);
-        }
-    }, [state]);
+    }, [state, isEditMode]);
 
     return (
         <GlobalDialog
+            open={open}
+            onOpenChange={setOpen}
             title={
                 isEditMode
                     ? "Editar Franqueadora"
@@ -83,7 +80,7 @@ const CreateEditFranqueadoraModal: React.FC<ICreateEditLeaderModalProps> = ({
                     <input
                         type="hidden"
                         name="id"
-                        value={franqueadoraData?.id}
+                        value={franqueadoraData?.id_franqueadora}
                     />
                 )}
 

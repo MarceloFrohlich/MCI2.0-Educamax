@@ -1,26 +1,20 @@
+'use client'
+
 import DataTable from "react-data-table-component";
 import { IDepartamento, IFilial } from "../../../types/cadastros/cadastros";
 import { customStyles } from "../../utils/general";
-import DeleteModal from "../../utils/deleteModal";
-import { departamentosMock } from "../../../mocks/departamentos";
 import CreateEditDepartamentoModal from "./createEditDepartamentoModal";
+import DeleteModal from "../../utils/deleteModal";
+import { deleteDepartamentoAction } from "../../../actions/cadastros/departamentos";
 
 
 interface IManageFilialDataTable {
     filiais: IFilial[]
+    departamentos: IDepartamento[]
 }
 const ManageDepartamentosDataTable: React.FC<IManageFilialDataTable> = ({
-    filiais
+    filiais, departamentos
 }) => {
-    const data = departamentosMock
-
-    const getFilialNome = (filial_uuid: string) => {
-        return (
-            filiais.find(
-                filial => filial.id === filial_uuid
-            )?.nome || '-'
-        )
-    }
 
     const columns = [
         {
@@ -32,9 +26,9 @@ const ManageDepartamentosDataTable: React.FC<IManageFilialDataTable> = ({
         },
         {
             name: "Filial pertencente",
-            selector: (row: IDepartamento) => getFilialNome(row.filial_uuid),
+            selector: (row: IDepartamento) => row.filial.nome,
             sortable: true,
-            cell: (row: IDepartamento) => getFilialNome(row.filial_uuid),
+            cell: (row: IDepartamento) => row.filial.nome,
             grow: 1.5,
         },
         {
@@ -42,7 +36,7 @@ const ManageDepartamentosDataTable: React.FC<IManageFilialDataTable> = ({
             cell: (row: IDepartamento) => {
                 return <div className="flex">
                     <CreateEditDepartamentoModal isEditMode={true} filiais={filiais} departamentoData={row} />
-                    <DeleteModal onConfirm={() => alert('clicou no delete')} />
+                    <DeleteModal action={deleteDepartamentoAction} id={row.id_departamento} />
                 </div>;
             },
             right: true,
@@ -54,7 +48,7 @@ const ManageDepartamentosDataTable: React.FC<IManageFilialDataTable> = ({
         <div className="w-full max-h-[80vh] rounded-lg shadow-[0_10px_35px_rgba(93,120,183,0.22)]">
             <DataTable
                 columns={columns}
-                data={data}
+                data={departamentos || []}
                 responsive
                 pagination
                 customStyles={customStyles}

@@ -1,7 +1,12 @@
+'use client'
+
 import { CiEdit } from "react-icons/ci";
 import { Button } from "../../../../components/ui/button";
 import GlobalDialog from "../../utils/globalDialog";
 import { IDepartamento, IFilial } from "../../../types/cadastros/cadastros";
+import { useEffect, useState } from "react";
+import { useServerAction } from "../../../hooks/useServerAction";
+import { createDepartamentoAction, updateDepartamentoAction } from "../../../actions/cadastros/departamentos";
 
 
 
@@ -13,8 +18,33 @@ interface ICreateEditDepartametoModal {
 
 
 const CreateEditDepartamentoModal: React.FC<ICreateEditDepartametoModal> = ({ isEditMode = false, departamentoData, filiais }) => {
+    const [open, setOpen] = useState(false);
+
+    const action = isEditMode
+        ? updateDepartamentoAction
+        : createDepartamentoAction;
+
+    const {
+        state,
+        formAction,
+        pending
+    } = useServerAction(action);
+
+    useEffect(() => {
+        if (
+            state.success &&
+            isEditMode
+        ) {
+            setOpen(false);
+            
+        }
+
+    }, [state, isEditMode]);
+
     return (
         <GlobalDialog
+            open={open}
+            onOpenChange={setOpen}
             title={isEditMode ? "Editar Departamento" : "Criar Novo Departamento"}
             contentClassName="w-1/2"
             trigger={
@@ -29,12 +59,20 @@ const CreateEditDepartamentoModal: React.FC<ICreateEditDepartametoModal> = ({ is
                 )
             }
         >
-            <form className="flex flex-col gap-4">
+            <form action={formAction} className="flex flex-col gap-4">
+
+                {isEditMode && (
+                    <input
+                        type="hidden"
+                        name="id"
+                        value={departamentoData?.id_departamento}
+                    />
+                )}
 
                 <div className="flex gap-4">
                     <div className="flex flex-col gap-2 w-full">
                         <label htmlFor="leaderName" className="block text-sm font-medium text-gray-700">
-                            Departamentos
+                            Filiais
                         </label>
                         <select
                             className="
@@ -50,14 +88,15 @@ const CreateEditDepartamentoModal: React.FC<ICreateEditDepartametoModal> = ({ is
                             border-(--textBaseColor)/50
                             text-(--textBaseColor)
                         "
-                            id="franqueadoras"
-                            defaultValue={isEditMode ? departamentoData?.filial_uuid : ""}
+                            id="id_filial"
+                            name="id_filial"
+                            defaultValue={isEditMode ? departamentoData?.id_filial : ""}
                         >
                             <option value=''>Selecione a Filial</option>
                             {filiais && filiais.map(filial => (
                                 <option
-                                    key={filial.id}
-                                    value={filial.id}
+                                    key={filial.id_filial}
+                                    value={filial.id_filial}
                                 >{filial.nome}</option>
                             ))}
 
@@ -85,6 +124,7 @@ const CreateEditDepartamentoModal: React.FC<ICreateEditDepartametoModal> = ({ is
                         "
                             type='text'
                             id="departamento"
+                            name="departamento"
                             placeholder="Novo Departamento"
                             defaultValue={isEditMode ? departamentoData?.nome : ""}
                         />
@@ -94,9 +134,24 @@ const CreateEditDepartamentoModal: React.FC<ICreateEditDepartametoModal> = ({ is
 
                 <div className="flex justify-end">
                     <Button
-                        className="hover:cursor-pointer bg-(--colorVariantBlue) text-white hover:bg-(--colorVariantBlue)/80 duration-300 border-none mt-4"
-                        type="submit">
-                        {isEditMode ? "Salvar Alterações" : "Criar Departamento"}
+                        disabled={pending}
+                        className="
+                            hover:cursor-pointer
+                            bg-(--colorVariantBlue)
+                            text-white
+                            hover:bg-(--colorVariantBlue)/80
+                            duration-300
+                            border-none
+                            mt-4
+                        "
+                        type="submit"
+                    >
+                        {pending
+                            ? "Salvando..."
+                            : isEditMode
+                                ? "Salvar Alterações"
+                                : "Criar Departamento"
+                        }
                     </Button>
                 </div>
             </form>

@@ -1,130 +1,136 @@
 'use server'
 
 import { revalidatePath } from "next/cache";
-import { serverApi } from "../../services/serverApi";
 
+import { serverApi } from "../../services/serverApi";
 
 interface IActionResponse {
     success: boolean;
     message: string;
 }
 
-export async function createFranqueadoraAction(
+export async function createDepartamentoAction(
     _: IActionResponse,
     formData: FormData
 ): Promise<IActionResponse> {
-
-    const nome = formData.get("nome");
-
+    const nome = formData.get("departamento");
+    const id_filial =
+        formData.get("id_filial");
     try {
         const api = await serverApi();
-
-        await api.post("/franqueadoras", {
+        await api.post("/departamentos", {
             nome,
+            id_filial,
         });
-        revalidatePath("/pages/cadastros/franqueadoras");
+        revalidatePath(
+            "/pages/cadastros/departamentos"
+        );
         return {
             success: true,
-            message: "Franqueadora criada com sucesso",
+            message: "Departamento criado com sucesso",
         };
-
     } catch (error: any) {
-        console.log("Error creating franqueadora:", error);
+        console.log(
+            "Error creating departamento:",
+            error
+        );
         return {
             success: false,
             message:
                 error.response?.data?.message ||
-                "Erro ao criar franqueadora",
+                "Erro ao criar departamento",
         };
     }
 }
 
-export async function updateFranqueadoraAction(
+export async function updateDepartamentoAction(
     _: IActionResponse,
     formData: FormData
 ): Promise<IActionResponse> {
 
     const id = formData.get("id");
-    const nome = formData.get("nome");
+
+    const nome = formData.get("departamento");
+
+    const id_filial =
+        formData.get("id_filial");
 
     try {
         const api = await serverApi();
-
-        await api.put(`/franqueadoras/${id}`, {
+        await api.put(`/departamentos/${id}`, {
             nome,
+            id_filial,
         });
-
-        revalidatePath("/pages/cadastros/franqueadoras");
-
+        revalidatePath(
+            "/pages/cadastros/departamentos"
+        );
         return {
             success: true,
-            message: "Franqueadora atualizada com sucesso",
+            message: "Departamento atualizado com sucesso",
         };
 
     } catch (error: any) {
-        console.log("Error updating franqueadora:", error);
+        console.log(
+            "Error updating departamento:",
+            error
+        );
         return {
             success: false,
             message:
                 error.response?.data?.message ||
-                "Erro ao atualizar franqueadora",
+                "Erro ao atualizar departamento",
         };
     }
 }
 
-export async function getAllFranqueadoras() {
-
+export async function getAllDepartamentos() {
     try {
         const api = await serverApi();
-        const response = await api.get("/franqueadoras");
+        const response =
+            await api.get("/departamentos");
         return response.data;
     } catch (error: any) {
         console.log(
-            "Error getting franqueadoras:",
+            "Error getting departamentos:",
             error
         );
         return {
             success: false,
             message:
                 error.response?.data?.message ||
-                "Erro ao buscar as franqueadora",
+                "Erro ao buscar departamentos",
         };
     }
 }
 
-export async function deleteFranqueadoraAction(
+export async function deleteDepartamentoAction(
     _: IActionResponse,
     formData: FormData
 ): Promise<IActionResponse> {
-
     const id = formData.get("id");
-
     try {
         const api = await serverApi();
         await api.post(
-            `/franqueadoras/${id}/remover`
+            `/departamentos/${id}/remover`
         );
         revalidatePath(
-            "/pages/cadastros/franqueadoras"
+            "/pages/cadastros/departamentos"
         );
-
         return {
             success: true,
-            message: "Franqueadora removida com sucesso",
+            message: "Departamento removido com sucesso",
         };
 
     } catch (error: any) {
-
         console.log(
-            "Error deleting franqueadora:",
+            "Error deleting departamento:",
             error
         );
-
         return {
             success: false,
             message:
                 error.response?.data?.message ||
-                "Erro ao remover franqueadora",
+                "Erro ao remover departamento",
         };
     }
 }

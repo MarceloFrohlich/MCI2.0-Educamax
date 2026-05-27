@@ -1,15 +1,12 @@
-'use client'
-
+import { getAllFiliais } from "../../../actions/cadastros/filiais"
+import { getAllFranqueadoras } from "../../../actions/cadastros/franqueadoras"
 import CreateEditFilialModal from "../../../components/cadastro/filial/createEditFilialModal"
 import ManageFilialDataTable from "../../../components/cadastro/filial/manageFilialDataTable"
-import { franqueadorasMock } from "../../../mocks/franqueadoras"
 
+const CadastroFilial: React.FC = async () => {
 
-
-const CadastroFilial: React.FC = () => {
-
-
-    const franqueadoras = franqueadorasMock
+    const franqueadoras = await getAllFranqueadoras()
+    const filiais = await getAllFiliais();
 
     return (
         <section className="mx-8 text-(--textBaseColor) relative z-50">
@@ -20,7 +17,7 @@ const CadastroFilial: React.FC = () => {
             </div>
 
             <div className="max-h-[50%]">
-                <ManageFilialDataTable franqueadoras={franqueadoras} />
+                <ManageFilialDataTable franqueadoras={franqueadoras} filiais={filiais} />
             </div>
         </section>
     )
