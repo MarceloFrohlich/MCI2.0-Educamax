@@ -1,30 +1,37 @@
 import { Ilancamento } from "../atualizacoes/atualizacoes";
+import { IDepartamento } from "../cadastros/cadastros";
 
 export interface ILeader {
-    id: number;
-    nome: string;
+    id_lider: string,
+    id_franqueadora: string,
+    nome: string,
+    data_criacao: string,
+    data_atualizacao: string,
+    deletado_em: string,
+    franqueadora: string
 }
 
 export interface ICup {
-    id: number;
-    nome: string;
-    lider: ILeader;
-    verbo: string;
-    medida: string;
-    de: number;
-    para: number;
-    inicio: string;
-    fim: string;
-    departamentos: string[];
-}
-
-export interface IDepartment {
-  id: number;
-  nome: string;
+    id_copa: string,
+    id_departamento: string,
+    id_lider: string,
+    nome: string,
+    objetivo: string,
+    inicio: string,
+    fim: string,
+    verbo: string,
+    medida: string,
+    de: number,
+    ate: number,
+    data_criacao: string,
+    data_atualizacao: string,
+    deletado_em: string,
+    departamento: IDepartamento
+    lider: ILeader
 }
 
 export interface IDirectionMeasure {
-    id: number;
+    id: string;
     verbo: string;
     unidadeMedida: string;
     placarDesejado: number;
@@ -33,7 +40,6 @@ export interface IDirectionMeasure {
     excluirPeriodo: boolean;
     dataInicialPeriodoExcluido?: string;
     dataFinalPeriodoExcluido?: string;
-    semanas: ISemana[];
 }
 
 export interface ISemana {
@@ -44,10 +50,11 @@ export interface ISemana {
 }
 
 export interface IGame {
-    id: number;
+    id: string;
     nome: string;
+    copa: ICup
     lider: ILeader;
-    departamentos: IDepartment[];
+    departamento: IDepartamento;
     verbo: string;
     medida: string;
     de: number;

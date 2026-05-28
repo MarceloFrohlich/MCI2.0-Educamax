@@ -8,14 +8,11 @@ import { useEffect, useState } from "react";
 import { useServerAction } from "../../../hooks/useServerAction";
 import { createDepartamentoAction, updateDepartamentoAction } from "../../../actions/cadastros/departamentos";
 
-
-
 interface ICreateEditDepartametoModal {
     isEditMode?: boolean;
     departamentoData?: IDepartamento
     filiais: IFilial[]
 }
-
 
 const CreateEditDepartamentoModal: React.FC<ICreateEditDepartametoModal> = ({ isEditMode = false, departamentoData, filiais }) => {
     const [open, setOpen] = useState(false);

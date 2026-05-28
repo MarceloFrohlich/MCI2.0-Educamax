@@ -63,7 +63,7 @@ const GameModal: React.FC<IGameModalProps> = ({ game }) => {
                     measures={game.medidasDirecao || []}
                 />
                 <ReplyGame game={game}/>
-                <DeleteModal contentClassName="w-1/4" onConfirm={() => alert('clicou no delete')} />
+                {/* <DeleteModal contentClassName="w-1/4" action={() => alert('clicou no delete')} /> */}
             </div>
         </section>
     )

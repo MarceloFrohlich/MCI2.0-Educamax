@@ -2,12 +2,17 @@
 
 import React from "react";
 import DataTable from "react-data-table-component";
-import { leaders } from "../../mocks/mocks";
 import CreateEditLeaderModal from "./createEditLeaderModal";
 import { ILeader } from "../../types/centralMCI/centralMCI";
 import DeleteModal from "../utils/deleteModal";
+import { deleteLiderAction } from "../../actions/lideres/lideres";
 
-const ManageLeaderDataTable: React.FC = ({
+interface IManageLeaderDataTable{
+    leaders: ILeader[]
+}
+
+const ManageLeaderDataTable: React.FC<IManageLeaderDataTable> = ({
+    leaders
 }) => {
 
     const data = leaders as ILeader[];
@@ -25,7 +30,7 @@ const ManageLeaderDataTable: React.FC = ({
             cell: (row: ILeader) => {
                 return <div className="flex">
                     <CreateEditLeaderModal isEditMode={true} leaderData={row} />
-                    <DeleteModal onConfirm={() => alert('clicou no delete')} />
+                    <DeleteModal action={deleteLiderAction} id={row.id_lider} />
                 </div>;
             },
             right: true,

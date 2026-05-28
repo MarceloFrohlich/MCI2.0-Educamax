@@ -3,11 +3,8 @@
 import { revalidatePath } from "next/cache";
 
 import { serverApi } from "../../services/serverApi";
-
-interface IActionResponse {
-    success: boolean;
-    message: string;
-}
+import { IDepartamento } from "../../types/cadastros/cadastros";
+import { IActionResponse } from "../types";
 
 export async function createDepartamentoAction(
     _: IActionResponse,
@@ -27,7 +24,7 @@ export async function createDepartamentoAction(
         );
         return {
             success: true,
-            message: "Departamento criado com sucesso",
+            successMessage: "Departamento criado com sucesso",
         };
     } catch (error: any) {
         console.log(
@@ -36,7 +33,7 @@ export async function createDepartamentoAction(
         );
         return {
             success: false,
-            message:
+            errorMessage:
                 error.response?.data?.message ||
                 "Erro ao criar departamento",
         };
@@ -66,7 +63,7 @@ export async function updateDepartamentoAction(
         );
         return {
             success: true,
-            message: "Departamento atualizado com sucesso",
+            successMessage: "Departamento atualizado com sucesso",
         };
 
     } catch (error: any) {
@@ -76,14 +73,14 @@ export async function updateDepartamentoAction(
         );
         return {
             success: false,
-            message:
+            errorMessage:
                 error.response?.data?.message ||
                 "Erro ao atualizar departamento",
         };
     }
 }
 
-export async function getAllDepartamentos() {
+export async function getAllDepartamentos(): Promise<IDepartamento[]> {
     try {
         const api = await serverApi();
         const response =
@@ -94,12 +91,11 @@ export async function getAllDepartamentos() {
             "Error getting departamentos:",
             error
         );
-        return {
-            success: false,
-            message:
-                error.response?.data?.message ||
-                "Erro ao buscar departamentos",
-        };
+
+        throw new Error(
+            error.response?.data?.message ||
+            "Erro ao buscar os departamentos"
+        );
     }
 }
 
@@ -118,7 +114,7 @@ export async function deleteDepartamentoAction(
         );
         return {
             success: true,
-            message: "Departamento removido com sucesso",
+            successMessage: "Departamento removido com sucesso",
         };
 
     } catch (error: any) {
@@ -128,7 +124,7 @@ export async function deleteDepartamentoAction(
         );
         return {
             success: false,
-            message:
+            errorMessage:
                 error.response?.data?.message ||
                 "Erro ao remover departamento",
         };

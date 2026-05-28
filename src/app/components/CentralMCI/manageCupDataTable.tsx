@@ -2,17 +2,21 @@
 
 import React from "react";
 import DataTable from "react-data-table-component";
-import CreateEditLeaderModal from "./createEditLeaderModal";
-import { ICup } from "../../types/centralMCI/centralMCI";
-import { cups, leaders } from "../../mocks/mocks";
+import { ICup, ILeader } from "../../types/centralMCI/centralMCI";
 import DeleteModal from "../utils/deleteModal";
 import CreateEditCupModal from "./createEditCupModal";
+import { IDepartamento } from "../../types/cadastros/cadastros";
+import { deleteCopaAction } from "../../actions/copas/copas";
 
-const ManageCupDataTable: React.FC = ({
+interface IManageCupDataTable {
+    leaders: ILeader[]
+    departamentos: IDepartamento[]
+    copas: ICup[]
+}
+
+const ManageCupDataTable: React.FC<IManageCupDataTable> = ({
+    leaders, departamentos, copas
 }) => {
-
-    const data:ICup[] = cups
-
     const columns = [
         {
             name: "Nome",
@@ -22,10 +26,17 @@ const ManageCupDataTable: React.FC = ({
             grow: 1.5,
         },
         {
+            name: "Departamento",
+            selector: (row: ICup) => row.departamento.nome,
+            sortable: true,
+            cell: (row: ICup) => row.departamento.nome,
+            grow: 1.5,
+        },
+        {
             name: "Lider",
             selector: (row: ICup) => row.lider.nome,
             sortable: true,
-            cell: (row: ICup) => row.nome,
+            cell: (row: ICup) => row.lider.nome,
             grow: 1,
         },
         {
@@ -51,9 +62,9 @@ const ManageCupDataTable: React.FC = ({
         },
         {
             name: "Para",
-            selector: (row: ICup) => row.para,
+            selector: (row: ICup) => row.ate,
             sortable: true,
-            cell: (row: ICup) => row.para,
+            cell: (row: ICup) => row.ate,
             grow: 1,
         },
         {
@@ -75,8 +86,13 @@ const ManageCupDataTable: React.FC = ({
             name: "Ações",
             cell: (row: ICup) => {
                 return <div className="flex">
-                    <CreateEditCupModal isEditMode={true} cupData={row} leaders={leaders} />
-                    <DeleteModal onConfirm={() => alert('clicou no delete')} />
+                    <CreateEditCupModal
+                        isEditMode={true}
+                        cupData={row}
+                        leaders={leaders}
+                        departamentos={departamentos}
+                    />
+                    <DeleteModal action={deleteCopaAction} id={row.id_copa}  />
                 </div>;
             },
             right: true,
@@ -87,14 +103,16 @@ const ManageCupDataTable: React.FC = ({
     return (
         <DataTable
             title={
-            <div className="w-full flex justify-end">
-                <CreateEditCupModal leaders={leaders}/>
-            </div>}
+                <div className="w-full flex justify-end">
+                    <CreateEditCupModal
+                        departamentos={departamentos}
+                        leaders={leaders} />
+                </div>}
             columns={columns}
-            data={data}
+            data={copas}
             responsive
             pagination
-            noDataComponent={<div>Nenhum líder cadastrado</div>}
+            noDataComponent={<div>Nenhuma copa cadastrado</div>}
             paginationPerPage={8}
             paginationRowsPerPageOptions={[5, 8]}
             paginationComponentOptions={{

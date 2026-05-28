@@ -1,18 +1,24 @@
+'use client'
 import { SlUserFollow } from "react-icons/sl";
-
 import ManageLeaderDataTable from "./manageLeaderDataTable";
 import GlobalDialog from "../utils/globalDialog";
 import TriggerButton from "../utils/triggerButton";
+import { ILeader } from "../../types/centralMCI/centralMCI";
 
+interface IManageLeaderModal{
+    leader:ILeader[]
+}
 
-const ManageLeaderModal: React.FC = () => {
+const ManageLeaderModal: React.FC<IManageLeaderModal> = ({
+    leader
+}) => {
     return (
         <GlobalDialog 
         trigger={ <TriggerButton children={<SlUserFollow className="size-5 pointer-events-none" />} />} 
         title="Gerenciamento de líderes"
-        contentClassName="w-1/2"
+        contentClassName="w-1/3"
         >
-            <ManageLeaderDataTable />
+            <ManageLeaderDataTable leaders={leader}  />
         </GlobalDialog>
        
     );

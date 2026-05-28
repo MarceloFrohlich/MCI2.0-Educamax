@@ -2,14 +2,25 @@
 
 import { CiMail } from "react-icons/ci"
 import { sendRecoveryCodeAction } from "../../actions/auth";
-import { useActionState, useEffect } from "react";
+import { useActionState, useEffect, useState } from "react";
 import { toast } from "sonner";
+import { IActionResponse } from "../../actions/types";
 
-const SendRecoveryCode: React.FC = () => {
+interface ISendRecoveryCode {
+    changeState: () => void
+    returnState: () => void
+    email: string
+    setEmail: React.Dispatch<React.SetStateAction<string>>
+}
 
-    const initialState = {
-        success: false,
-        message: "",
+const SendRecoveryCode: React.FC<ISendRecoveryCode> = ({
+    changeState,
+    returnState,
+    email,
+    setEmail }) => {
+
+    const initialState:IActionResponse = {
+        success: undefined,
     };
 
     const [state, formAction, pending] = useActionState(
@@ -18,19 +29,23 @@ const SendRecoveryCode: React.FC = () => {
     );
 
     useEffect(() => {
-        if (state.success) {
-          toast.success("Email enviado com sucesso");
+        if (state.success === true && state.successMessage) {
+            toast.success(state.success === true && state.successMessage);
+            changeState()
+            return;
         }
-    
-        if (state.message) {
-          toast.error(state.message);
+
+        if (state.success === false && state.errorMessage) {
+            toast.error(state.success === false && state.errorMessage);
         }
-      }, [state]);
+    }, [state.success,
+    state.successMessage,
+    state.errorMessage]);
 
     return (
         <form action={formAction} className="flex-1 flex flex-col justify-around">
             <div className="flex flex-col gap-0">
-                <h1 className="text-lg font-bold">Recupere sua senha</h1>
+                <h1 className="text-lg font-bold">Recuperação de senha</h1>
             </div>
 
             <div className="flex flex-col gap-0">
@@ -54,6 +69,8 @@ const SendRecoveryCode: React.FC = () => {
                 transition-colors
               "
                         type="text"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
                         name="emailRecovery"
                         placeholder="Digite seu email cadastrado"
                     />
@@ -79,6 +96,11 @@ const SendRecoveryCode: React.FC = () => {
                 type="submit"
                 className="bg-(--colorVariantBlue) w-full rounded-3xl text-white py-2 cursor-pointer"
             >{pending ? "Enviando..." : "Recuperar"}</button>
+            <button
+            onClick={returnState}
+                type="button"
+                className="bg-(--colorVariantBlue) w-full rounded-3xl text-white py-2 cursor-pointer"
+            >Voltar</button>
         </form>
     )
 }

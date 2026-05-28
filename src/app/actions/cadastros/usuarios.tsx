@@ -2,12 +2,8 @@
 
 import { revalidatePath } from "next/cache";
 import { serverApi } from "../../services/serverApi";
-
-
-interface IActionResponse {
-    success: boolean;
-    message: string;
-}
+import { IUser } from "../../types/cadastros/cadastros";
+import { IActionResponse } from "../types";
 
 export async function createUsuarioAction(
     _: IActionResponse,
@@ -25,21 +21,21 @@ export async function createUsuarioAction(
             id_nivel: Number(formData.get('nivelPermissao')),
             relacao: formData.get('relacao'),
         });
-    revalidatePath("/pages/cadastros/usuarios");
-    return {
-        success: true,
-        message: "usuario criada com sucesso",
-    };
+        revalidatePath("/pages/cadastros/usuarios");
+        return {
+            success: true,
+            successMessage: "usuario criada com sucesso",
+        };
 
-} catch (error: any) {
-    console.log("Error creating usuario:", error);
-    return {
-        success: false,
-        message:
-            error.response?.data?.message ||
-            "Erro ao criar usuario",
-    };
-}
+    } catch (error: any) {
+        console.log("Error creating usuario:", error);
+        return {
+            success: false,
+            errorMessage:
+                error.response?.data?.message ||
+                "Erro ao criar usuario",
+        };
+    }
 }
 
 export async function updateUsuarioAction(
@@ -62,21 +58,21 @@ export async function updateUsuarioAction(
 
         return {
             success: true,
-            message: "usuario atualizada com sucesso",
+            successMessage: "usuario atualizada com sucesso",
         };
 
     } catch (error: any) {
         console.log("Error updating usuario:", error);
         return {
             success: false,
-            message:
+            errorMessage:
                 error.response?.data?.message ||
                 "Erro ao atualizar usuario",
         };
     }
 }
 
-export async function getAllUsuarios() {
+export async function getAllUsuarios(): Promise<IUser> {
 
     try {
         const api = await serverApi();
@@ -87,12 +83,11 @@ export async function getAllUsuarios() {
             "Error getting usuarios:",
             error
         );
-        return {
-            success: false,
-            message:
-                error.response?.data?.message ||
-                "Erro ao buscar as usuario",
-        };
+
+        throw new Error(
+            error.response?.data?.message ||
+            "Erro ao buscar os usuarios"
+        );
     }
 }
 
@@ -108,10 +103,10 @@ export async function deleteUsuarioAction(
         revalidatePath(
             "/pages/cadastros/usuarios"
         );
-console.log("DELETE RESPONSE:", response.data);
+        console.log("DELETE RESPONSE:", response.data);
         return {
             success: true,
-            message: "usuario removida com sucesso",
+            successMessage: "usuario removida com sucesso",
         };
 
     } catch (error: any) {
@@ -123,7 +118,7 @@ console.log("DELETE RESPONSE:", response.data);
 
         return {
             success: false,
-            message:
+            errorMessage:
                 error.response?.data?.message ||
                 "Erro ao remover usuario",
         };

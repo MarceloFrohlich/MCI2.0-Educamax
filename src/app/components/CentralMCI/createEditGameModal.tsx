@@ -1,23 +1,25 @@
 'use client'
 
 import { CiEdit } from "react-icons/ci";
-import { useState } from "react";
-import { IDirectionMeasure } from "../../types/centralMCI/centralMCI";
+import { useEffect, useState } from "react";
+import { ICup, IDirectionMeasure } from "../../types/centralMCI/centralMCI";
 import { Button } from "../../../components/ui/button";
 import GlobalDialog from "../utils/globalDialog";
-
 import { IGame, ILeader } from "../../types/centralMCI/centralMCI";
-import { departments } from "../../mocks/mocks";
 import Select from "react-select";
 import TriggerButton from "../utils/triggerButton";
 import { PiVolleyball } from "react-icons/pi";
 import DirectionMeasuresModal from "./directionMeasuresModal";
+import { useServerAction } from "../../hooks/useServerAction";
+import { createJogoAction, updatejogoAction } from "../../actions/jogos/jogos";
+import FormSubmitButton from "../utils/formSubmitButton";
 
 
 interface ICreateEditGameModalProps {
     isEditMode?: boolean;
     gameData?: IGame;
     leaders?: ILeader[];
+    copas: ICup[]
 }
 
 interface ISelectOption {
@@ -28,12 +30,43 @@ interface ISelectOption {
 const CreateEditGameModal: React.FC<ICreateEditGameModalProps> = ({
     isEditMode = false,
     gameData,
+    copas,
     leaders = [],
 }) => {
+    const action = isEditMode
+        ? updatejogoAction
+        : createJogoAction;
+
+    const {
+        state,
+        formAction,
+        pending
+    } = useServerAction(action);
+
+    useEffect(() => {
+        if (
+            state.success &&
+            isEditMode
+        ) {
+            setOpen(false);
+
+        }
+
+    }, [state, isEditMode]);
 
     const [directionMeasures, setDirectionMeasures] = useState<IDirectionMeasure[]>(
         gameData?.medidasDirecao ?? []
     );
+
+    const [selectedCopas, setSelectedCopas] = useState<ISelectOption[]>(
+        gameData?.copa
+            ? [
+                {
+                    value: gameData.copa.id_copa,
+                    label: gameData.copa.nome,
+                },
+            ]
+            : [])
 
     const [open, setOpen] = useState(false);
 
@@ -44,64 +77,18 @@ const CreateEditGameModal: React.FC<ICreateEditGameModalProps> = ({
         }
 
     };
-
-    const handleAddDirectionMeasure = (
-        measure: IDirectionMeasure
-    ) => {
-
-        if (directionMeasures.length >= 3) {
-            return;
-        }
-
-        setDirectionMeasures((prev) => [
-            ...prev,
-            measure,
-        ]);
+    const AllCopasOptions = {
+        value: "__all__",
+        label: "Selecionar todos",
     };
+    const copasOptions: ISelectOption[] = [
+        AllCopasOptions,
 
-    const departmentOptions: ISelectOption[] =
-        departments.map((department) => ({
-            value: String(department.id),
-            label: department.nome,
-        }));
-
-    const handleSubmit = (formData: FormData) => {
-        const payload = {
-            nome: formData.get("gameName"),
-            liderId: formData.get("leader"),
-            departamentos: formData
-                .getAll("departamentos")
-                .map(Number),
-            verbo: formData.get("verbo"),
-            medida: formData.get("medida"),
-            de: Number(formData.get("de")),
-            para: Number(formData.get("para")),
-            inicio: formData.get("inicio"),
-            fim: formData.get("fim"),
-            observacoes: formData.get("observacoes"),
-            incluirPLP: formData.get("plp") === "on",
-            medidasDirecao: directionMeasures.map(
-                (measure) => ({
-                    id: measure.id,
-                    verbo: measure.verbo,
-                    unidadeMedida: measure.unidadeMedida,
-                    placarDesejado: measure.placarDesejado,
-                    dataInicial: measure.dataInicial,
-                    dataFinal: measure.dataFinal,
-                    excluirPeriodo: measure.excluirPeriodo,
-
-                    dataInicialPeriodoExcluido:
-                        measure.dataInicialPeriodoExcluido,
-
-                    dataFinalPeriodoExcluido:
-                        measure.dataFinalPeriodoExcluido,
-                })
-            ),
-        };
-
-        console.log(payload);
-
-    };
+        ...(copas ?? []).map((copa) => ({
+            value: copa.id_departamento,
+            label: copa.nome,
+        })),
+    ];
 
     return (
         <GlobalDialog
@@ -119,8 +106,23 @@ const CreateEditGameModal: React.FC<ICreateEditGameModalProps> = ({
                 )
             }
         >
-            <form action={handleSubmit} className="flex flex-col gap-4 max-h-[80vh] overflow-y-auto">
+            <form action={formAction} className="flex flex-col gap-4 max-h-[80vh] overflow-y-auto">
                 <div className="grid grid-cols-2 gap-4">
+                    {selectedCopas.map((copas) => (
+                        <input
+                            key={copas.value}
+                            type="hidden"
+                            name="selectedCopas"
+                            value={copas.value}
+                        />
+                    ))}
+
+                    <input
+                        type="hidden"
+                        name="previdencias"
+                        value={JSON.stringify(directionMeasures)}
+                    />
+
                     <div className="flex flex-col gap-2">
                         <label
                             htmlFor="gameName"
@@ -162,7 +164,7 @@ const CreateEditGameModal: React.FC<ICreateEditGameModalProps> = ({
                         <select
                             id="leader"
                             name="leader"
-                            defaultValue={gameData?.lider?.id ?? ""}
+                            defaultValue={gameData?.lider.id_lider ?? ""}
                             className="
                                 bg-white
                                 w-full
@@ -182,8 +184,8 @@ const CreateEditGameModal: React.FC<ICreateEditGameModalProps> = ({
 
                             {leaders.map((leader) => (
                                 <option
-                                    key={leader.id}
-                                    value={leader.id}
+                                    key={leader.id_lider}
+                                    value={leader.id_lider}
                                 >
                                     {leader.nome}
                                 </option>
@@ -194,23 +196,41 @@ const CreateEditGameModal: React.FC<ICreateEditGameModalProps> = ({
 
                 <div className="flex flex-col gap-2">
                     <label
-                        htmlFor="departamentos"
+                        htmlFor="copas"
                         className="text-sm font-medium text-gray-700"
                     >
-                        Departamentos
+                        Copas
                     </label>
 
                     <Select
                         isMulti
-                        isDisabled={isEditMode}
-                        name="departamentos"
-                        options={departmentOptions}
-                        defaultValue={
-                            gameData?.departamentos?.map((department) => ({
-                                value: String(department.id),
-                                label: department.nome,
-                            })) ?? []
-                        }
+                        onChange={(value) => {
+
+                            const selected =
+                                value as ISelectOption[];
+
+                            const hasSelectAll =
+                                selected.some(
+                                    (option) =>
+                                        option.value === "__all__"
+                                );
+
+                            if (hasSelectAll) {
+
+                                setSelectedCopas(
+                                    copas.map((copa) => ({
+                                        value: copa.id_copa,
+                                        label: copa.nome,
+                                    }))
+                                );
+
+                                return;
+                            }
+
+                            setSelectedCopas(selected);
+                        }}
+                        options={copasOptions}
+                        value={selectedCopas}
                         placeholder="Selecione os departamentos"
                         className="text-(--textBaseColor)"
                         styles={{
@@ -276,6 +296,95 @@ const CreateEditGameModal: React.FC<ICreateEditGameModalProps> = ({
                         }}
                     />
                 </div>
+
+                {/* <div className="flex flex-col gap-2">
+                    <label
+                        htmlFor="departamentos"
+                        className="text-sm font-medium text-gray-700"
+                    >
+                        Departamentos
+                    </label>
+
+                    <Select
+                        isMulti
+                        isDisabled={isEditMode}
+                        name="departamentos"
+                        options={departmentOptions}
+                        defaultValue={
+                            gameData?.departamento
+                                ? [
+                                    {
+                                        value: gameData.departamento.id_departamento,
+                                        label: gameData.departamento.nome,
+                                    },
+                                ]
+                                : []
+                        }
+                        placeholder="Selecione os departamentos"
+                        className="text-(--textBaseColor)"
+                        styles={{
+                            control: (base, state) => ({
+                                ...base,
+                                backgroundColor: "#fff",
+                                borderRadius: "0.75rem",
+                                border: "2px solid rgba(17, 44, 70, 0.5)",
+                                minHeight: "44px",
+                                boxShadow: "none",
+                                paddingLeft: "0.25rem",
+                                transition: "all .2s ease",
+                                cursor: "pointer",
+
+                                "&:hover": {
+                                    border: "2px solid rgba(17, 44, 70, 0.7)",
+                                },
+                            }),
+
+                            placeholder: (base) => ({
+                                ...base,
+                                color: "#94a3b8",
+                            }),
+
+                            multiValue: (base) => ({
+                                ...base,
+                                backgroundColor: "rgba(52, 119, 221, 0.12)",
+                                borderRadius: "0.5rem",
+                            }),
+
+                            multiValueLabel: (base) => ({
+                                ...base,
+                                color: "#112C46",
+                                fontWeight: 500,
+                            }),
+
+                            multiValueRemove: (base) => ({
+                                ...base,
+                                color: "#112C46",
+                                cursor: "pointer",
+
+                                ":hover": {
+                                    backgroundColor: "rgba(52, 119, 221, 0.2)",
+                                    color: "#112C46",
+                                },
+                            }),
+
+                            menu: (base) => ({
+                                ...base,
+                                borderRadius: "0.75rem",
+                                overflow: "hidden",
+                                zIndex: 9999,
+                            }),
+
+                            option: (base, state) => ({
+                                ...base,
+                                backgroundColor: state.isFocused
+                                    ? "rgba(52, 119, 221, 0.1)"
+                                    : "#fff",
+                                color: "#112C46",
+                                cursor: "pointer",
+                            }),
+                        }}
+                    />
+                </div> */}
 
                 <div className="grid grid-cols-2 gap-4">
                     <div className="flex flex-col gap-2">
@@ -488,7 +597,7 @@ const CreateEditGameModal: React.FC<ICreateEditGameModalProps> = ({
                 </div>
 
                 <div className="flex gap-2">
-                    <input type="checkbox" defaultChecked={gameData?.incluirPLP} className="size-5" id="plp" />
+                    <input type="checkbox" name="hasplp" defaultChecked={gameData?.incluirPLP} className="size-5" id="plp" />
                     <label
                         htmlFor="plp"
                         className="text-sm font-medium text-gray-700"
@@ -574,22 +683,7 @@ const CreateEditGameModal: React.FC<ICreateEditGameModalProps> = ({
                 )}
 
                 <div className="flex justify-end">
-                    <Button
-                        type="submit"
-                        className="
-                            hover:cursor-pointer
-                            bg-(--colorVariantBlue)
-                            text-white
-                            hover:bg-(--colorVariantBlue)/80
-                            duration-300
-                            border-none
-                            mt-4
-                        "
-                    >
-                        {isEditMode
-                            ? "Salvar Alterações"
-                            : "Criar Jogo"}
-                    </Button>
+                    <FormSubmitButton actionText="Salvar Jogo" pending={pending} isEditMode={isEditMode} />
                 </div>
 
             </form>

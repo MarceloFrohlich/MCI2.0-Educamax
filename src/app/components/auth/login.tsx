@@ -4,12 +4,19 @@ import Image from "next/image";
 import logo from "../../../../public/images/logoMci.svg";
 import { useState } from "react";
 import SendRecoveryCode from "./sendRecoveryCode";
-import ResetPassword from "./resetPassword";
+import LoginForm from "./loginForm";
+import PasswordRecovery from "./passwordRecovery";
 
-export default function LoginForm() {
+export default function Login() {
 
   const [passwordRecovery, setPasswordRecovery] = useState<boolean>(false)
   const [passwordSent, setPasswordSent] = useState<boolean>(false)
+  const [emailRecovery, setEmailRecovery] = useState('')
+
+  function resetStates() {
+    setPasswordRecovery(false)
+    setPasswordSent(false)
+  }
 
   return (
     <section
@@ -63,15 +70,20 @@ export default function LoginForm() {
         </div>
 
         {!passwordRecovery && !passwordSent && (
-          <LoginForm />
+          <LoginForm changeState={() => setPasswordRecovery(true)} />
         )}
 
         {passwordRecovery && !passwordSent && (
-          <SendRecoveryCode />
+          <SendRecoveryCode
+            returnState={() => setPasswordRecovery(false)}
+            changeState={() => setPasswordSent(true)}
+            email={emailRecovery}
+            setEmail={setEmailRecovery}
+          />
         )}
 
         {passwordRecovery && passwordSent && (
-          <ResetPassword />
+          <PasswordRecovery email={emailRecovery} resetStates={resetStates} />
         )}
 
       </div>

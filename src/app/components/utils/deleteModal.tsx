@@ -3,15 +3,10 @@
 import React, { useActionState, useEffect, useState } from "react";
 import { Trash2 } from "lucide-react";
 import { toast } from "sonner";
-import { useRouter } from "next/navigation";
 import { Button } from "../../../components/ui/button";
 import GlobalDialog from "./globalDialog";
 import { DialogClose } from "../../../components/ui/dialog";
-
-interface IActionResponse {
-    success: boolean;
-    message: string;
-}
+import { IActionResponse } from "../../actions/types";
 
 interface IDeleteModalProps {
     id: string;
@@ -27,10 +22,7 @@ interface IDeleteModalProps {
     cancelText?: string;
 }
 
-const initialState: IActionResponse = {
-    success: false,
-    message: "",
-};
+const initialState: IActionResponse = {};
 
 const DeleteModal: React.FC<IDeleteModalProps> = ({
     id,
@@ -43,8 +35,6 @@ const DeleteModal: React.FC<IDeleteModalProps> = ({
     cancelText = "Cancelar",
 }) => {
 
-    const router = useRouter();
-
     const [open, setOpen] = useState(false);
 
     const [state, formAction, pending] =
@@ -52,26 +42,22 @@ const DeleteModal: React.FC<IDeleteModalProps> = ({
             action,
             initialState
         );
-useEffect(() => {
-
-    if (state?.success === true) {
-
-        toast.success(state.message);
-
-        setTimeout(() => {
-            setOpen(false);
-        }, 100);
-    }
-
-    if (state?.success === false) {
-        toast.error(state.message);
-    }
-
-}, [state]);
-
     useEffect(() => {
-    console.log(state);
-}, [state]);
+
+        if (state?.success === true) {
+
+            toast.success(state.success === true && state.successMessage);
+
+            setTimeout(() => {
+                setOpen(false);
+            }, 100);
+        }
+
+        if (state?.success === false) {
+            toast.error(state.success === false && state.errorMessage);
+        }
+
+    }, [state]);
 
     return (
         <GlobalDialog

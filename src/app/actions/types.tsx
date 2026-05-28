@@ -1,5 +1,5 @@
-
-interface IActionResponse {
-  success: boolean;
-  message: string;
+export interface IActionResponse {
+    success?: boolean;
+    successMessage?: string;
+    errorMessage?: string;
 }

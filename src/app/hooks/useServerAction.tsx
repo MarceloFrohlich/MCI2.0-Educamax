@@ -1,20 +1,11 @@
-// hooks/useServerAction.ts
-
 'use client';
 
-import { useActionState, useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { useActionState, useEffect, useRef } from "react";
 import { toast } from "sonner";
+import { IActionResponse } from "../actions/types";
 
-interface IActionResponse {
-    success: boolean;
-    message: string;
-}
 
-const initialState: IActionResponse = {
-    success: false,
-    message: "",
-};
+const initialState: IActionResponse = {};
 
 export function useServerAction(
     action: (
@@ -22,24 +13,36 @@ export function useServerAction(
         formData: FormData
     ) => Promise<IActionResponse>
 ) {
-
-    const router = useRouter();
+    const isFirstRender = useRef(true);
 
     const [state, formAction, pending] =
-        useActionState(
+        useActionState<IActionResponse, FormData>(
             action,
             initialState
         );
 
     useEffect(() => {
-        if (state.success) {
-            toast.success(state.message);
-            router.refresh();
+
+        // IGNORA PRIMEIRO RENDER
+        if (isFirstRender.current) {
+            isFirstRender.current = false;
+            return;
         }
-        if (!state.success && state.message) {
-            toast.error(state.message);
+
+        if (state.success === true && state.successMessage) {
+            toast.success(state.success === true && state.successMessage);
         }
-    }, [state, router]);
+
+        if (state.success === false && state.errorMessage) {
+            toast.error(state.success === false && state.errorMessage);
+        }
+
+    }, [
+        state.success,
+        state.successMessage,
+        state.errorMessage
+    ]);
+
     return {
         state,
         formAction,

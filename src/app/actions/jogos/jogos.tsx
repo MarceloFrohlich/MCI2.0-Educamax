@@ -1,0 +1,208 @@
+'use server'
+
+import { revalidatePath } from "next/cache";
+
+import { serverApi } from "../../services/serverApi";
+import { IActionResponse } from "../types";
+import { ICup } from "../../types/centralMCI/centralMCI";
+
+export async function createJogoAction(
+    _: IActionResponse,
+    formData: FormData
+): Promise<IActionResponse> {
+
+    const tem_plp = formData.get('hasplp') == 'on' ? true : false
+    const payload = {
+        ids_copas: formData.getAll('selectedCopas'),
+        id_lider: formData.get('leader'),
+        nome: formData.get('gameName'),
+        verbo: formData.get('verbo'),
+        medida: formData.get('medida'),
+        de: formData.get('de'),
+        para: formData.get('para'),
+        data_inicio: formData.get('inicio'),
+        data_fim: formData.get('fim'),
+        observacao: formData.get('observacoes'),
+        tem_plp,
+
+        previdencias: JSON.parse(
+            formData.get("previdencias") as string
+        ).map((measure: any) => ({
+            unidade_medida: measure.unidadeMedida,
+            placar_inicial: 0,
+            placar_desejado: measure.placarDesejado,
+            data_inicio: measure.dataInicial,
+            data_fim: measure.dataFinal,
+
+            inativo_de: measure.excluirPeriodo
+                ? measure.dataInicialPeriodoExcluido
+                : null,
+
+            inativo_ate: measure.excluirPeriodo
+                ? measure.dataFinalPeriodoExcluido
+                : null,
+
+            verbo: measure.verbo,
+        })),
+    };
+
+    console.log(
+        "PAYLOAD CREATE JOGO:",
+        JSON.stringify(payload, null, 2)
+    );
+    try {
+        const api = await serverApi();
+        await api.post("/jogos", {
+            ids_copas: formData.get('selectedCopas'),
+            id_lider: formData.get('leader'),
+            nome: formData.get('gameName'),
+            verbo: formData.get('verbo'),
+            medida: formData.get('medida'),
+            de: Number(formData.get('de')),
+            para: Number(formData.get('para')),
+            data_inicio: formData.get('inicio'),
+            data_fim: formData.get('fim'),
+            observacao: formData.get('observacoes'),
+            tem_plp,
+            previdencias: JSON.parse(
+                formData.get("previdencias") as string
+            ).map((measure: any) => ({
+                unidade_medida: measure.unidadeMedida,
+                placar_inicial: 0,
+                placar_desejado: measure.placarDesejado,
+                data_inicio: measure.dataInicial,
+                data_fim: measure.dataFinal,
+                inativo_de: measure.excluirPeriodo
+                    ? measure.dataInicialPeriodoExcluido
+                    : null,
+                inativo_ate: measure.excluirPeriodo
+                    ? measure.dataFinalPeriodoExcluido
+                    : null,
+                verbo: measure.verbo,
+            }))
+
+        });
+        revalidatePath(
+            "pages/centralmci"
+        );
+        return {
+            success: true,
+            successMessage: "Jogo criada com sucesso",
+        };
+    } catch (error: any) {
+
+        console.log("ERROR COMPLETO:");
+        console.dir(error, { depth: null });
+
+        console.log("STATUS:");
+        console.log(error?.response?.status);
+
+        console.log("RESPONSE DATA:");
+        console.dir(error?.response?.data, {
+            depth: null
+        });
+
+        console.log("RESPONSE MESSAGE:");
+        console.log(error?.response?.data?.message);
+
+        return {
+            success: false,
+            errorMessage:
+                error.response?.data?.message ||
+                "Erro ao criar jogo",
+        };
+    }
+}
+
+export async function updatejogoAction(
+    _: IActionResponse,
+    formData: FormData
+): Promise<IActionResponse> {
+
+    try {
+        const api = await serverApi();
+        await api.put(`/jogos/${formData.get('id')}`, {
+            nome: formData.get('cupName'),
+            ids_departamentos: formData
+                .getAll('departamentos')
+                .map((id) => id),
+            id_lider: formData.get('leader'),
+            inicio: formData.get('start_date'),
+            fim: formData.get('end_date'),
+            verbo: formData.get('verbo'),
+            medida: formData.get('medida'),
+            de: Number(formData.get('de')),
+            ate: Number(formData.get('para'))
+        });
+        revalidatePath(
+            "pages/centralmci"
+        );
+        return {
+            success: true,
+            successMessage: "Jogo atualizada com sucesso",
+        };
+
+    } catch (error: any) {
+        console.log(
+            "Error updating jogo:",
+            error
+        );
+        return {
+            success: false,
+            errorMessage:
+                error.response?.data?.message ||
+                "Erro ao atualizar jogo",
+        };
+    }
+}
+
+export async function getAlljogos(): Promise<ICup[]> {
+    try {
+        const api = await serverApi();
+        const response =
+            await api.get("/jogos");
+        return response.data;
+    } catch (error: any) {
+        console.log(
+            "Error getting jogos:",
+            error
+        );
+
+        throw new Error(
+            error.response?.data?.message ||
+            "Erro ao buscar as jogos"
+        );
+    }
+}
+
+export async function deletejogoAction(
+    _: IActionResponse,
+    formData: FormData
+): Promise<IActionResponse> {
+    const id = formData.get("id");
+    try {
+        const api = await serverApi();
+        await api.post(
+            `/jogos/${id}/remover`
+        );
+        revalidatePath(
+            "/pages/centralmci"
+        );
+        return {
+            success: true,
+            successMessage: "Jogo removida com sucesso",
+        };
+
+    } catch (error: any) {
+        console.log(
+            "Error deleting jogo:",
+            error
+        );
+        return {
+            success: false,
+            errorMessage:
+                error.response?.data?.message ||
+                "Erro ao remover jogo",
+        };
+    }
+}

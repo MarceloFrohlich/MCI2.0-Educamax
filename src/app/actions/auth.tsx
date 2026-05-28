@@ -3,9 +3,10 @@
 
 import { api } from "../services/api";
 import { cookies } from "next/headers";
-import { serverApi } from "../services/serverApi";
+import { redirect } from "next/navigation";
+import { IActionResponse } from "./types";
 
-export async function loginAction(_: any, formData: FormData) {
+export async function loginAction(_: IActionResponse, formData: FormData): Promise<IActionResponse> {
   const email = formData.get("email");
   const senha = formData.get("senha");
 
@@ -14,7 +15,7 @@ export async function loginAction(_: any, formData: FormData) {
       email,
       senha,
     });
-    console.log(response.data);
+
     const token = response.data.access_token;
 
     const cookieStore = await cookies();
@@ -26,42 +27,74 @@ export async function loginAction(_: any, formData: FormData) {
       path: "/",
     });
 
-    return {
-      success: true,
-    };
 
   } catch (error: any) {
     console.log("Login error:", error);
+        console.log(error.response?.data);
+
     return {
       success: false,
-      message:
-        error.response?.data?.message ||
+      errorMessage:
+        error.response?.data?.mensagem ||
         "Erro ao fazer login",
+    };
+  }
+
+  redirect("/pages");
+  
+}
+
+export async function sendRecoveryCodeAction(
+  _: IActionResponse,
+  formData: FormData
+): Promise<IActionResponse> {
+  try {
+    await api.post("/auth/esqueci-senha", {
+      email: formData.get('emailRecovery'),
+    });
+
+    return {
+      success: true,
+      successMessage: "Código enviado por email com sucesso",
+    };
+
+  } catch (error: any) {
+    console.log("Error sending password:", error);
+        console.log(error.response?.data);
+    return {
+      success: false,
+      errorMessage:
+        error.response?.data?.mensagem?.[0] ||
+        "Erro ao enviar a senha",
     };
   }
 }
 
-export async function sendRecoveryCodeAction(
-    _: IActionResponse,
-    formData: FormData
-) {
-    try {
-        await api.post("/auth/esqueci-senha", {
-            email: formData.get('emailRecovery'),
-        });
+export async function passwordRecovery(
+  _: IActionResponse,
+  formData: FormData
+): Promise<IActionResponse> {
+  try {
+    await api.post("/auth/redefinir-senha", {
+      email: formData.get('emailForRecovery'),
+      codigo: formData.get('code'),
+      nova_senha: formData.get('newPassword'),
+      confirmacao_senha: formData.get('passValidation')
+    });
 
     return {
-        success: true,
-        message: "Código enviado por email com sucesso",
+      success: true,
+      successMessage: "Senha recuperada com sucesso",
     };
 
-} catch (error: any) {
-    console.log("Error sending password:", error);
+  } catch (error: any) {
+    console.log("Error recovering password:", error);
+    console.log(error.response?.data);
     return {
-        success: false,
-        message:
-            error.response?.data?.message ||
-            "Erro ao enviar a senha",
+      success: false,
+      errorMessage:
+        error.response?.data?.mensagem ||
+        "Erro ao recuperar a senha",
     };
-}
+  }
 }

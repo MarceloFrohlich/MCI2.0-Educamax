@@ -3,11 +3,8 @@
 import { revalidatePath } from "next/cache";
 
 import { serverApi } from "../../services/serverApi";
-
-interface IActionResponse {
-    success: boolean;
-    message: string;
-}
+import { IFilial } from "../../types/cadastros/cadastros";
+import { IActionResponse } from "../types";
 
 export async function createFilialAction(
     _: IActionResponse,
@@ -27,7 +24,7 @@ export async function createFilialAction(
         );
         return {
             success: true,
-            message: "Filial criada com sucesso",
+            successMessage: "Filial criada com sucesso",
         };
     } catch (error: any) {
         console.log(
@@ -36,7 +33,7 @@ export async function createFilialAction(
         );
         return {
             success: false,
-            message:
+            errorMessage:
                 error.response?.data?.message ||
                 "Erro ao criar filial",
         };
@@ -66,7 +63,7 @@ export async function updateFilialAction(
         );
         return {
             success: true,
-            message: "Filial atualizada com sucesso",
+            successMessage: "Filial atualizada com sucesso",
         };
 
     } catch (error: any) {
@@ -76,14 +73,14 @@ export async function updateFilialAction(
         );
         return {
             success: false,
-            message:
+            errorMessage:
                 error.response?.data?.message ||
                 "Erro ao atualizar filial",
         };
     }
 }
 
-export async function getAllFiliais() {
+export async function getAllFiliais(): Promise<IFilial[]> {
     try {
         const api = await serverApi();
         const response =
@@ -94,12 +91,11 @@ export async function getAllFiliais() {
             "Error getting filiais:",
             error
         );
-        return {
-            success: false,
-            message:
-                error.response?.data?.message ||
-                "Erro ao buscar filiais",
-        };
+
+        throw new Error(
+            error.response?.data?.message ||
+            "Erro ao buscar as filiais"
+        );
     }
 }
 
@@ -118,7 +114,7 @@ export async function deleteFilialAction(
         );
         return {
             success: true,
-            message: "Filial removida com sucesso",
+            successMessage: "Filial removida com sucesso",
         };
 
     } catch (error: any) {
@@ -128,7 +124,7 @@ export async function deleteFilialAction(
         );
         return {
             success: false,
-            message:
+            errorMessage:
                 error.response?.data?.message ||
                 "Erro ao remover filial",
         };

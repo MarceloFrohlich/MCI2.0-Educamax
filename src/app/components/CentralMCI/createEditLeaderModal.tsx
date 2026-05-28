@@ -1,24 +1,55 @@
+'use client'
+
 import { CiEdit } from "react-icons/ci";
 import { Button } from "../../../components/ui/button";
 import GlobalDialog from "../utils/globalDialog";
 import { ILeader } from "../../types/centralMCI/centralMCI";
+import { createLiderAction, updateLiderAction } from "../../actions/lideres/lideres";
+import { useServerAction } from "../../hooks/useServerAction";
+import { useEffect, useState } from "react";
+import FormSubmitButton from "../utils/formSubmitButton";
 
 interface ICreateEditLeaderModalProps {
     isEditMode?: boolean;
     leaderData?: ILeader
 }
 
+const CreateEditLeaderModal: React.FC<ICreateEditLeaderModalProps> = ({ isEditMode = false, leaderData }) => {
 
-const CreateEditLeaderModal: React.FC<ICreateEditLeaderModalProps> = ({ isEditMode=false, leaderData }) => {
+    const [open, setOpen] = useState(false);
+    const action = isEditMode
+        ? updateLiderAction
+        : createLiderAction;
+
+    const {
+        state,
+        formAction,
+        pending
+    } = useServerAction(action);
+
+    useEffect(() => {
+
+        if (
+            state.success === true && state.successMessage &&
+            isEditMode
+        ) {
+            setOpen(false);
+        }
+
+    }, [state, isEditMode]);
+
+
     return (
         <GlobalDialog
+            open={open}
+            onOpenChange={setOpen}
             title={isEditMode ? "Editar Líder" : "Criar Novo Líder"}
             contentClassName="w-1/4"
             trigger={
                 isEditMode ? (
                     <Button className="bg-transparent hover:cursor-pointer">
                         <CiEdit className="text-green-700 size-5" />
-                    </Button>                ) : (
+                    </Button>) : (
                     <Button
                         className="hover:cursor-pointer bg-(--colorVariantBlue) text-white hover:bg-(--colorVariantBlue)/80 duration-300 border-none">
                         Novo Líder
@@ -26,8 +57,17 @@ const CreateEditLeaderModal: React.FC<ICreateEditLeaderModalProps> = ({ isEditMo
                 )
             }
         >
-            <form>
+            <form action={formAction}>
                 <div className="flex flex-col gap-2">
+
+                    {isEditMode && (
+                        <input
+                            type="hidden"
+                            name="id"
+                            value={leaderData?.id_lider}
+                        />
+                    )}
+
                     <label htmlFor="leaderName" className="block text-sm font-medium text-gray-700">
                         Nome do Líder
                     </label>
@@ -48,17 +88,14 @@ const CreateEditLeaderModal: React.FC<ICreateEditLeaderModalProps> = ({ isEditMo
                         "
                         type='text'
                         id="newleader"
+                        name="newleader"
                         placeholder="Novo Lider"
                         defaultValue={isEditMode ? leaderData?.nome : ""}
                     />
                 </div>
 
                 <div className="flex justify-end">
-                    <Button
-                        className="hover:cursor-pointer bg-(--colorVariantBlue) text-white hover:bg-(--colorVariantBlue)/80 duration-300 border-none mt-4"
-                        type="submit">
-                        {isEditMode ? "Salvar Alterações" : "Criar Líder"}
-                    </Button>
+                   <FormSubmitButton isEditMode={isEditMode} pending={pending} actionText="Criar lider"/>
                 </div>
             </form>
         </GlobalDialog>

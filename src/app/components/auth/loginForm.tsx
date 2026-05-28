@@ -6,33 +6,37 @@ import { FaLock } from "react-icons/fa"
 import { loginAction } from "../../actions/auth";
 import { toast } from "sonner";
 import { useActionState, useEffect } from "react";
-import { useRouter } from "next/router";
+import { IActionResponse } from "../../actions/types";
 
-const LoginForm: React.FC = () => {
-    const initialState = {
-        success: false,
-        message: "",
+interface ILoginForm {
+    changeState: () => void
+}
+
+const LoginForm: React.FC<ILoginForm> = ({ changeState }) => {
+    const initialState: IActionResponse = {
+        success: undefined,
     };
-    const router = useRouter();
+
     const [state, formAction, pending] = useActionState(
         loginAction,
         initialState
     );
 
     useEffect(() => {
-        if (state.success) {
-            toast.success("Login realizado com sucesso");
-
-            router.push("/pages");
+        if (state.success === true && state.successMessage) {
+            toast.success(state.success === true && state.successMessage);
+            return
         }
 
-        if (state.message) {
-            toast.error(state.message);
+        if (state.success === false && state.errorMessage) {
+            toast.error(state.success === false && state.errorMessage);
         }
-    }, [state, router]);
+    }, [state.success,
+    state.successMessage,
+    state.errorMessage]);
 
     return (
-        <form action={formAction} className="flex-1 flex flex-col justify-around">
+        <form action={formAction} className="h-full flex flex-col justify-around">
             <div className="flex flex-col gap-0">
                 <h1 className="text-lg font-bold">Bem vindo!</h1>
                 <p>Faça o seu login.</p>
@@ -115,7 +119,7 @@ const LoginForm: React.FC = () => {
                 className="bg-(--colorVariantBlue) w-full rounded-3xl text-white py-2 cursor-pointer"
             >{pending ? "Entrando..." : "Login"}</button>
 
-            <Link href="#" className="text-center text-(--primaryText)">Esqueci a minha senha</Link>
+            <Link onClick={changeState} href="#" className="text-center text-(--primaryText)">Esqueci a minha senha</Link>
         </form>
     )
 }

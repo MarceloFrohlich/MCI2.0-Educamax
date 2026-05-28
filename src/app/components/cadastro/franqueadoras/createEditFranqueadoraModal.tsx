@@ -32,7 +32,7 @@ const CreateEditFranqueadoraModal: React.FC<ICreateEditLeaderModalProps> = ({
     useEffect(() => {
 
         if (
-            state.success &&
+            state.success === true && state.successMessage &&
             isEditMode
         ) {
             setOpen(false);
