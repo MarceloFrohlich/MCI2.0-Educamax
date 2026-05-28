@@ -12,48 +12,10 @@ export async function createJogoAction(
 ): Promise<IActionResponse> {
 
     const tem_plp = formData.get('hasplp') == 'on' ? true : false
-    const payload = {
-        ids_copas: formData.getAll('selectedCopas'),
-        id_lider: formData.get('leader'),
-        nome: formData.get('gameName'),
-        verbo: formData.get('verbo'),
-        medida: formData.get('medida'),
-        de: formData.get('de'),
-        para: formData.get('para'),
-        data_inicio: formData.get('inicio'),
-        data_fim: formData.get('fim'),
-        observacao: formData.get('observacoes'),
-        tem_plp,
-
-        previdencias: JSON.parse(
-            formData.get("previdencias") as string
-        ).map((measure: any) => ({
-            unidade_medida: measure.unidadeMedida,
-            placar_inicial: 0,
-            placar_desejado: measure.placarDesejado,
-            data_inicio: measure.dataInicial,
-            data_fim: measure.dataFinal,
-
-            inativo_de: measure.excluirPeriodo
-                ? measure.dataInicialPeriodoExcluido
-                : null,
-
-            inativo_ate: measure.excluirPeriodo
-                ? measure.dataFinalPeriodoExcluido
-                : null,
-
-            verbo: measure.verbo,
-        })),
-    };
-
-    console.log(
-        "PAYLOAD CREATE JOGO:",
-        JSON.stringify(payload, null, 2)
-    );
     try {
         const api = await serverApi();
         await api.post("/jogos", {
-            ids_copas: formData.get('selectedCopas'),
+            ids_copas: formData.getAll('selectedCopas'),
             id_lider: formData.get('leader'),
             nome: formData.get('gameName'),
             verbo: formData.get('verbo'),
@@ -68,7 +30,6 @@ export async function createJogoAction(
                 formData.get("previdencias") as string
             ).map((measure: any) => ({
                 unidade_medida: measure.unidadeMedida,
-                placar_inicial: 0,
                 placar_desejado: measure.placarDesejado,
                 data_inicio: measure.dataInicial,
                 data_fim: measure.dataFinal,
@@ -90,21 +51,6 @@ export async function createJogoAction(
             successMessage: "Jogo criada com sucesso",
         };
     } catch (error: any) {
-
-        console.log("ERROR COMPLETO:");
-        console.dir(error, { depth: null });
-
-        console.log("STATUS:");
-        console.log(error?.response?.status);
-
-        console.log("RESPONSE DATA:");
-        console.dir(error?.response?.data, {
-            depth: null
-        });
-
-        console.log("RESPONSE MESSAGE:");
-        console.log(error?.response?.data?.message);
-
         return {
             success: false,
             errorMessage:

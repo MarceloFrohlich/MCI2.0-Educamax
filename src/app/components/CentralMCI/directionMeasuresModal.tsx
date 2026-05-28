@@ -2,37 +2,38 @@
 
 import React, {
     useEffect,
+    useRef,
     useState,
 } from "react";
 
 import { Button } from "../../../components/ui/button";
 import GlobalDialog from "../utils/globalDialog";
 
-import { IDirectionMeasure } from "../../types/centralMCI/centralMCI";
+import { IPrevidenciaCreate } from "../../types/centralMCI/centralMCI";
 
 import { VscGraph } from "react-icons/vsc";
 
 interface IDirectionMeasuresModalProps {
-    measures: IDirectionMeasure[];
+    measures: IPrevidenciaCreate[];
 
     setMeasures?: React.Dispatch<
-        React.SetStateAction<IDirectionMeasure[]>
+        React.SetStateAction<IPrevidenciaCreate[]>
     >;
 
     isEditMode?: boolean;
 }
 
 const createEmptyMeasure =
-    (): IDirectionMeasure => ({
-        id: crypto.randomUUID(),
+    (): IPrevidenciaCreate => ({
+        id_previdencia: '',
         verbo: "",
-        unidadeMedida: "",
-        placarDesejado: 0,
-        dataInicial: "",
-        dataFinal: "",
-        excluirPeriodo: false,
-        dataInicialPeriodoExcluido: "",
-        dataFinalPeriodoExcluido: "",
+        unidade_medida: "",
+        placar_desejado: 0,
+        data_inicio: "",
+        data_fim: "",
+        excluir_periodo: false,
+        inativo_de: "",
+        inativo_ate: "",
     });
 
 const DirectionMeasuresModal: React.FC<
@@ -51,7 +52,7 @@ const DirectionMeasuresModal: React.FC<
         const [
             formData,
             setFormData,
-        ] = useState<IDirectionMeasure>(
+        ] = useState<IPrevidenciaCreate>(
             createEmptyMeasure()
         );
 
@@ -60,9 +61,14 @@ const DirectionMeasuresModal: React.FC<
             setOpen,
         ] = useState(false);
 
+        const measuresRef = useRef(measures);
+        measuresRef.current = measures;
+
         useEffect(() => {
+            if (!open) return;
+
             const selectedMeasure =
-                measures[selectedIndex];
+                measuresRef.current[selectedIndex];
 
             if (selectedMeasure) {
                 setFormData(selectedMeasure);
@@ -71,10 +77,10 @@ const DirectionMeasuresModal: React.FC<
 
             setFormData(createEmptyMeasure());
 
-        }, [selectedIndex, measures]);
+        }, [open, selectedIndex]);
 
         const handleChange = (
-            field: keyof IDirectionMeasure,
+            field: keyof IPrevidenciaCreate,
             value: string | number | boolean
         ) => {
             setFormData((prev) => ({
@@ -189,13 +195,6 @@ const DirectionMeasuresModal: React.FC<
                                     }
                                     onClick={() => {
                                         setSelectedIndex(index);
-                                        if (!currentMeasure) {
-                                            setFormData(
-                                                createEmptyMeasure()
-                                            );
-                                            return;
-                                        }
-                                        setFormData(currentMeasure);
                                     }}
                                     className="
                                     truncate
@@ -254,11 +253,11 @@ const DirectionMeasuresModal: React.FC<
                             <input
                                 type="text"
                                 value={
-                                    formData.unidadeMedida ?? ""
+                                    formData.unidade_medida ?? ""
                                 }
                                 onChange={(e) =>
                                     handleChange(
-                                        "unidadeMedida",
+                                        "unidade_medida",
                                         e.target.value
                                     )
                                 }
@@ -288,11 +287,11 @@ const DirectionMeasuresModal: React.FC<
                         <input
                             type="number"
                             value={
-                                formData.placarDesejado ?? 0
+                                formData.placar_desejado ?? 0
                             }
                             onChange={(e) =>
                                 handleChange(
-                                    "placarDesejado",
+                                    "placar_desejado",
                                     Number(e.target.value)
                                 )
                             }
@@ -321,10 +320,10 @@ const DirectionMeasuresModal: React.FC<
 
                             <input
                                 type="date"
-                                value={formData.dataInicial ?? ""}
+                                value={formData.data_inicio ?? ""}
                                 onChange={(e) =>
                                     handleChange(
-                                        "dataInicial",
+                                        "data_inicio",
                                         e.target.value
                                     )
                                 }
@@ -350,10 +349,10 @@ const DirectionMeasuresModal: React.FC<
 
                             <input
                                 type="date"
-                                value={formData.dataFinal ?? ""}
+                                value={formData.data_fim ?? ""}
                                 onChange={(e) =>
                                     handleChange(
-                                        "dataFinal",
+                                        "data_fim",
                                         e.target.value
                                     )
                                 }
@@ -378,11 +377,11 @@ const DirectionMeasuresModal: React.FC<
                         <input
                             type="checkbox"
                             checked={
-                                formData.excluirPeriodo ?? false
+                                formData.excluir_periodo ?? false
                             }
                             onChange={(e) =>
                                 handleChange(
-                                    "excluirPeriodo",
+                                    "excluir_periodo",
                                     e.target.checked
                                 )
                             }
@@ -400,14 +399,14 @@ const DirectionMeasuresModal: React.FC<
                         <input
                             type="date"
                             disabled={
-                                !formData.excluirPeriodo
+                                !formData.excluir_periodo
                             }
                             value={
-                                formData.dataInicialPeriodoExcluido ?? ""
+                                formData.inativo_de ?? ""
                             }
                             onChange={(e) =>
                                 handleChange(
-                                    "dataInicialPeriodoExcluido",
+                                    "inativo_de",
                                     e.target.value
                                 )
                             }
@@ -427,14 +426,14 @@ const DirectionMeasuresModal: React.FC<
                         <input
                             type="date"
                             disabled={
-                                !formData.excluirPeriodo
+                                !formData.excluir_periodo
                             }
                             value={
-                                formData.dataFinalPeriodoExcluido ?? ""
+                                formData.inativo_ate ?? ""
                             }
                             onChange={(e) =>
                                 handleChange(
-                                    "dataFinalPeriodoExcluido",
+                                    "inativo_ate",
                                     e.target.value
                                 )
                             }

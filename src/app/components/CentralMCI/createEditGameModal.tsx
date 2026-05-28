@@ -2,7 +2,7 @@
 
 import { CiEdit } from "react-icons/ci";
 import { useEffect, useState } from "react";
-import { ICup, IDirectionMeasure } from "../../types/centralMCI/centralMCI";
+import { ICup, IDirectionMeasure, IPrevidencia, IPrevidenciaCreate } from "../../types/centralMCI/centralMCI";
 import { Button } from "../../../components/ui/button";
 import GlobalDialog from "../utils/globalDialog";
 import { IGame, ILeader } from "../../types/centralMCI/centralMCI";
@@ -54,9 +54,12 @@ const CreateEditGameModal: React.FC<ICreateEditGameModalProps> = ({
 
     }, [state, isEditMode]);
 
-    const [directionMeasures, setDirectionMeasures] = useState<IDirectionMeasure[]>(
-        gameData?.medidasDirecao ?? []
+    const [directionMeasures, setDirectionMeasures] = useState<IPrevidenciaCreate[] | []>(
+        gameData?.previdencias ?? []
     );
+
+    const [startDate, setStartDate] = useState(gameData?.data_inicio ?? "");
+    const [endDate, setEndDate] = useState(gameData?.data_fim ?? "");
 
     const [selectedCopas, setSelectedCopas] = useState<ISelectOption[]>(
         gameData?.copa
@@ -297,95 +300,6 @@ const CreateEditGameModal: React.FC<ICreateEditGameModalProps> = ({
                     />
                 </div>
 
-                {/* <div className="flex flex-col gap-2">
-                    <label
-                        htmlFor="departamentos"
-                        className="text-sm font-medium text-gray-700"
-                    >
-                        Departamentos
-                    </label>
-
-                    <Select
-                        isMulti
-                        isDisabled={isEditMode}
-                        name="departamentos"
-                        options={departmentOptions}
-                        defaultValue={
-                            gameData?.departamento
-                                ? [
-                                    {
-                                        value: gameData.departamento.id_departamento,
-                                        label: gameData.departamento.nome,
-                                    },
-                                ]
-                                : []
-                        }
-                        placeholder="Selecione os departamentos"
-                        className="text-(--textBaseColor)"
-                        styles={{
-                            control: (base, state) => ({
-                                ...base,
-                                backgroundColor: "#fff",
-                                borderRadius: "0.75rem",
-                                border: "2px solid rgba(17, 44, 70, 0.5)",
-                                minHeight: "44px",
-                                boxShadow: "none",
-                                paddingLeft: "0.25rem",
-                                transition: "all .2s ease",
-                                cursor: "pointer",
-
-                                "&:hover": {
-                                    border: "2px solid rgba(17, 44, 70, 0.7)",
-                                },
-                            }),
-
-                            placeholder: (base) => ({
-                                ...base,
-                                color: "#94a3b8",
-                            }),
-
-                            multiValue: (base) => ({
-                                ...base,
-                                backgroundColor: "rgba(52, 119, 221, 0.12)",
-                                borderRadius: "0.5rem",
-                            }),
-
-                            multiValueLabel: (base) => ({
-                                ...base,
-                                color: "#112C46",
-                                fontWeight: 500,
-                            }),
-
-                            multiValueRemove: (base) => ({
-                                ...base,
-                                color: "#112C46",
-                                cursor: "pointer",
-
-                                ":hover": {
-                                    backgroundColor: "rgba(52, 119, 221, 0.2)",
-                                    color: "#112C46",
-                                },
-                            }),
-
-                            menu: (base) => ({
-                                ...base,
-                                borderRadius: "0.75rem",
-                                overflow: "hidden",
-                                zIndex: 9999,
-                            }),
-
-                            option: (base, state) => ({
-                                ...base,
-                                backgroundColor: state.isFocused
-                                    ? "rgba(52, 119, 221, 0.1)"
-                                    : "#fff",
-                                color: "#112C46",
-                                cursor: "pointer",
-                            }),
-                        }}
-                    />
-                </div> */}
-
                 <div className="grid grid-cols-2 gap-4">
                     <div className="flex flex-col gap-2">
                         <label
@@ -523,7 +437,8 @@ const CreateEditGameModal: React.FC<ICreateEditGameModalProps> = ({
                             id="inicio"
                             name="inicio"
                             type="date"
-                            defaultValue={gameData?.inicio ?? ""}
+                            value={startDate}
+                            onChange={(e) => setStartDate((e.target as HTMLInputElement).value)}
                             className="
                                 bg-white
                                 w-full
@@ -551,7 +466,8 @@ const CreateEditGameModal: React.FC<ICreateEditGameModalProps> = ({
                             id="fim"
                             name="fim"
                             type="date"
-                            defaultValue={gameData?.fim ?? ""}
+                            value={endDate}
+                            onChange={(e: any) => setEndDate(e.target.value)}
                             className="
                                 bg-white
                                 w-full
@@ -579,7 +495,7 @@ const CreateEditGameModal: React.FC<ICreateEditGameModalProps> = ({
                     <textarea
                         id="observacoes"
                         name="observacoes"
-                        defaultValue={gameData?.observacoes ?? ""}
+                        defaultValue={gameData?.observacao ?? ""}
                         placeholder="Observações adicionais sobre o jogo"
                         className="
                             bg-white
@@ -597,7 +513,7 @@ const CreateEditGameModal: React.FC<ICreateEditGameModalProps> = ({
                 </div>
 
                 <div className="flex gap-2">
-                    <input type="checkbox" name="hasplp" defaultChecked={gameData?.incluirPLP} className="size-5" id="plp" />
+                    <input type="checkbox" name="hasplp" defaultChecked={gameData?.tem_plp} className="size-5" id="plp" />
                     <label
                         htmlFor="plp"
                         className="text-sm font-medium text-gray-700"
@@ -625,7 +541,7 @@ const CreateEditGameModal: React.FC<ICreateEditGameModalProps> = ({
                                 {directionMeasures.map((measure) => (
 
                                     <div
-                                        key={measure.id}
+                                        key={measure.id_previdencia}
                                         className="
                                         border
                                         rounded-xl
@@ -640,33 +556,33 @@ const CreateEditGameModal: React.FC<ICreateEditGameModalProps> = ({
                                                 {measure.verbo}
                                             </span>
                                             <span className="text-sm text-slate-600">
-                                                {measure.unidadeMedida}
+                                                {measure.unidade_medida}
                                             </span>
                                         </div>
 
                                         <span className="text-sm">
                                             Meta:
                                             {" "}
-                                            {measure.placarDesejado}
+                                            {measure.placar_desejado}
                                         </span>
 
                                         <div className="flex justify-between items-center">
                                             <span className="font-semibold">
-                                                {measure.dataInicial}
+                                                {measure.data_inicio}
                                             </span>
                                             <span className="text-sm text-slate-600">
-                                                {measure.dataFinal}
+                                                {measure.data_fim}
                                             </span>
                                         </div>
 
-                                        {measure.excluirPeriodo && (
+                                        {measure.excluir_periodo && (
 
                                             <div className="flex justify-between items-center">
                                                 <span className="font-semibold">
-                                                    {measure.dataInicialPeriodoExcluido}
+                                                    {measure.inativo_de}
                                                 </span>
                                                 <span className="text-sm text-slate-600">
-                                                    {measure.dataFinalPeriodoExcluido}
+                                                    {measure.inativo_ate}
                                                 </span>
                                             </div>
                                         )}

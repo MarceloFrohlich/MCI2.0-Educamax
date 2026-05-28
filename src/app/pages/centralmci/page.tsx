@@ -3,14 +3,14 @@ import FilterCard from "../../components/utils/filterCard";
 import GameModal from "../../components/CentralMCI/gameModal";
 import ManageCupModal from "../../components/CentralMCI/manageCupModal";
 import ManageLeaderModal from "../../components/CentralMCI/manageLeaderModal";
-import { mockedGames } from "../../mocks/mocks";
 import { getAllLideres } from "../../actions/lideres/lideres";
 import { getAllDepartamentos } from "../../actions/cadastros/departamentos";
 import { getAllCopas } from "../../actions/copas/copas";
+import { getAlljogos } from "../../actions/jogos/jogos";
 
 export default async function CentralMCI() {
 
-    const games = mockedGames;
+    const games = await getAlljogos()
     const copas = await getAllCopas()
     const departamentos = await getAllDepartamentos()
     const lideres = await getAllLideres();
@@ -60,7 +60,7 @@ export default async function CentralMCI() {
             </div>
 
             <div className="mt-4 flex gap-4 flex-wrap">
-                {games?.map((game) => (
+                {games && games?.map((game) => (
                     <GameModal
                         key={game.id}
                         game={game}

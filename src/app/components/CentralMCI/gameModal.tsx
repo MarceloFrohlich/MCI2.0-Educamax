@@ -31,7 +31,7 @@ const GameModal: React.FC<IGameModalProps> = ({ game }) => {
                 <div className="flex flex-col justify-around h-full transition-colors">
                     <div className="flex flex-col justify-start h-full">
                         <p className="font-bold  text-[12px]">Instituição</p>
-                        <p className="text-[13px]">{game.departamentos[0].nome}</p>
+                        <p className="text-[13px]">{game.copa.departamento.nome}</p>
                     </div>
                     <div className="flex flex-col justify-start h-full">
                         <p className="font-bold  text-[12px]">Nome</p>
@@ -44,11 +44,11 @@ const GameModal: React.FC<IGameModalProps> = ({ game }) => {
                     <div className="flex justify-between">
                         <div className="flex flex-col justify-start h-full">
                             <p className="font-bold  text-[12px]">Data Inicial</p>
-                            <p className="text-[13px]">{game.inicio}</p>
+                            <p className="text-[13px]">{game.data_inicio}</p>
                         </div>
                         <div className="flex flex-col justify-start h-full">
                             <p className="font-bold  text-[12px]">Data Final</p>
-                            <p className="text-[13px]">{game.fim}</p>
+                            <p className="text-[13px]">{game.data_fim}</p>
                         </div>
 
                     </div>
@@ -60,7 +60,7 @@ const GameModal: React.FC<IGameModalProps> = ({ game }) => {
                 <CreateEditGameModal isEditMode={true} gameData={game} />
                 <DirectionMeasuresModal
                     isEditMode={true}
-                    measures={game.medidasDirecao || []}
+                    measures={game.previdencias || []}
                 />
                 <ReplyGame game={game}/>
                 {/* <DeleteModal contentClassName="w-1/4" action={() => alert('clicou no delete')} /> */}
