@@ -233,6 +233,12 @@ const DirectionMeasuresModal: React.FC<
 
                     <div className="grid grid-cols-2 gap-4">
 
+                        <input
+                            type="hidden"
+                            name="previdencias"
+                            value={JSON.stringify(measures)}
+                        />
+
                         <div className="flex flex-col gap-2">
 
                             <label className="text-sm font-medium text-gray-700">

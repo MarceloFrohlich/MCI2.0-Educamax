@@ -138,21 +138,21 @@ export async function updatePrevidenciaAction(
 
     try {
         const api = await serverApi();
-        await api.put(`/jogos/${formData.get('id')}`, {
+        await api.put(`/previdencias/${formData.get('id')}`, {
             previdencias: JSON.parse(
                 formData.get("previdencias") as string
             ).map((measure: any) => ({
-                unidade_medida: measure.unidadeMedida,
-                placar_desejado: measure.placarDesejado,
-                data_inicio: measure.dataInicial,
-                data_fim: measure.dataFinal,
-                inativo_de: measure.excluirPeriodo
-                    ? measure.dataInicialPeriodoExcluido
-                    : null,
-                inativo_ate: measure.excluirPeriodo
-                    ? measure.dataFinalPeriodoExcluido
-                    : null,
+                id_previdencia: measure.id_previdencia,
+                unidade_medida: measure.unidade_medida,
+                placar_desejado: measure.placar_desejado,
+                excluir_periodo: measure.excluir_periodo,
+                data_inicio: measure.data_inicio,
+                data_fim: measure.data_fim,
                 verbo: measure.verbo,
+                ...(measure.excluir_periodo && {
+                    inativo_de: measure.inativo_de,
+                    inativo_ate: measure.inativo_ate,
+                }),
             }))
         });
         revalidatePath(
@@ -160,7 +160,7 @@ export async function updatePrevidenciaAction(
         );
         return {
             success: true,
-            successMessage: "Jogo atualizada com sucesso",
+            successMessage: "Previdencia atualizada com sucesso",
         };
 
     } catch (error: any) {
@@ -168,7 +168,7 @@ export async function updatePrevidenciaAction(
             success: false,
             errorMessage: getErrorMessage(
                 error,
-                "Erro ao criar jogo"
+                "Erro ao editar Previdencia"
             ),
         };
     }
