@@ -12,6 +12,9 @@ import GlobalDialog from "../utils/globalDialog";
 import { IPrevidenciaForm } from "../../types/centralMCI/centralMCI";
 
 import { VscGraph } from "react-icons/vsc";
+import { updatePrevidenciaAction } from "../../actions/jogos/jogos";
+import { useServerAction } from "../../hooks/useServerAction";
+import FormSubmitButton from "../utils/formSubmitButton";
 
 interface IDirectionMeasuresModalProps {
     measures: IPrevidenciaForm[];
@@ -43,6 +46,24 @@ const DirectionMeasuresModal: React.FC<
     setMeasures,
     isEditMode = false,
 }) => {
+
+        const action = updatePrevidenciaAction
+        const {
+            state,
+            formAction,
+            pending
+        } = useServerAction(action);
+
+        useEffect(() => {
+            if (
+                state.success &&
+                isEditMode
+            ) {
+                setOpen(false);
+
+            }
+
+        }, [state, isEditMode]);
 
         const [
             selectedIndex,
@@ -101,15 +122,18 @@ const DirectionMeasuresModal: React.FC<
                 return;
             }
             setMeasures((prev) => {
-                const updated =
-                    [...prev];
+                const updated = [...prev];
                 updated[selectedIndex] = {
                     ...formData,
                 };
                 return updated.filter(Boolean);
             });
+            // vai para próxima medida automaticamente
+            if (selectedIndex < 2) {
+                setSelectedIndex((prev) => prev + 1);
+                setFormData(createEmptyMeasure());
+            }
         };
-
         return (
 
             <GlobalDialog
@@ -169,11 +193,11 @@ const DirectionMeasuresModal: React.FC<
                 }
             >
 
-                <div className="flex flex-col gap-4">
+                <form action={formAction} className="flex flex-col gap-4">
 
                     <div className="grid grid-cols-3 gap-2 pt-2">
 
-                        {[0, 1, 2].map((index:any) => {
+                        {[0, 1, 2].map((index: any) => {
 
                             const currentMeasure =
                                 measures[index];
@@ -449,26 +473,31 @@ const DirectionMeasuresModal: React.FC<
 
                     <div className="flex justify-end">
 
-                        <Button
-                            type="button"
-                            onClick={handleSaveMeasure}
-                            className="
+
+                        {isEditMode && (
+                            <FormSubmitButton isEditMode={isEditMode} actionText="Atualizar medida" pending={pending} />
+                        )}
+                        {!isEditMode && (
+                            <Button
+                                type="button"
+                                onClick={handleSaveMeasure}
+                                className="
                             bg-(--colorVariantBlue)
                             text-white
                             hover:bg-(--colorVariantBlue)/80
                             hover:cursor-pointer
                         "
-                        >
+                            >
 
-                            {isEditMode
-                                ? "Salvar Alterações"
-                                : "Salvar Medida"}
+                                Salvar Medida
 
-                        </Button>
+                            </Button>
+
+                        )}
 
                     </div>
 
-                </div>
+                </form>
 
             </GlobalDialog>
 
