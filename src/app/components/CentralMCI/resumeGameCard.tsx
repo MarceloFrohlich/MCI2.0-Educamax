@@ -4,17 +4,19 @@ import React, { useState } from 'react';
 import { IoFootballOutline } from 'react-icons/io5';
 import { FiTarget } from 'react-icons/fi';
 import { PiChartBar, } from 'react-icons/pi';
-import { IGame } from '../../types/centralMCI/centralMCI';
+import { ICup, IGame } from '../../types/centralMCI/centralMCI';
 import Select from 'react-select';
-import { cups } from '../../mocks/mocks';
+import { IDepartamento } from '../../types/cadastros/cadastros';
 
 interface IResumeGameCardProps {
     game: IGame
+    departamentos: IDepartamento[]
+    copas: ICup[]
 }
 
 const ResumeGameCard: React.FC<
     IResumeGameCardProps
-> = ({ game }) => {
+> = ({ game, departamentos, copas }) => {
 
     const [selectedCopas, setSelectedCopas] = useState<
         { value: string | number; label: string }[]
@@ -28,8 +30,8 @@ const ResumeGameCard: React.FC<
     const copaOptions = [
         SELECT_ALL_OPTION,
 
-        ...cups.map((copa) => ({
-            value: copa.id,
+        ...(copas ?? []).map((copa) => ({
+            value: copa.id_copa,
             label: copa.nome,
         })),
     ];
@@ -80,8 +82,8 @@ const ResumeGameCard: React.FC<
                         if (hasSelectAll) {
 
                             setSelectedCopas(
-                                cups.map((copa) => ({
-                                    value: copa.id,
+                                copas && copas.map((copa) => ({
+                                    value: copa.id_copa,
                                     label: copa.nome,
                                 }))
                             );
@@ -177,7 +179,7 @@ const ResumeGameCard: React.FC<
                             >
                                 {game.lider?.nome}
                                 {' • '}
-                                {game.departamentos.map((d) => d.nome).join(', ')}
+                                {departamentos.map((d) => d.nome).join(', ')}
                             </span>
 
                         </div>
@@ -204,7 +206,7 @@ const ResumeGameCard: React.FC<
                         <span>
                             PLP:
                             {' '}
-                            {game.incluirPLP
+                            {game.tem_plp
                                 ? 'Sim'
                                 : 'Não'}
                         </span>
@@ -354,7 +356,7 @@ const ResumeGameCard: React.FC<
                                     text-[#17233C]
                                 "
                         >
-                            {game.inicio}
+                            {game.data_inicio}
                         </span>
 
                     </div>
@@ -379,7 +381,7 @@ const ResumeGameCard: React.FC<
                                     text-[#17233C]
                                 "
                         >
-                            {game.fim}
+                            {game.data_fim}
                         </span>
 
                     </div>
@@ -388,7 +390,7 @@ const ResumeGameCard: React.FC<
 
             </div>
 
-            {game.medidasDirecao.length > 0 && (
+            {game.previdencias.length > 0 && (
 
                 <div
                     className="
@@ -427,18 +429,18 @@ const ResumeGameCard: React.FC<
                         >
                             Medidas
                             {' '}
-                            ({game.medidasDirecao.length})
+                            ({game.previdencias.length})
                         </h3>
 
                     </div>
 
                     <div className="flex flex-col gap-4">
 
-                        {game.medidasDirecao.map(
+                        {game.previdencias.map(
                             (measure) => (
 
                                 <div
-                                    key={measure.id}
+                                    key={measure.id_previdencia}
                                     className="
                                             bg-[#ECECEC]
                                             rounded-2xl
@@ -471,9 +473,9 @@ const ResumeGameCard: React.FC<
                                             >
                                                 {measure.verbo.toUpperCase()}
                                                 {' '}
-                                                {measure.placarDesejado}
+                                                {measure.placar_desejado}
                                                 {' '}
-                                                {measure.unidadeMedida.toUpperCase()}
+                                                {`${measure.verbo.toUpperCase()} ${measure.unidade_medida.toUpperCase()}`}
                                             </h4>
 
                                             <span
@@ -561,7 +563,7 @@ const ResumeGameCard: React.FC<
                                                         text-[#5D78B7]
                                                     "
                                             >
-                                                {measure.placarDesejado}
+                                                {measure.placar_desejado}
                                             </span>
 
                                         </div>
@@ -589,14 +591,14 @@ const ResumeGameCard: React.FC<
                                                         text-[#17233C]
                                                     "
                                             >
-                                                {measure.dataInicial}
+                                                {measure.data_inicio}
                                                 {' até '}
-                                                {measure.dataFinal}
+                                                {measure.data_fim}
                                             </span>
 
                                         </div>
 
-                                        {measure.excluirPeriodo && (
+                                        {measure.excluir_periodo && (
 
                                             <div
                                                 className="
@@ -628,11 +630,11 @@ const ResumeGameCard: React.FC<
                                                         "
                                                 >
                                                     {
-                                                        measure.dataInicialPeriodoExcluido
+                                                        measure.inativo_de
                                                     }
                                                     {' até '}
                                                     {
-                                                        measure.dataFinalPeriodoExcluido
+                                                        measure.inativo_ate
                                                     }
                                                 </span>
 

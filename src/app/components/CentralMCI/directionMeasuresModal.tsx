@@ -9,22 +9,22 @@ import React, {
 import { Button } from "../../../components/ui/button";
 import GlobalDialog from "../utils/globalDialog";
 
-import { IPrevidenciaCreate } from "../../types/centralMCI/centralMCI";
+import { IPrevidenciaForm } from "../../types/centralMCI/centralMCI";
 
 import { VscGraph } from "react-icons/vsc";
 
 interface IDirectionMeasuresModalProps {
-    measures: IPrevidenciaCreate[];
+    measures: IPrevidenciaForm[];
 
     setMeasures?: React.Dispatch<
-        React.SetStateAction<IPrevidenciaCreate[]>
+        React.SetStateAction<IPrevidenciaForm[]>
     >;
 
     isEditMode?: boolean;
 }
 
 const createEmptyMeasure =
-    (): IPrevidenciaCreate => ({
+    (): IPrevidenciaForm => ({
         id_previdencia: '',
         verbo: "",
         unidade_medida: "",
@@ -52,7 +52,7 @@ const DirectionMeasuresModal: React.FC<
         const [
             formData,
             setFormData,
-        ] = useState<IPrevidenciaCreate>(
+        ] = useState<IPrevidenciaForm>(
             createEmptyMeasure()
         );
 
@@ -80,7 +80,7 @@ const DirectionMeasuresModal: React.FC<
         }, [open, selectedIndex]);
 
         const handleChange = (
-            field: keyof IPrevidenciaCreate,
+            field: keyof IPrevidenciaForm,
             value: string | number | boolean
         ) => {
             setFormData((prev) => ({
@@ -115,15 +115,10 @@ const DirectionMeasuresModal: React.FC<
             <GlobalDialog
                 open={open}
                 onOpenChange={(isOpen) => {
-
                     setOpen(isOpen);
-
                     if (!isOpen) {
-
                         resetState();
-
                     }
-
                 }}
                 title={
                     isEditMode

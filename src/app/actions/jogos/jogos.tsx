@@ -4,7 +4,7 @@ import { revalidatePath } from "next/cache";
 
 import { serverApi } from "../../services/serverApi";
 import { IActionResponse } from "../types";
-import { ICup } from "../../types/centralMCI/centralMCI";
+import { ICup, IGame } from "../../types/centralMCI/centralMCI";
 
 export async function createJogoAction(
     _: IActionResponse,
@@ -41,7 +41,6 @@ export async function createJogoAction(
                     : null,
                 verbo: measure.verbo,
             }))
-
         });
         revalidatePath(
             "pages/centralmci"
@@ -64,21 +63,22 @@ export async function updatejogoAction(
     _: IActionResponse,
     formData: FormData
 ): Promise<IActionResponse> {
+    const tem_plp = formData.get('hasplp') == 'on' ? true : false
 
     try {
         const api = await serverApi();
         await api.put(`/jogos/${formData.get('id')}`, {
-            nome: formData.get('cupName'),
-            ids_departamentos: formData
-                .getAll('departamentos')
-                .map((id) => id),
+            ids_copas: formData.getAll('selectedCopas'),
             id_lider: formData.get('leader'),
-            inicio: formData.get('start_date'),
-            fim: formData.get('end_date'),
+            nome: formData.get('gameName'),
             verbo: formData.get('verbo'),
             medida: formData.get('medida'),
             de: Number(formData.get('de')),
-            ate: Number(formData.get('para'))
+            para: Number(formData.get('para')),
+            data_inicio: formData.get('inicio'),
+            data_fim: formData.get('fim'),
+            observacao: formData.get('observacoes'),
+            tem_plp
         });
         revalidatePath(
             "pages/centralmci"
@@ -102,7 +102,53 @@ export async function updatejogoAction(
     }
 }
 
-export async function getAlljogos(): Promise<ICup[]> {
+export async function updatePrevidenciaAction(
+    _: IActionResponse,
+    formData: FormData
+): Promise<IActionResponse> {
+
+    try {
+        const api = await serverApi();
+        await api.put(`/jogos/${formData.get('id')}`, {
+           previdencias: JSON.parse(
+                formData.get("previdencias") as string
+            ).map((measure: any) => ({
+                unidade_medida: measure.unidadeMedida,
+                placar_desejado: measure.placarDesejado,
+                data_inicio: measure.dataInicial,
+                data_fim: measure.dataFinal,
+                inativo_de: measure.excluirPeriodo
+                    ? measure.dataInicialPeriodoExcluido
+                    : null,
+                inativo_ate: measure.excluirPeriodo
+                    ? measure.dataFinalPeriodoExcluido
+                    : null,
+                verbo: measure.verbo,
+            }))
+        });
+        revalidatePath(
+            "pages/centralmci"
+        );
+        return {
+            success: true,
+            successMessage: "Jogo atualizada com sucesso",
+        };
+
+    } catch (error: any) {
+        console.log(
+            "Error updating jogo:",
+            error
+        );
+        return {
+            success: false,
+            errorMessage:
+                error.response?.data?.message ||
+                "Erro ao atualizar jogo",
+        };
+    }
+}
+
+export async function getAlljogos(): Promise<IGame[]> {
     try {
         const api = await serverApi();
         const response =

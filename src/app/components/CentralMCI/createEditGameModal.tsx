@@ -2,7 +2,7 @@
 
 import { CiEdit } from "react-icons/ci";
 import { useEffect, useState } from "react";
-import { ICup, IDirectionMeasure, IPrevidencia, IPrevidenciaCreate } from "../../types/centralMCI/centralMCI";
+import { ICup, IPrevidenciaForm } from "../../types/centralMCI/centralMCI";
 import { Button } from "../../../components/ui/button";
 import GlobalDialog from "../utils/globalDialog";
 import { IGame, ILeader } from "../../types/centralMCI/centralMCI";
@@ -18,7 +18,7 @@ import FormSubmitButton from "../utils/formSubmitButton";
 interface ICreateEditGameModalProps {
     isEditMode?: boolean;
     gameData?: IGame;
-    leaders?: ILeader[];
+    leaders: ILeader[];
     copas: ICup[]
 }
 
@@ -54,7 +54,7 @@ const CreateEditGameModal: React.FC<ICreateEditGameModalProps> = ({
 
     }, [state, isEditMode]);
 
-    const [directionMeasures, setDirectionMeasures] = useState<IPrevidenciaCreate[] | []>(
+    const [directionMeasures, setDirectionMeasures] = useState<IPrevidenciaForm[] | []>(
         gameData?.previdencias ?? []
     );
 
@@ -125,6 +125,13 @@ const CreateEditGameModal: React.FC<ICreateEditGameModalProps> = ({
                         name="previdencias"
                         value={JSON.stringify(directionMeasures)}
                     />
+                    {isEditMode && (
+                        <input
+                            type="hidden"
+                            name="id"
+                            value={gameData?.id_jogo}
+                        />
+                    )}
 
                     <div className="flex flex-col gap-2">
                         <label
@@ -185,7 +192,7 @@ const CreateEditGameModal: React.FC<ICreateEditGameModalProps> = ({
                                 Selecione um líder
                             </option>
 
-                            {leaders.map((leader) => (
+                            {leaders && leaders.map((leader) => (
                                 <option
                                     key={leader.id_lider}
                                     value={leader.id_lider}

@@ -50,27 +50,28 @@ export interface ISemana {
 }
 
 export interface IGame {
-    id_jogo: string
-    id_copa: string
-    id_lider: string
-    nome: string
-    verbo: string
-    medida: string
-    de: number
-    para: number
-    data_inicio: string
-    data_fim: string
-    observacao: string
-    tem_plp: boolean
-    semanas: null
-    data_criacao: string
-    data_atualizacao: string
-    deletado_em: string
-    copa: ICup
-    lider: ILeader
-    status: string
-    previdencias: IPrevidencia[]
+    id_jogo: string,
+    id_copa: string,
+    id_lider: string,
+    nome: string,
+    verbo: string,
+    medida: string,
+    de: number,
+    para: number,
+    data_inicio: string,
+    data_fim: string,
+    observacao: string,
+    tem_plp: boolean,
+    semanas: null,
+    data_criacao: string,
+    data_atualizacao: string,
+    deletado_em: string,
+    copa: ICup,
+    lider: ILeader,
+    status: null,
+    previdencias:IPrevidencia[]
 }
+
 
 export interface IPrevidencia {
     id_previdencia: string
@@ -91,14 +92,15 @@ export interface IPrevidencia {
     deletado_em: string
 }
 
-export interface IPrevidenciaCreate {
-    id_previdencia: '',
-    verbo: "",
-    unidade_medida: "",
-    placar_desejado: 0,
-    data_inicio: "",
-    data_fim: "",
-    excluir_periodo: false,
-    inativo_de: "",
-    inativo_ate: "",
-}
+export type IPrevidenciaForm = Pick<
+    IPrevidencia,
+    | 'id_previdencia'
+    | 'verbo'
+    | 'unidade_medida'
+    | 'placar_desejado'
+    | 'data_inicio'
+    | 'data_fim'
+    | 'excluir_periodo'
+    | 'inativo_de'
+    | 'inativo_ate'
+>;

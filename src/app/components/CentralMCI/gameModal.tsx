@@ -1,16 +1,18 @@
-'use client'
-import { useState } from "react";
-import { IDirectionMeasure, IGame } from "../../types/centralMCI/centralMCI";
+import { ICup, IGame, ILeader } from "../../types/centralMCI/centralMCI";
 import CreateEditGameModal from "./createEditGameModal";
 import DirectionMeasuresModal from "./directionMeasuresModal";
 import DeleteModal from "../utils/deleteModal";
 import ReplyGame from "./replyGame";
+import { IDepartamento } from "../../types/cadastros/cadastros";
 
 interface IGameModalProps {
     game: IGame
+    copas: ICup[]
+    departamentos: IDepartamento[]
+    leaders: ILeader[]
 }
 
-const GameModal: React.FC<IGameModalProps> = ({ game }) => {
+const GameModal: React.FC<IGameModalProps> = ({ game, copas, departamentos, leaders }) => {
 
 
     return (
@@ -41,6 +43,10 @@ const GameModal: React.FC<IGameModalProps> = ({ game }) => {
                         <p className="font-bold  text-[12px]">Líder</p>
                         <p className="text-[13px]">{game.lider?.nome}</p>
                     </div>
+                    <div className="flex justify-start items-center gap-4 h-full">
+                        <p className="font-bold  text-[12px]">Tem PLP?</p>
+                        <p className="text-[13px]">{game.tem_plp === true ? 'Sim' : 'Não'}</p>
+                    </div>
                     <div className="flex justify-between">
                         <div className="flex flex-col justify-start h-full">
                             <p className="font-bold  text-[12px]">Data Inicial</p>
@@ -57,12 +63,12 @@ const GameModal: React.FC<IGameModalProps> = ({ game }) => {
             </div>
 
             <div className="flex flex-col justify-around opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                <CreateEditGameModal isEditMode={true} gameData={game} />
+                <CreateEditGameModal isEditMode={true} gameData={game} copas={copas} leaders={leaders} />
                 <DirectionMeasuresModal
                     isEditMode={true}
                     measures={game.previdencias || []}
                 />
-                <ReplyGame game={game}/>
+                <ReplyGame game={game} departamentos={departamentos} copas={copas}/>
                 {/* <DeleteModal contentClassName="w-1/4" action={() => alert('clicou no delete')} /> */}
             </div>
         </section>

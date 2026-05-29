@@ -62,8 +62,11 @@ export default async function CentralMCI() {
             <div className="mt-4 flex gap-4 flex-wrap">
                 {games && games?.map((game) => (
                     <GameModal
-                        key={game.id}
+                        leaders={lideres}
+                        copas={copas}
+                        key={game.id_jogo}
                         game={game}
+                        departamentos={departamentos}
                     />
                 ))}
             </div>
