@@ -14,19 +14,6 @@ interface UpdateGameCardProps {
     game: IGame
 }
 
-const data = [
-    { week: 'Sem 1', atual: 10, meta: 0 },
-    { week: 'Sem 2', atual: 30, meta: 10 },
-    { week: 'Sem 3', atual: 55, meta: 20 },
-    { week: 'Sem 4', atual: 75, meta: 30 },
-    { week: 'Sem 5', atual: 35, meta: 40 },
-    { week: 'Sem 6', atual: 45, meta: 50 },
-    { week: 'Sem 7', atual: 38, meta: 60 },
-    { week: 'Sem 8', atual: 95, meta: 70 },
-    { week: 'Sem 9', atual: 50, meta: 80 },
-    { week: 'Sem 10', atual: 35, meta: 90 },
-];
-
 const UpdateGameCard: React.FC<UpdateGameCardProps> = ({ game }) => {
 
     const [selectedMedidaId, setSelectedMedidaId] = useState<string | null>(null)
