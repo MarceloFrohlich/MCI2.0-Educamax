@@ -74,7 +74,7 @@ const Sidebar: React.FC = () => {
                                 : 'opacity-0 -translate-x-2 pointer-events-none'}
                         `}>Atualização Semanal</p>
                     </Link>
-                    <Link href="/pages/scoreboard" className='flex h-9 gap-2 items-center'>
+                    <Link href="/pages/reuniaomci" className='flex h-9 gap-2 items-center'>
                         <Image src={scoreboard} alt='scoreboard' width={40} height={40} className='shrink-0' />
                         <p className={`
                             whitespace-nowrap
@@ -84,7 +84,7 @@ const Sidebar: React.FC = () => {
                             ${isExpanded
                                 ? 'opacity-100 translate-x-0'
                                 : 'opacity-0 -translate-x-2 pointer-events-none'}
-                        `}>ScoreBoard</p>
+                        `}>Reunião MCI</p>
                     </Link>
                     <Link href="/pages/reunioes" className='flex h-9 gap-2 items-center'>
                         <Image src={reunioes} alt='reunioes' width={40} height={40} className='shrink-0' />

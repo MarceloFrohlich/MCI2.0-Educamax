@@ -46,6 +46,7 @@ export interface ISemana {
     numero_semana: number,
     data_inicio_semana: string,
     data_fim_semana: string,
+    data_previsto_lancamento: string,
     inativa: boolean,
     status: string,
     permite_lancamento: boolean,
@@ -53,12 +54,16 @@ export interface ISemana {
 }
 
 export interface ILancamento {
+    id_atualizacao: string,
     realizado: number,
     compromisso: number,
-    entrevistaqtd: number,
-    promotores: number,
-    neutros: number,
-    detratores: number
+    plp: {
+        entrevistaqtd: number,
+        promotores: number,
+        neutros: number,
+        detratores: number,
+        score: number
+    }
 }
 
 export interface IGame {
@@ -103,6 +108,34 @@ export interface IPrevidencia {
     data_atualizacao: string
     deletado_em: string
     semanas: ISemana[]
+    atualizacoes: IAtualizacao[]
+}
+
+export interface IAtualizacao {
+    id_atualizacao: string,
+    id_previdencia: string,
+    id_usuario: string,
+    numero_semana: number,
+    placar_atual: number,
+    compromisso: number,
+    data_criacao: string,
+    data_atualizacao: string,
+    deletado_em: string,
+    plps: IPLP[]
+}
+
+export interface IPLP {
+    id_plp: string,
+    id_previdencia: string,
+    id_atualizacao: string,
+    respondentes: number,
+    detratores: number,
+    propagadores: number,
+    neutros: number,
+    plp: number,
+    data_criacao: string,
+    data_atualizacao: string,
+    deletado_em: string
 }
 
 export type IPrevidenciaForm = Pick<

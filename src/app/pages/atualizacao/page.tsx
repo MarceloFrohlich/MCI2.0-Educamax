@@ -1,7 +1,6 @@
 import { getAlljogos } from "../../actions/jogos/jogos"
 import UpdateGameCard from "../../components/atualizacao/updateGameCard"
 import FilterCard from "../../components/utils/filterCard"
-import { mockedGames } from "../../mocks/mocks"
 
 const Indicadores:React.FC = async () => {
 

@@ -237,7 +237,7 @@ export async function deletejogoAction(
     _: IActionResponse,
     formData: FormData
 ): Promise<IActionResponse> {
-    
+
     try {
         const api = await serverApi();
         await api.post(
@@ -266,35 +266,34 @@ export async function atualizacaoSemanalAction(
     _: IActionResponse,
     formData: FormData
 ): Promise<IActionResponse> {
-    const measure = JSON.parse(
-        formData.get("measure") as string
-    );
     try {
         const api = await serverApi();
-        await api.put(
-            `/previdencias/${formData.get("id")}/semanas/${formData.get("numero")}`, {
-            realizado: 100,
-            compromisso: 120,
-            entrevistaqtd: 10,
-            promotores: 9,
-            neutros: 1,
-            detratores: 0
-            }
+        await api.post(
+            `/previdencias/${formData.get("previdenciaId")}/semanas/${Number(formData.get("semana"))}`, {
+            realizado: Number(formData.get("realizado")),
+            compromisso: Number(formData.get("compromisso")),
+            ...(formData.get("tem_plp") === "true" && {
+                entrevistaqtd: Number(formData.get("entrevistaqtd")),
+                promotores: Number(formData.get("promotores")),
+                neutros: Number(formData.get("neutros")),
+                detratores: Number(formData.get("detratores"))
+            }),
+        }
         );
         revalidatePath(
-            "pages/centralmci"
+            "pages/atualizacao"
         );
         return {
             success: true,
             successMessage:
-                "Previdência atualizada com sucesso",
+                "Medida atualizada com sucesso",
         };
     } catch (error: any) {
         return {
             success: false,
             errorMessage: getErrorMessage(
                 error,
-                "Erro ao editar Previdência"
+                "Erro ao editar Medida"
             ),
         };
 

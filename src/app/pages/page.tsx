@@ -8,6 +8,19 @@ import AlertsWarning from "../components/Dashboard/alertsWarning"
 import Score from "../components/Dashboard/score"
 import { scores } from "../mocks/mocks"
 
+const data = [
+    { week: 'Sem 1', atual: 10, meta: 0 },
+    { week: 'Sem 2', atual: 30, meta: 10 },
+    { week: 'Sem 3', atual: 55, meta: 20 },
+    { week: 'Sem 4', atual: 75, meta: 30 },
+    { week: 'Sem 5', atual: 35, meta: 40 },
+    { week: 'Sem 6', atual: 45, meta: 50 },
+    { week: 'Sem 7', atual: 38, meta: 60 },
+    { week: 'Sem 8', atual: 95, meta: 70 },
+    { week: 'Sem 9', atual: 50, meta: 80 },
+    { week: 'Sem 10', atual: 35, meta: 90 },
+];
+
 const Dashboard: React.FC = () => {
     return (
         <section className="mx-8 text-(--textBaseColor)">
@@ -71,7 +84,7 @@ const Dashboard: React.FC = () => {
                                     <option value='3'>3 Semana</option>
                                 </select>
                             </div>
-                            <MciEvolutionChart />
+                            <MciEvolutionChart data={data} />
                         </div>
                         <div className="w-1/2 rounded-4xl bg-[#F0F4F9] h-full px-6 py-2 shadow-xl flex flex-col">
                             <h1 className="font-semibold text-[14px] mb-2">
