@@ -13,37 +13,6 @@ export async function createJogoAction(
 ): Promise<IActionResponse> {
 
     const tem_plp = formData.get('hasplp') == 'on' ? true : false
-    const excluirPeriodo = formData.get('excluir_periodo') == 'on' ? true : false
-
-    const payload = {
-        ids_copas: formData.getAll('selectedCopas'),
-        id_lider: formData.get('leader'),
-        nome: formData.get('gameName'),
-        verbo: formData.get('verbo'),
-        medida: formData.get('medida'),
-        de: Number(formData.get('de')),
-        para: Number(formData.get('para')),
-        data_inicio: formData.get('inicio'),
-        data_fim: formData.get('fim'),
-        observacao: formData.get('observacoes'),
-        tem_plp,
-        previdencias: JSON.parse(
-            formData.get("previdencias") as string
-        ).map((measure: any) => ({
-            unidade_medida: measure.unidade_medida,
-            placar_desejado: measure.placar_desejado,
-            excluir_periodo: excluirPeriodo,
-            data_inicio: measure.data_inicio,
-            data_fim: measure.data_fim,
-            ...(measure.excluir_periodo && {
-                inativo_de: measure.inativo_de,
-                inativo_ate: measure.inativo_ate,
-            }),
-        }))
-    }
-
-    console.log('PAYLOAD', payload)
-    console.log(`ID: ${formData.get('id')}`)
     try {
         const api = await serverApi();
         await api.post("/jogos", {
@@ -78,7 +47,7 @@ export async function createJogoAction(
         );
         return {
             success: true,
-            successMessage: "Jogo criada com sucesso",
+            successMessage: "Jogo criado com sucesso",
         };
     } catch (error: any) {
         return {
@@ -135,14 +104,14 @@ export async function updatePrevidenciaAction(
     _: IActionResponse,
     formData: FormData
 ): Promise<IActionResponse> {
-
+    const measure = JSON.parse(
+        formData.get("measure") as string
+    );
     try {
         const api = await serverApi();
-        await api.put(`/previdencias/${formData.get('id')}`, {
-            previdencias: JSON.parse(
-                formData.get("previdencias") as string
-            ).map((measure: any) => ({
-                id_previdencia: measure.id_previdencia,
+        await api.put(
+            `/previdencias/${formData.get("id")}`,
+            {
                 unidade_medida: measure.unidade_medida,
                 placar_desejado: measure.placar_desejado,
                 excluir_periodo: measure.excluir_periodo,
@@ -153,25 +122,72 @@ export async function updatePrevidenciaAction(
                     inativo_de: measure.inativo_de,
                     inativo_ate: measure.inativo_ate,
                 }),
-            }))
-        });
+            }
+        );
         revalidatePath(
             "pages/centralmci"
         );
         return {
             success: true,
-            successMessage: "Previdencia atualizada com sucesso",
+            successMessage:
+                "Previdência atualizada com sucesso",
         };
-
     } catch (error: any) {
         return {
             success: false,
             errorMessage: getErrorMessage(
                 error,
-                "Erro ao editar Previdencia"
+                "Erro ao editar Previdência"
+            ),
+        };
+
+    }
+}
+
+export async function createPrevidenciaAction(
+    _: IActionResponse,
+    formData: FormData
+): Promise<IActionResponse> {
+    const measure = JSON.parse(
+        formData.get("measure") as string
+    );
+    try {
+        const api = await serverApi();
+        await api.post(
+            "/previdencias",
+            {
+                id_jogo: formData.get("id_jogo"),
+                unidade_medida: measure.unidade_medida,
+                placar_desejado: Number(measure.placar_desejado),
+                data_inicio: measure.data_inicio,
+                data_fim: measure.data_fim,
+                verbo: measure.verbo,
+                excluir_periodo: measure.excluir_periodo,
+                ...(measure.excluir_periodo && {
+                    inativo_de: measure.inativo_de,
+                    inativo_ate: measure.inativo_ate,
+                }),
+            }
+        );
+
+        revalidatePath(
+            "pages/centralmci"
+        );
+        return {
+            success: true,
+            successMessage:
+                "Previdência criada com sucesso",
+        };
+    } catch (error: any) {
+        return {
+            success: false,
+            errorMessage: getErrorMessage(
+                error,
+                "Erro ao criar Previdência"
             ),
         };
     }
+
 }
 
 export async function getAlljogos(): Promise<IGame[]> {
@@ -188,7 +204,7 @@ export async function getAlljogos(): Promise<IGame[]> {
     }
 }
 
-export async function deletejogoAction(
+export async function deletePrevidenciaAction(
     _: IActionResponse,
     formData: FormData
 ): Promise<IActionResponse> {
@@ -196,7 +212,36 @@ export async function deletejogoAction(
     try {
         const api = await serverApi();
         await api.post(
-            `/jogos/${id}/remover`
+            `/previdencias/${id}/remover`
+        );
+        revalidatePath(
+            "/pages/centralmci"
+        );
+        return {
+            success: true,
+            successMessage: "Previdencia removida com sucesso",
+        };
+
+    } catch (error: any) {
+        return {
+            success: false,
+            errorMessage: getErrorMessage(
+                error,
+                "Erro ao remover Previdencia"
+            ),
+        };
+    }
+}
+
+export async function deletejogoAction(
+    _: IActionResponse,
+    formData: FormData
+): Promise<IActionResponse> {
+    
+    try {
+        const api = await serverApi();
+        await api.post(
+            `/jogos/${formData.get("id")}/remover`
         );
         revalidatePath(
             "/pages/centralmci"
@@ -211,8 +256,47 @@ export async function deletejogoAction(
             success: false,
             errorMessage: getErrorMessage(
                 error,
-                "Erro ao criar jogo"
+                "Erro ao deletar jogo"
             ),
         };
+    }
+}
+
+export async function atualizacaoSemanalAction(
+    _: IActionResponse,
+    formData: FormData
+): Promise<IActionResponse> {
+    const measure = JSON.parse(
+        formData.get("measure") as string
+    );
+    try {
+        const api = await serverApi();
+        await api.put(
+            `/previdencias/${formData.get("id")}/semanas/${formData.get("numero")}`, {
+            realizado: 100,
+            compromisso: 120,
+            entrevistaqtd: 10,
+            promotores: 9,
+            neutros: 1,
+            detratores: 0
+            }
+        );
+        revalidatePath(
+            "pages/centralmci"
+        );
+        return {
+            success: true,
+            successMessage:
+                "Previdência atualizada com sucesso",
+        };
+    } catch (error: any) {
+        return {
+            success: false,
+            errorMessage: getErrorMessage(
+                error,
+                "Erro ao editar Previdência"
+            ),
+        };
+
     }
 }

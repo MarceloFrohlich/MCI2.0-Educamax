@@ -1,9 +1,10 @@
 import { ICup, IGame, ILeader } from "../../types/centralMCI/centralMCI";
 import CreateEditGameModal from "./createEditGameModal";
-import DirectionMeasuresModal from "./directionMeasuresModal";
 import DeleteModal from "../utils/deleteModal";
 import ReplyGame from "./replyGame";
 import { IDepartamento } from "../../types/cadastros/cadastros";
+import CreateEditPrevidencia from "./createEditPrevidencia";
+import { deletejogoAction } from "../../actions/jogos/jogos";
 
 interface IGameModalProps {
     game: IGame
@@ -64,12 +65,11 @@ const GameModal: React.FC<IGameModalProps> = ({ game, copas, departamentos, lead
 
             <div className="flex flex-col justify-around opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                 <CreateEditGameModal isEditMode={true} gameData={game} copas={copas} leaders={leaders} />
-                <DirectionMeasuresModal
-                    isEditMode={true}
-                    measures={game.previdencias || []}
+                <CreateEditPrevidencia
+                    game={game}
                 />
-                <ReplyGame game={game} departamentos={departamentos} copas={copas}/>
-                {/* <DeleteModal contentClassName="w-1/4" action={() => alert('clicou no delete')} /> */}
+                <ReplyGame game={game} departamentos={departamentos} copas={copas} />
+                <DeleteModal action={deletejogoAction} id={game.id_jogo} />
             </div>
         </section>
     )

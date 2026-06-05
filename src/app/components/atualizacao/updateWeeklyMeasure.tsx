@@ -3,21 +3,21 @@
 import { FaCheck } from "react-icons/fa"
 import GlobalDialog from "../utils/globalDialog"
 import { Button } from "../../../components/ui/button"
-import { IDirectionMeasure, IGame, ISemana } from "../../types/centralMCI/centralMCI"
+import { IGame, IPrevidencia, ISemana } from "../../types/centralMCI/centralMCI"
 import FormSubmitButton from "../utils/formSubmitButton"
 
 interface UpdateWeeklyMeasureProps {
     game: IGame
-    measure: IDirectionMeasure
+    measure: IPrevidencia
     isEditMode?: boolean
     semana: ISemana
 }
 
 const UpdateWeeklyMeasure: React.FC<UpdateWeeklyMeasureProps> = ({ measure, game, isEditMode, semana }) => {
 
-    function weeklyActivitiesCount(measure: IDirectionMeasure) {
+    function weeklyActivitiesCount(measure: IPrevidencia) {
         const semanas = measure.semanas.length
-        const atividadesTotal = measure.placarDesejado
+        const atividadesTotal = measure.placar_desejado
         return (atividadesTotal / semanas).toFixed(2).replace(".", ",")
     }
 
@@ -34,7 +34,7 @@ const UpdateWeeklyMeasure: React.FC<UpdateWeeklyMeasureProps> = ({ measure, game
             <form className="flex flex-col gap-4">
                 <div>
                     <h1 className="text-lg fonte-bold">Medida de direção</h1>
-                    <p>{measure.verbo} {measure.placarDesejado} {measure.unidadeMedida} até {measure.dataFinal}</p>
+                    <p>{measure.verbo} {measure.placar_desejado} {measure.unidade_medida} até {measure.data_fim}</p>
                 </div>
 
                 <div>
@@ -70,7 +70,7 @@ const UpdateWeeklyMeasure: React.FC<UpdateWeeklyMeasureProps> = ({ measure, game
                     />
                 </div>
 
-                {game && game.incluirPLP && (
+                {game && game.tem_plp && (
                     <div>
                         <div>
                             <h1 className="text-lg fonte-bold">Pontuação líquida de Propagação</h1>
@@ -135,7 +135,7 @@ const UpdateWeeklyMeasure: React.FC<UpdateWeeklyMeasureProps> = ({ measure, game
                 )}
 
                 <div className="flex w-full justify-end ">
-                    <FormSubmitButton />
+                    {/* <FormSubmitButton actionText="Salvar Atualização" pending={pending} isEditMode={isEditMode} /> */}
                 </div>
 
             </form>

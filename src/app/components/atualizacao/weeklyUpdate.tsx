@@ -1,22 +1,22 @@
 'use client'
 import { IoMdClose } from "react-icons/io"
-import { IDirectionMeasure, IGame } from "../../types/centralMCI/centralMCI"
+import { IGame, IPrevidencia } from "../../types/centralMCI/centralMCI"
 import UpdateWeeklyMeasure from "./updateWeeklyMeasure"
 
 interface WeeklyUpdateProps {
-    medida: IDirectionMeasure
+    medida: IPrevidencia
     game: IGame
 }
 
 const WeeklyUpdate:React.FC<WeeklyUpdateProps> = ({ medida, game }) => {
 
 
-    const limite = medida.semanas.findIndex(week => week.permiteLancamento)
+    const limite = medida.semanas.findIndex(week => week.permite_lancamento)
 
     return (
         <section className="flex items-center gap-4">
             {medida.semanas.map((semana, i) => (
-                <div key={semana.semana} className="flex items-center">
+                <div key={i} className="flex items-center">
                     <div className="relative flex items-center justify-center w-6 h-6">
                         {i !== medida.semanas.length - 1 && (
                             <>

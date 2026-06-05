@@ -1,7 +1,7 @@
 'use client'
 
 import { CiEdit } from "react-icons/ci";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { ICup, IPrevidenciaForm } from "../../types/centralMCI/centralMCI";
 import { Button } from "../../../components/ui/button";
 import GlobalDialog from "../utils/globalDialog";
@@ -13,7 +13,6 @@ import DirectionMeasuresModal from "./directionMeasuresModal";
 import { useServerAction } from "../../hooks/useServerAction";
 import { createJogoAction, updatejogoAction } from "../../actions/jogos/jogos";
 import FormSubmitButton from "../utils/formSubmitButton";
-
 
 interface ICreateEditGameModalProps {
     isEditMode?: boolean;
@@ -37,6 +36,8 @@ const CreateEditGameModal: React.FC<ICreateEditGameModalProps> = ({
         ? updatejogoAction
         : createJogoAction;
 
+    const formRef = useRef<HTMLFormElement>(null);
+
     const {
         state,
         formAction,
@@ -44,15 +45,21 @@ const CreateEditGameModal: React.FC<ICreateEditGameModalProps> = ({
     } = useServerAction(action);
 
     useEffect(() => {
-        if (
-            state.success &&
-            isEditMode
-        ) {
-            setOpen(false);
+        if (!state.success) return;
 
+        if (isEditMode) {
+            setOpen(false);
+            return;
         }
 
-    }, [state, isEditMode]);
+        formRef.current?.reset();
+
+        setDirectionMeasures([]);
+        setSelectedCopas([]);
+        setStartDate("");
+        setEndDate("");
+
+    }, [state.success, isEditMode]);
 
     const [directionMeasures, setDirectionMeasures] = useState<IPrevidenciaForm[] | []>(
         gameData?.previdencias ?? []
@@ -88,8 +95,8 @@ const CreateEditGameModal: React.FC<ICreateEditGameModalProps> = ({
         AllCopasOptions,
 
         ...(copas ?? []).map((copa) => ({
-            value: copa.id_departamento,
-            label: copa.nome,
+            value: copa.id_copa,
+            label: `${copa.nome} - ${copa.departamento.nome}`,
         })),
     ];
 
@@ -109,7 +116,10 @@ const CreateEditGameModal: React.FC<ICreateEditGameModalProps> = ({
                 )
             }
         >
-            <form action={formAction} className="flex flex-col gap-4 max-h-[80vh] overflow-y-auto">
+            <form
+                ref={formRef}
+                action={formAction}
+                className="flex flex-col gap-4 max-h-[80vh] overflow-y-auto">
                 <div className="grid grid-cols-2 gap-4">
                     {selectedCopas.map((copas) => (
                         <input
@@ -241,7 +251,7 @@ const CreateEditGameModal: React.FC<ICreateEditGameModalProps> = ({
                         }}
                         options={copasOptions}
                         value={selectedCopas}
-                        placeholder="Selecione os departamentos"
+                        placeholder="Selecione as copas"
                         className="text-(--textBaseColor)"
                         styles={{
                             control: (base, state) => ({

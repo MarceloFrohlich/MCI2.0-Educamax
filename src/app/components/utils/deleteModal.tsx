@@ -42,21 +42,18 @@ const DeleteModal: React.FC<IDeleteModalProps> = ({
             action,
             initialState
         );
+        
     useEffect(() => {
 
         if (state?.success === true) {
-
             toast.success(state.success === true && state.successMessage);
-
             setTimeout(() => {
                 setOpen(false);
             }, 100);
         }
-
         if (state?.success === false) {
             toast.error(state.success === false && state.errorMessage);
         }
-
     }, [state]);
 
     return (

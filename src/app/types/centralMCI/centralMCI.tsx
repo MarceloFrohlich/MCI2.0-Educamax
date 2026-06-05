@@ -43,10 +43,22 @@ export interface IDirectionMeasure {
 }
 
 export interface ISemana {
-    semana: number;
-    status: "concluída" | "disponivel" | "indisponivel";
-    permiteLancamento: boolean;
-    lancamento: Ilancamento | null;
+    numero_semana: number,
+    data_inicio_semana: string,
+    data_fim_semana: string,
+    inativa: boolean,
+    status: string,
+    permite_lancamento: boolean,
+    lancamento: ILancamento
+}
+
+export interface ILancamento {
+    realizado: number,
+    compromisso: number,
+    entrevistaqtd: number,
+    promotores: number,
+    neutros: number,
+    detratores: number
 }
 
 export interface IGame {
@@ -69,7 +81,7 @@ export interface IGame {
     copa: ICup,
     lider: ILeader,
     status: null,
-    previdencias:IPrevidencia[]
+    previdencias: IPrevidencia[]
 }
 
 
@@ -90,6 +102,7 @@ export interface IPrevidencia {
     data_criacao: string
     data_atualizacao: string
     deletado_em: string
+    semanas: ISemana[]
 }
 
 export type IPrevidenciaForm = Pick<

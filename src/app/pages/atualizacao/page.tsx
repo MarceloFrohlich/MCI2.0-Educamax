@@ -1,10 +1,11 @@
+import { getAlljogos } from "../../actions/jogos/jogos"
 import UpdateGameCard from "../../components/atualizacao/updateGameCard"
 import FilterCard from "../../components/utils/filterCard"
 import { mockedGames } from "../../mocks/mocks"
 
-const Indicadores:React.FC = () => {
+const Indicadores:React.FC = async () => {
 
-    const games = mockedGames
+    const games = await getAlljogos()
 
     return (
         <section className="flex flex-col gap-4 w-full">
@@ -22,7 +23,7 @@ const Indicadores:React.FC = () => {
             {games && games.length > 0 && (
                 <div className="flex gap-4 flex-wrap">
                     {games.map((game) => (
-                        <UpdateGameCard key={game.id} game={game} />
+                        <UpdateGameCard key={game.id_jogo} game={game} />
                     ))}
                 </div>
             )}
