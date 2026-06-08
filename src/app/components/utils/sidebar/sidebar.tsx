@@ -42,6 +42,7 @@ const Sidebar: React.FC = () => {
                         <Image src={dashboard} alt='dashboard' width={40} height={40} className='shrink-0' />
                         <p className={`
                             whitespace-nowrap
+                            hover:scale-110
                             transition-all
                             duration-300
                             ease-in-out
@@ -54,6 +55,7 @@ const Sidebar: React.FC = () => {
                         <Image src={centralMCI} alt='centralMCI' width={40} height={40} className='shrink-0' />
                         <p className={`
                             whitespace-nowrap
+                            hover:scale-110
                             transition-all
                             duration-300
                             ease-in-out
@@ -66,6 +68,7 @@ const Sidebar: React.FC = () => {
                         <Image src={indicadores} alt='indicadores' width={40} height={40} className='shrink-0' />
                         <p className={`
                             whitespace-nowrap
+                            hover:scale-110
                             transition-all
                             duration-300
                             ease-in-out
@@ -78,6 +81,7 @@ const Sidebar: React.FC = () => {
                         <Image src={scoreboard} alt='scoreboard' width={40} height={40} className='shrink-0' />
                         <p className={`
                             whitespace-nowrap
+                            hover:scale-110
                             transition-all
                             duration-300
                             ease-in-out
@@ -90,6 +94,7 @@ const Sidebar: React.FC = () => {
                         <Image src={reunioes} alt='reunioes' width={40} height={40} className='shrink-0' />
                         <p className={`
                             whitespace-nowrap
+                            hover:scale-110
                             transition-all
                             duration-300
                             ease-in-out
@@ -102,6 +107,7 @@ const Sidebar: React.FC = () => {
                         <Image src={compromissos} alt='compromissos' width={40} height={40} className='shrink-0' />
                         <p className={`
                             whitespace-nowrap
+                            hover:scale-110
                             transition-all
                             duration-300
                             ease-in-out
@@ -114,6 +120,7 @@ const Sidebar: React.FC = () => {
                         <Image src={relatorios} alt='relatorios' width={40} height={40} className='shrink-0' />
                         <p className={`
                             whitespace-nowrap
+                            hover:scale-110
                             transition-all
                             duration-300
                             ease-in-out

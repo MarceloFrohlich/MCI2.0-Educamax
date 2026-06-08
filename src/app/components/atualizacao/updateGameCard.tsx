@@ -2,12 +2,10 @@
 import { VscGraph } from "react-icons/vsc"
 import { Button } from "../../../components/ui/button"
 import WeeklyUpdate from "./weeklyUpdate"
-import { IGame, IPrevidencia } from "../../types/centralMCI/centralMCI"
-import { useEffect, useState } from "react"
+import { IGame } from "../../types/centralMCI/centralMCI"
+import { useState } from "react"
 import { GoAlertFill, GoGraph } from "react-icons/go"
 import GlobalDialog from "../utils/globalDialog"
-import MciEvolutionChart from "../Dashboard/graphs/MCIEvolutionChart"
-import { weeklyActivitiesCount } from "../utils/general"
 import MeasureGraphs from "./measuresGraphs"
 
 interface UpdateGameCardProps {
@@ -33,7 +31,7 @@ const UpdateGameCard: React.FC<UpdateGameCardProps> = ({ game }) => {
     )
 
     return (
-        <section className="w-[45%] border-2 border-white shadow-lg h-60 rounded-xl p-4 relative">
+        <section className="w-[45%] border-2 border-white shadow-2xl h-60 rounded-xl p-4 relative">
             <div className="w-full justify-between flex">
                 <div className="flex flex-col gap-2 flex-1 leading-3">
                     <h1 className="font-bold">{game.copa.departamento.nome}</h1>

@@ -3,9 +3,13 @@
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { CiUser } from 'react-icons/ci'
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '../../../../components/ui/accordion'
+import {
+    Accordion,
+    AccordionContent,
+    AccordionItem,
+    AccordionTrigger
+} from '../../../../components/ui/accordion'
 import { GoArrowRight } from 'react-icons/go'
-
 
 const CadastroCollapse: React.FC<{
     isExpanded: boolean
@@ -41,7 +45,7 @@ const CadastroCollapse: React.FC<{
         <Accordion
             type="single"
             collapsible
-            className="w-full"
+            className="w-full hover:cursor-pointer"
         >
 
             <AccordionItem
@@ -50,7 +54,7 @@ const CadastroCollapse: React.FC<{
             >
 
                 <div
-                    className={`
+                    className="
                         group
                         ms-0.5
                         relative
@@ -61,7 +65,8 @@ const CadastroCollapse: React.FC<{
                         rounded-lg
                         px-2
                         transition-colors
-                    `}
+                        hover:cursor-pointer
+                    "
                 >
 
                     {isActive && (
@@ -83,8 +88,8 @@ const CadastroCollapse: React.FC<{
 
                     <CiUser
                         className={`
-                            shrink-0
                             size-5
+                            shrink-0
                             transition-colors
                             ${isActive
                                 ? 'text-[#5D78B7]'
@@ -96,32 +101,33 @@ const CadastroCollapse: React.FC<{
                     <AccordionTrigger
                         className={`
                             flex-1
-                            py-0
                             overflow-hidden
+                            py-0
                             transition-all
                             duration-300
                             hover:no-underline
+                            hover:scale-105
                             [&>svg]:size-4
                             [&>svg]:shrink-0
                             [&>svg]:text-(--textBaseColor)
                             [&>svg]:transition-transform
                             ${isExpanded
-                                ? 'opacity-100 max-w-50 ms-2.5'
-                                : 'opacity-0 max-w-0 pointer-events-none'
+                                ? 'max-w-50 ms-2.5 opacity-100'
+                                : 'pointer-events-none max-w-0 opacity-0'
                             }
-                            `}
+                        `}
                     >
 
                         <p
                             className={`
-                                    text-[14px]
-                                    whitespace-nowrap
-                                    transition-colors
-                                    ${isActive
+                                whitespace-nowrap
+                                text-[15px]
+                                transition-colors
+                                ${isActive
                                     ? 'text-[#5D78B7]'
                                     : 'text-(--textBaseColor)'
                                 }
-                                `}
+                            `}
                         >
                             Cadastro
                         </p>
@@ -152,7 +158,7 @@ const CadastroCollapse: React.FC<{
                                 <Link
                                     key={item.href}
                                     href={item.href}
-                                    className={`
+                                    className="
                                         group
                                         relative
                                         flex
@@ -161,8 +167,7 @@ const CadastroCollapse: React.FC<{
                                         rounded-lg
                                         px-2
                                         text-[13px]
-                                        transition-colors
-                                    `}
+                                    "
                                 >
 
                                     {active && (
@@ -182,19 +187,35 @@ const CadastroCollapse: React.FC<{
 
                                     )}
 
-                                    <span
+                                    <div
                                         className={`
-                                            transition-colors
+                                            flex
+                                            items-center
+                                            gap-2
+                                            transition-all
+                                            duration-300
+                                            transform-gpu
+                                            group-hover:translate-x-1
                                             ${active
                                                 ? 'text-[#5D78B7]'
                                                 : 'text-(--textBaseColor)'
                                             }
                                         `}
                                     >
-                                        <div className='flex items-center gap-2'>
-                                            <GoArrowRight /> {item.label}
-                                        </div>
-                                    </span>
+
+                                        <GoArrowRight
+                                            className="
+                                                transition-all
+                                                duration-300
+                                                group-hover:translate-x-1
+                                            "
+                                        />
+
+                                        <span>
+                                            {item.label}
+                                        </span>
+
+                                    </div>
 
                                 </Link>
 

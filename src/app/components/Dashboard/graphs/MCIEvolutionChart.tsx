@@ -77,7 +77,7 @@ const MciEvolutionChart: React.FC<IMciEvolutionChart> = ({
                     {/* Y */}
                     <YAxis
                         width={35}
-                        domain={[0, 100]}
+                        domain={['auto', 'auto']}
                         tick={{ fontSize: 11, fill: '#64748B' }}
                         axisLine={false}
                         tickLine={false}
