@@ -31,9 +31,14 @@ const CustomTooltip = ({ active, payload, label }: any) => {
                     if (item.value === null || item.value === undefined) return null;
 
                     return (
-                        <div key={item.dataKey} className="flex justify-between gap-6">
+                        <div
+                            key={item.dataKey}
+                            className="flex justify-between gap-6"
+                        >
                             <span className="text-slate-300">
-                                {item.dataKey === 'meta' ? 'Meta' : 'Atual'}
+                                {item.dataKey === 'meta'
+                                    ? 'Meta'
+                                    : 'Atual'}
                             </span>
 
                             <span className="font-semibold">
@@ -49,24 +54,29 @@ const CustomTooltip = ({ active, payload, label }: any) => {
 
 const MciEvolutionChart: React.FC<IMciEvolutionChart> = ({
     data,
-    graphHeight = "h-50"
+    graphHeight = 'h-50',
 }) => {
     return (
         <div className={`w-full ${graphHeight} -mx-2`}>
             <ResponsiveContainer width="100%" height="100%">
-                <LineChart data={data} margin={{ top: 8, right: 8, bottom: 0, left: 0 }}>
-
-                    {/* GRID */}
+                <LineChart
+                    key={JSON.stringify(data)}
+                    data={data}
+                    margin={{
+                        top: 8,
+                        right: 8,
+                        bottom: 0,
+                        left: 0,
+                    }}
+                >
                     <CartesianGrid
                         stroke="#CBD5E1"
                         strokeDasharray="0"
                         vertical={false}
                     />
 
-                    {/* TOOLTIP */}
                     <Tooltip content={<CustomTooltip />} />
 
-                    {/* X */}
                     <XAxis
                         dataKey="week"
                         tick={{ fontSize: 11, fill: '#64748B' }}
@@ -74,7 +84,6 @@ const MciEvolutionChart: React.FC<IMciEvolutionChart> = ({
                         tickLine={false}
                     />
 
-                    {/* Y */}
                     <YAxis
                         width={35}
                         domain={['auto', 'auto']}
@@ -83,39 +92,48 @@ const MciEvolutionChart: React.FC<IMciEvolutionChart> = ({
                         tickLine={false}
                     />
 
-                    {/* META (começa já no valor da semana 1) */}
+                    {/* META */}
                     <Line
                         type="linear"
                         dataKey="meta"
                         stroke="#F59E0B"
                         strokeWidth={2}
                         dot={false}
-                        isAnimationActive={false}
+                        animationDuration={1200}
+                        animationBegin={0}
+                        animationEasing="ease-out"
+                        isAnimationActive
                     />
 
-                    {/* ATUAL (acumulado) */}
+                    {/* ATUAL */}
                     <Line
                         type="monotone"
                         dataKey="atual"
                         stroke="#4B5563"
                         strokeWidth={2.5}
-                        dot={{ r: 3 }}
-                        activeDot={{ r: 6 }}
+                        dot={{
+                            r: 4,
+                        }}
+                        activeDot={{
+                            r: 7,
+                        }}
                         connectNulls={false}
+                        animationDuration={1400}
+                        animationBegin={200}
+                        animationEasing="ease-out"
+                        isAnimationActive
                     />
-
                 </LineChart>
             </ResponsiveContainer>
 
-            {/* LEGENDA */}
-            <div className='mx-8 flex gap-4 items-center mt-2'>
-                <div className='flex gap-3 items-center'>
-                    <div className='h-4 w-10 bg-[#F59E0B]' />
+            <div className="mx-8 flex gap-4 items-center mt-2">
+                <div className="flex gap-3 items-center">
+                    <div className="h-4 w-10 bg-[#F59E0B]" />
                     <small>Meta</small>
                 </div>
 
-                <div className='flex gap-3 items-center'>
-                    <div className='h-4 w-10 bg-[#4B5563]' />
+                <div className="flex gap-3 items-center">
+                    <div className="h-4 w-10 bg-[#4B5563]" />
                     <small>Atual</small>
                 </div>
             </div>
