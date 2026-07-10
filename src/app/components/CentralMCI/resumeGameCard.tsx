@@ -1,22 +1,43 @@
 'use client'
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { IoFootballOutline } from 'react-icons/io5';
 import { FiTarget } from 'react-icons/fi';
 import { PiChartBar, } from 'react-icons/pi';
 import { ICup, IGame } from '../../types/centralMCI/centralMCI';
 import Select from 'react-select';
-import { IDepartamento } from '../../types/cadastros/cadastros';
+import { formatDateBR } from '../utils/general';
+import { replicarJogoAction } from '../../actions/jogos/jogos';
+import { useServerAction } from '../../hooks/useServerAction';
+import FormSubmitButton from '../utils/formSubmitButton';
 
 interface IResumeGameCardProps {
     game: IGame
-    departamentos: IDepartamento[]
     copas: ICup[]
+    open: boolean
+    setOpen: (open: boolean) => void
 }
 
 const ResumeGameCard: React.FC<
     IResumeGameCardProps
-> = ({ game, departamentos, copas }) => {
+> = ({ game, copas, open, setOpen }) => {
+
+        const action = replicarJogoAction
+    
+        const {
+            state,
+            formAction,
+            pending
+        } = useServerAction(action);
+    
+        useEffect(() => {
+            if (!state.success) return;
+
+            if (state.success === true && state.successMessage) {
+                setOpen(false);
+            }
+    
+        }, [state]);
 
     const [selectedCopas, setSelectedCopas] = useState<
         { value: string | number; label: string }[]
@@ -27,17 +48,21 @@ const ResumeGameCard: React.FC<
         label: 'Selecionar todas',
     };
 
-    const copaOptions = [
-        SELECT_ALL_OPTION,
+    const availableCopas = (copas ?? []).filter(
+        (copa) => copa.id_copa !== game.copa.id_copa
+    );
 
-        ...(copas ?? []).map((copa) => ({
+    const copaOptions = [
+        ...(availableCopas.length > 0 ? [SELECT_ALL_OPTION] : []),
+
+        ...availableCopas.map((copa) => ({
             value: copa.id_copa,
-            label: copa.nome,
+            label: `${copa.departamento.nome} - ${copa.nome}`,
         })),
     ];
 
     return (
-        <div
+        <form action={formAction}
             className="
                     bg-[#ECECEC]
                     rounded-3xl
@@ -52,6 +77,16 @@ const ResumeGameCard: React.FC<
                     h-[80vh]
                 "
         >
+            <input
+                type="hidden"
+                name="id"
+                value={game.id_jogo}
+            />
+            <input
+                type="hidden"
+                name="selectedCopas"
+                value={selectedCopas.map((copa) => copa.value).join(',')}
+            />
 
             <div className="flex flex-col gap-3">
 
@@ -71,18 +106,18 @@ const ResumeGameCard: React.FC<
                     options={copaOptions}
                     value={selectedCopas}
                     placeholder="Selecione as copas"
+                    noOptionsMessage={() => 'Nenhuma copa para duplicar'}
                     onChange={(selectedOptions) => {
 
                         const hasSelectAll =
                             selectedOptions?.some(
-                                (option) =>
-                                    option.value === 'all'
+                                (option) => option.value === 'all'
                             );
 
                         if (hasSelectAll) {
 
                             setSelectedCopas(
-                                copas && copas.map((copa) => ({
+                                availableCopas.map((copa) => ({
                                     value: copa.id_copa,
                                     label: copa.nome,
                                 }))
@@ -177,9 +212,16 @@ const ResumeGameCard: React.FC<
                                         font-medium
                                     "
                             >
-                                {game.lider?.nome}
-                                {' • '}
-                                {departamentos.map((d) => d.nome).join(', ')}
+                                Líder: {game.lider?.nome}
+                            </span>
+                            <span
+                                className="
+                                        text-md
+                                        text-[#6F6F6F]
+                                        font-medium
+                                    "
+                            >
+                                Copa: {game.copa.departamento.nome} - {game.copa.nome}
                             </span>
 
                         </div>
@@ -356,7 +398,7 @@ const ResumeGameCard: React.FC<
                                     text-[#17233C]
                                 "
                         >
-                            {game.data_inicio}
+                            {formatDateBR(game.data_inicio)}
                         </span>
 
                     </div>
@@ -381,7 +423,7 @@ const ResumeGameCard: React.FC<
                                     text-[#17233C]
                                 "
                         >
-                            {game.data_fim}
+                            {formatDateBR(game.data_fim)}
                         </span>
 
                     </div>
@@ -591,9 +633,9 @@ const ResumeGameCard: React.FC<
                                                         text-[#17233C]
                                                     "
                                             >
-                                                {measure.data_inicio}
+                                                {formatDateBR(measure.data_inicio)}
                                                 {' até '}
-                                                {measure.data_fim}
+                                                {formatDateBR(measure.data_fim)}
                                             </span>
 
                                         </div>
@@ -630,11 +672,11 @@ const ResumeGameCard: React.FC<
                                                         "
                                                 >
                                                     {
-                                                        measure.inativo_de
+                                                        formatDateBR(measure.inativo_de)
                                                     }
                                                     {' até '}
                                                     {
-                                                        measure.inativo_ate
+                                                        formatDateBR(measure.inativo_ate)
                                                     }
                                                 </span>
 
@@ -655,7 +697,10 @@ const ResumeGameCard: React.FC<
 
             )}
 
-        </div>
+            <div className="flex justify-end mt-5 gap-3">
+                <FormSubmitButton actionText='Replicar Jogo' pending={pending} isEditMode={false} />
+            </div>
+        </form>
 
     );
 

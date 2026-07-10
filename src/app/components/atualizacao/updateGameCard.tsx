@@ -40,7 +40,7 @@ const UpdateGameCard: React.FC<UpdateGameCardProps> = ({ game }) => {
                         <p className="text-[12px]">Descrição: {game.verbo} {game.medida} de {game.de} para {game.para} até {game.data_fim}</p>
                         <div className="flex flex-col items-end gap-1">
                             <span>Líder</span>
-                            <span className="font-bold text-sm">{game.lider.nome}</span>
+                            <span className="font-bold text-sm">{game.lider?.nome}</span>
                         </div>
                     </div>
                 </div>

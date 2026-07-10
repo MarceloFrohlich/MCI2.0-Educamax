@@ -4,7 +4,7 @@ import { revalidatePath } from "next/cache";
 
 import { serverApi } from "../../services/serverApi";
 import { IActionResponse } from "../types";
-import { ICup, IGame } from "../../types/centralMCI/centralMCI";
+import { IGame } from "../../types/centralMCI/centralMCI";
 import { getErrorMessage } from "../../utils/getErrorMessage";
 
 export async function createJogoAction(
@@ -190,6 +190,47 @@ export async function createPrevidenciaAction(
 
 }
 
+export async function getJogosFiltrados({
+    id_departamento,
+    id_lider,
+    nome,
+    id_copa,
+}: {
+    id_departamento?: string;
+    id_lider?: string;
+    nome?: string;
+    id_copa?:string
+}): Promise<IGame[]> {
+    try {
+        const api = await serverApi();
+
+        const response = await api.post(
+            "/jogos/filtrar",
+            {
+                ...(id_copa && {
+                    id_copa,
+                }),
+                ...(id_departamento && {
+                    id_departamento,
+                }),
+                ...(id_lider && {
+                    id_lider,
+                }),
+                ...(nome && {
+                    nome,
+                }),
+            }
+        );
+
+        return response.data;
+    } catch (error: any) {
+        throw new Error(
+            error.response?.data?.message ||
+            "Erro ao buscar jogos"
+        );
+    }
+}
+
 export async function getAlljogos(): Promise<IGame[]> {
     try {
         const api = await serverApi();
@@ -262,6 +303,7 @@ export async function deletejogoAction(
     }
 }
 
+
 export async function atualizacaoSemanalAction(
     _: IActionResponse,
     formData: FormData
@@ -281,7 +323,7 @@ export async function atualizacaoSemanalAction(
         }
         );
         revalidatePath(
-            "pages/atualizacao"
+            "/pages/atualizacao"
         );
         return {
             success: true,
@@ -297,5 +339,34 @@ export async function atualizacaoSemanalAction(
             ),
         };
 
+    }
+}
+
+
+export async function replicarJogoAction(
+    _: IActionResponse,
+    formData: FormData
+): Promise<IActionResponse> {
+
+    try {
+        const api = await serverApi();
+        await api.post(`/jogos/${formData.get('id')}/replicar`, {
+            ids_copas_destino: formData.getAll('selectedCopas'),
+        });
+        revalidatePath(
+            "pages/centralmci"
+        );
+        return {
+            success: true,
+            successMessage: "Jogo replicado com sucesso",
+        };
+    } catch (error: any) {
+        return {
+            success: false,
+            errorMessage: getErrorMessage(
+                error,
+                "Erro ao replicar jogo"
+            ),
+        };
     }
 }

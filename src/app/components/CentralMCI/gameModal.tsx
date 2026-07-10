@@ -5,6 +5,7 @@ import ReplyGame from "./replyGame";
 import { IDepartamento } from "../../types/cadastros/cadastros";
 import CreateEditPrevidencia from "./createEditPrevidencia";
 import { deletejogoAction } from "../../actions/jogos/jogos";
+import { formatDateBR } from "../utils/general";
 
 interface IGameModalProps {
     game: IGame
@@ -51,11 +52,11 @@ const GameModal: React.FC<IGameModalProps> = ({ game, copas, departamentos, lead
                     <div className="flex justify-between">
                         <div className="flex flex-col justify-start h-full">
                             <p className="font-bold  text-[12px]">Data Inicial</p>
-                            <p className="text-[13px]">{game.data_inicio}</p>
+                            <p className="text-[13px]">{formatDateBR(game.data_inicio)}</p>
                         </div>
                         <div className="flex flex-col justify-start h-full">
                             <p className="font-bold  text-[12px]">Data Final</p>
-                            <p className="text-[13px]">{game.data_fim}</p>
+                            <p className="text-[13px]">{formatDateBR(game.data_fim)}</p>
                         </div>
 
                     </div>

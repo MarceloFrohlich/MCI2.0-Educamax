@@ -1,32 +1,65 @@
+'use client'
+
 import dashboard from '../../../../../public/sidebar/dashboard.png'
 import centralMCI from '../../../../..//public/sidebar/centralMCI.png'
 import compromissos from '../../../../../public/sidebar/compromissos.png'
 import indicadores from '../../../../../public/sidebar/indicadores.png'
 import reunioes from '../../../../../public/sidebar/reunioes.png'
-import relatorios from '../../../../../public/sidebar/relatorios.png'
 import scoreboard from '../../../../../public/sidebar/scoreboard.png'
 import Image from 'next/image'
 import { useState } from 'react'
 import Link from 'next/link'
+import { usePathname } from 'next/navigation'
 import CadastroCollapse from './cadastroCollapse'
+import ReuniaoCollapse from './reuniaoCollapse'
 
 const Sidebar: React.FC = () => {
     const [isExpanded, setIsExpanded] = useState(false);
+
+    const pathname = usePathname()
+
+    const links = [
+        {
+            label: 'Dashboard',
+            href: '/pages',
+            image: dashboard,
+            alt: 'dashboard',
+        },
+        {
+            label: 'Central MCI',
+            href: '/pages/centralmci',
+            image: centralMCI,
+            alt: 'centralMCI',
+        },
+        {
+            label: 'Atualização Semanal',
+            href: '/pages/atualizacao',
+            image: indicadores,
+            alt: 'indicadores',
+        },
+        {
+            label: 'Reunião MCI',
+            href: '/pages/reuniaomci',
+            image: scoreboard,
+            alt: 'scoreboard',
+        },
+    ]
+
     return (
         <aside className='text-(--textBaseColor)'
 
         >
             <nav className={`
                     rounded-2xl
-                    fixed 
+                    fixed
                     z-9999
-                    flex 
-                    flex-col 
-                    bg-[#E3ECF3] 
-                    ms-5 
-                    py-2 
-                    shadow-lg 
-                    ${isExpanded ? 'w-52' : 'w-10'} 
+                    flex
+                    flex-col
+                    bg-[#E3ECF3]
+                    ms-5
+                    py-2
+                    shadow-lg
+                    ${isExpanded ? 'w-52' : 'w-10'}
                     transition-[width]
                     duration-300
                     top-30
@@ -38,97 +71,49 @@ const Sidebar: React.FC = () => {
             >
                 <ul>
                     <CadastroCollapse isExpanded={isExpanded} />
-                    <Link href="/pages/" className='flex h-9 gap-2 items-center'>
-                        <Image src={dashboard} alt='dashboard' width={40} height={40} className='shrink-0' />
-                        <p className={`
-                            whitespace-nowrap
-                            hover:scale-110
-                            transition-all
-                            duration-300
-                            ease-in-out
-                            ${isExpanded
-                                ? 'opacity-100 translate-x-0'
-                                : 'opacity-0 -translate-x-2 pointer-events-none'}
-                            `}>Dashboard</p>
-                    </Link>
-                    <Link href="/pages/centralmci" className='flex h-9 gap-2 items-center'>
-                        <Image src={centralMCI} alt='centralMCI' width={40} height={40} className='shrink-0' />
-                        <p className={`
-                            whitespace-nowrap
-                            hover:scale-110
-                            transition-all
-                            duration-300
-                            ease-in-out
-                            ${isExpanded
-                                ? 'opacity-100 translate-x-0'
-                                : 'opacity-0 -translate-x-2 pointer-events-none'}
-                        `}>Central MCI</p>
-                    </Link>
-                    <Link href="/pages/atualizacao" className='flex h-9 gap-2 items-center'>
-                        <Image src={indicadores} alt='indicadores' width={40} height={40} className='shrink-0' />
-                        <p className={`
-                            whitespace-nowrap
-                            hover:scale-110
-                            transition-all
-                            duration-300
-                            ease-in-out
-                            ${isExpanded
-                                ? 'opacity-100 translate-x-0'
-                                : 'opacity-0 -translate-x-2 pointer-events-none'}
-                        `}>Atualização Semanal</p>
-                    </Link>
-                    <Link href="/pages/reuniaomci" className='flex h-9 gap-2 items-center'>
-                        <Image src={scoreboard} alt='scoreboard' width={40} height={40} className='shrink-0' />
-                        <p className={`
-                            whitespace-nowrap
-                            hover:scale-110
-                            transition-all
-                            duration-300
-                            ease-in-out
-                            ${isExpanded
-                                ? 'opacity-100 translate-x-0'
-                                : 'opacity-0 -translate-x-2 pointer-events-none'}
-                        `}>Reunião MCI</p>
-                    </Link>
-                    <Link href="/pages/reunioes" className='flex h-9 gap-2 items-center'>
-                        <Image src={reunioes} alt='reunioes' width={40} height={40} className='shrink-0' />
-                        <p className={`
-                            whitespace-nowrap
-                            hover:scale-110
-                            transition-all
-                            duration-300
-                            ease-in-out
-                            ${isExpanded
-                                ? 'opacity-100 translate-x-0'
-                                : 'opacity-0 -translate-x-2 pointer-events-none'}
-                        `}>Reuniões</p>
-                    </Link>
-                    <Link href="/pages/compromissos" className='flex h-9 gap-2 items-center'>
-                        <Image src={compromissos} alt='compromissos' width={40} height={40} className='shrink-0' />
-                        <p className={`
-                            whitespace-nowrap
-                            hover:scale-110
-                            transition-all
-                            duration-300
-                            ease-in-out
-                            ${isExpanded
-                                ? 'opacity-100 translate-x-0'
-                                : 'opacity-0 -translate-x-2 pointer-events-none'}
-                        `}>Compromissos</p>
-                    </Link>
-                    <Link href="/pages/relatorios" className='flex h-9 gap-2 items-center'>
-                        <Image src={relatorios} alt='relatorios' width={40} height={40} className='shrink-0' />
-                        <p className={`
-                            whitespace-nowrap
-                            hover:scale-110
-                            transition-all
-                            duration-300
-                            ease-in-out
-                            ${isExpanded
-                                ? 'opacity-100 translate-x-0'
-                                : 'opacity-0 -translate-x-2 pointer-events-none'}
-                        `}>Relatórios</p>
-                    </Link>
+                    {links.map(link => {
+
+                        const active =
+                            pathname === link.href ||
+                            pathname === `${link.href}/`
+
+                        return (
+                            <Link
+                                key={link.href}
+                                href={link.href}
+                                className='relative flex h-9 gap-2 items-center'
+                            >
+                                {active && (
+                                    <div
+                                        className="
+                                            absolute
+                                            left-0
+                                            top-1/2
+                                            h-5
+                                            w-1
+                                            -translate-y-1/2
+                                            rounded-r-full
+                                            bg-[#5D78B7]
+                                        "
+                                    />
+                                )}
+
+                                <Image src={link.image} alt={link.alt} width={40} height={40} className='shrink-0' />
+                                <p className={`
+                                    whitespace-nowrap
+                                    hover:scale-110
+                                    transition-all
+                                    duration-300
+                                    ease-in-out
+                                    ${active ? 'text-[#5D78B7]' : ''}
+                                    ${isExpanded
+                                        ? 'opacity-100 translate-x-0'
+                                        : 'opacity-0 -translate-x-2 pointer-events-none'}
+                                `}>{link.label}</p>
+                            </Link>
+                        )
+                    })}
+                    <ReuniaoCollapse isExpanded={isExpanded} />
 
                 </ul>
             </nav>

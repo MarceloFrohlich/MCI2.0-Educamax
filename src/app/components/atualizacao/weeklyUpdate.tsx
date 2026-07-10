@@ -1,6 +1,7 @@
 'use client'
 
 import { IoMdClose } from "react-icons/io"
+import { toast } from "sonner"
 import { IGame, IPrevidencia } from "../../types/centralMCI/centralMCI"
 import UpdateWeeklyMeasure from "./updateWeeklyMeasure"
 import { weeklyActivitiesCount } from "../utils/general"
@@ -69,7 +70,13 @@ const WeeklyUpdate: React.FC<WeeklyUpdateProps> = ({ medida, game }) => {
                             )}
 
                             {semana.status === "indisponivel" && (
-                                <IoMdClose className="text-[#112C46] text-xs" />
+                                <button
+                                    type="button"
+                                    onClick={() => toast.warning("Semana não liberada para lançamento")}
+                                    className="flex items-center justify-center w-full h-full hover:cursor-pointer"
+                                >
+                                    <IoMdClose className="text-[#112C46] text-xs" />
+                                </button>
                             )}
                         </div>
                     </div>

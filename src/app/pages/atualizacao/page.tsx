@@ -1,10 +1,15 @@
+import { getAllDepartamentos } from "../../actions/cadastros/departamentos"
+import { getAllCopas } from "../../actions/copas/copas"
 import { getAlljogos } from "../../actions/jogos/jogos"
-import UpdateGameCard from "../../components/atualizacao/updateGameCard"
-import FilterCard from "../../components/utils/filterCard"
+import { getAllLideres } from "../../actions/lideres/lideres"
+import { CentralAtualizacaoClient } from "../../components/atualizacao/centralAtualizacaoClient"
 
 const Indicadores:React.FC = async () => {
 
     const games = await getAlljogos()
+    const lideres = await getAllLideres()
+    const copas = await getAllCopas()
+    const departamentos = await getAllDepartamentos()
 
     return (
         <section className="flex flex-col gap-4 w-full">
@@ -12,20 +17,7 @@ const Indicadores:React.FC = async () => {
             <p className="leading-4.5 text-sm">Busque pelo <br/> seu <span className="text-(--colorVariantBlue) font-bold">jogo</span></p>
 
 
-            <div className="flex gap-4">
-                <FilterCard title={<div><span className="font-bold">PESQUISAR</span><br />POR NOME</div>} />
-                <FilterCard title={<span className="font-bold">INSTITUIÇÃO</span>} />
-                <FilterCard title={<span className="font-bold">DATA</span>} />
-                <FilterCard title={<span className="font-bold">LIDER</span>} />
-            </div>
-
-            {games && games.length > 0 && (
-                <div className="flex gap-4 flex-wrap">
-                    {games.map((game) => (
-                        <UpdateGameCard key={game.id_jogo} game={game} />
-                    ))}
-                </div>
-            )}
+            <CentralAtualizacaoClient copas={copas} departamentos={departamentos} initialGames={games} lideres={lideres} />
         </section>
     )
 }

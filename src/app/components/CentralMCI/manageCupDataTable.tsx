@@ -7,6 +7,7 @@ import DeleteModal from "../utils/deleteModal";
 import CreateEditCupModal from "./createEditCupModal";
 import { IDepartamento } from "../../types/cadastros/cadastros";
 import { deleteCopaAction } from "../../actions/copas/copas";
+import { formatDateBR } from "../utils/general";
 
 interface IManageCupDataTable {
     leaders: ILeader[]
@@ -34,9 +35,9 @@ const ManageCupDataTable: React.FC<IManageCupDataTable> = ({
         },
         {
             name: "Lider",
-            selector: (row: ICup) => row.lider.nome,
+            selector: (row: ICup) => row.lider?.nome,
             sortable: true,
-            cell: (row: ICup) => row.lider.nome,
+            cell: (row: ICup) => row.lider?.nome,
             grow: 1,
         },
         {
@@ -71,14 +72,14 @@ const ManageCupDataTable: React.FC<IManageCupDataTable> = ({
             name: "Início",
             selector: (row: ICup) => row.inicio,
             sortable: true,
-            cell: (row: ICup) => row.inicio,
+            cell: (row: ICup) => formatDateBR(row.inicio),
             grow: 1,
         },
         {
             name: "Fim",
             selector: (row: ICup) => row.fim,
             sortable: true,
-            cell: (row: ICup) => row.fim,
+            cell: (row: ICup) => formatDateBR(row.fim),
             grow: 1,
         },
 

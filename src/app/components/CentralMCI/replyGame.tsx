@@ -1,9 +1,12 @@
+'use client'
+
 import { PiFilesDuotone } from "react-icons/pi"
 import GlobalDialog from "../utils/globalDialog"
 import { Button } from "../../../components/ui/button"
 import ResumeGameCard from "./resumeGameCard"
 import { ICup, IGame } from "../../types/centralMCI/centralMCI"
 import { IDepartamento } from "../../types/cadastros/cadastros"
+import { useState } from "react"
 
 interface IReplyGameProps {
     game: IGame
@@ -12,8 +15,13 @@ interface IReplyGameProps {
 }
 
 const ReplyGame: React.FC<IReplyGameProps> = ({ game, departamentos, copas }) => {
+
+    const [open, setOpen] = useState(false);
+
     return (
         <GlobalDialog
+            open={open}
+            onOpenChange={setOpen}
             contentClassName="w-1/2"
             trigger={
                 <Button
@@ -32,7 +40,7 @@ const ReplyGame: React.FC<IReplyGameProps> = ({ game, departamentos, copas }) =>
                 </Button>}
             title="Duplicar jogo"
         >
-            <ResumeGameCard game={game} departamentos={departamentos} copas={copas}/>
+            <ResumeGameCard game={game} copas={copas} open={open} setOpen={setOpen} />
         </GlobalDialog>
     )
 }

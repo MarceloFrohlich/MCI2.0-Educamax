@@ -51,16 +51,57 @@ export function formatWeek(date: string): string {
 }
 
 export function mapPrevidenciaToEvolutionChart(previdencia: IPrevidencia) {
-    const start = new Date(previdencia.data_inicio);
-    const end = new Date(previdencia.data_fim);
 
-    const weeks: string[] = [];
+    let weeks: { date: string; numeroSemana: number }[] = [];
 
-    const current = new Date(start);
+    if (previdencia.semanas && previdencia.semanas.length > 0) {
 
-    while (current <= end) {
-        weeks.push(current.toISOString().split("T")[0]);
-        current.setDate(current.getDate() + 7);
+        weeks = previdencia.semanas
+            .filter(semana => !semana.inativa)
+            .map(semana => ({
+                date: semana.data_previsto_lancamento,
+                numeroSemana: semana.numero_semana,
+            }));
+
+    } else {
+
+        const start = new Date(previdencia.data_inicio);
+        const end = new Date(previdencia.data_fim);
+
+        const temInatividade =
+            previdencia.excluir_periodo &&
+            previdencia.inativo_de &&
+            previdencia.inativo_ate;
+
+        const inativoDe = temInatividade
+            ? new Date(previdencia.inativo_de).getTime()
+            : null;
+
+        const inativoAte = temInatividade
+            ? new Date(previdencia.inativo_ate).getTime()
+            : null;
+
+        const current = new Date(start);
+        let numeroSemana = 0;
+
+        while (current <= end) {
+            numeroSemana += 1;
+
+            const isInativa =
+                inativoDe !== null &&
+                inativoAte !== null &&
+                current.getTime() >= inativoDe &&
+                current.getTime() <= inativoAte;
+
+            if (!isInativa) {
+                weeks.push({
+                    date: current.toISOString().split("T")[0],
+                    numeroSemana,
+                });
+            }
+
+            current.setDate(current.getDate() + 7);
+        }
     }
 
     const points = weeks.length;
@@ -94,11 +135,10 @@ export function mapPrevidenciaToEvolutionChart(previdencia: IPrevidencia) {
     let lastValidIndex = -1;
     let cumulative = 0;
 
-    const atualLine = Array.from({ length: points }, (_, i) => {
-        const weekIndex = i + 1;
+    const atualLine = weeks.map((week, i) => {
 
-        if (actualMap.has(weekIndex)) {
-            cumulative += actualMap.get(weekIndex)!;
+        if (actualMap.has(week.numeroSemana)) {
+            cumulative += actualMap.get(week.numeroSemana)!;
             lastValidIndex = i;
 
             return {
@@ -119,7 +159,7 @@ export function mapPrevidenciaToEvolutionChart(previdencia: IPrevidencia) {
     });
 
     return weeks.map((week, i) => ({
-        week,
+        week: week.date,
         meta: metaLine[i].meta,
         atual: atualLine[i].atual,
     }));

@@ -184,7 +184,7 @@ const CreateEditGameModal: React.FC<ICreateEditGameModalProps> = ({
                         <select
                             id="leader"
                             name="leader"
-                            defaultValue={gameData?.lider.id_lider ?? ""}
+                            defaultValue={gameData?.lider?.id_lider ?? ""}
                             className="
                                 bg-white
                                 w-full
