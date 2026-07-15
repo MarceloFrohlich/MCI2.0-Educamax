@@ -16,7 +16,7 @@ const ManageCupModal: React.FC<IManageCupModal> = ({leaders, departamentos, copa
       <GlobalDialog
       contentClassName="w-11/12 max-h-[90vh] overflow-auto"
       title="Gerenciamento de Copas"
-        trigger={ <TriggerButton children={<BsTrophy className="size-5 pointer-events-none" />} />}
+        trigger={ <TriggerButton><BsTrophy className="size-5 pointer-events-none" /></TriggerButton>}
       >
         <ManageCupDataTable leaders={leaders} departamentos={departamentos} copas={copas} />       
 

@@ -51,7 +51,7 @@ const UpdateWeeklyMeasure: React.FC<UpdateWeeklyMeasureProps> = ({ measure, game
             trigger={isEditMode ? (
                 <div className={`w-full h-full ${semana.lancamento?.realizado > weeklyActivitiesCount ? "bg-[#112C46]" : "bg-red-500"} hover:cursor-pointer`} />
             ) : (
-                <Button className="hover:cursor-pointer bg-transparent" children={<FaCheck className="text-[#112C46] text-[10px]" />} />
+                <Button className="hover:cursor-pointer bg-transparent"><FaCheck className="text-[#112C46] text-[10px]" /></Button>
 
             )}
         >

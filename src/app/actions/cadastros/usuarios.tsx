@@ -72,7 +72,7 @@ export async function updateUsuarioAction(
     }
 }
 
-export async function getAllUsuarios(): Promise<IUser> {
+export async function getAllUsuarios(): Promise<IUser[]> {
 
     try {
         const api = await serverApi();

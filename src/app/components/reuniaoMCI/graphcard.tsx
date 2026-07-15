@@ -41,13 +41,13 @@ const ScoreBoardCard: React.FC<IScoreBoardCardProps> = ({
                 const ondeQueroChegar = previdencia.placar_desejado;
 
                 return (
-                    <div className='flex flex-col gap-4 mx-4 my-12'>
+                    <div key={previdencia.id_previdencia} className='flex flex-col gap-4 mx-4 my-12'>
                         <div className='flex justify-around w-full'>
                             <span>Medida {index + 1}: {previdencia.verbo} {previdencia.unidade_medida} de {previdencia.placar_inicial} para {previdencia.placar_desejado} até {formatDateBR(game.data_fim)}</span>
                             <span>Líder: {game.lider?.nome}</span>
                         </div>
                         <div className='flex gap-4 justify-around w-full'>
-                            <div key={previdencia.id_previdencia} className="w-[50%] gap-4 justify-center ">
+                            <div className="w-[50%] gap-4 justify-center ">
                                 <MciEvolutionChart data={data} graphHeight='h-80' />
                             </div>
                             <div className='w-[23%] border-2 flex flex-col justify-around border-white shadow-2xl p-4 rounded-xl'>

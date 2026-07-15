@@ -112,7 +112,7 @@ const CreateEditGameModal: React.FC<ICreateEditGameModalProps> = ({
                         <CiEdit className="text-(--textBaseColor) size-6" />
                     </Button>
                 ) : (
-                    <TriggerButton children={<PiVolleyball className="size-5 pointer-events-none" />} />
+                    <TriggerButton><PiVolleyball className="size-5 pointer-events-none" /></TriggerButton>
                 )
             }
         >
