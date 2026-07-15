@@ -113,7 +113,7 @@ const Sidebar: React.FC<{ sessao: ISessao | null }> = ({ sessao }) => {
                             </Link>
                         )
                     })}
-                    <ReuniaoCollapse isExpanded={isExpanded} />
+                    <ReuniaoCollapse isExpanded={isExpanded} sessao={sessao} />
 
                 </ul>
             </nav>

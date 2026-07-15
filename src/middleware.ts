@@ -1,7 +1,7 @@
 // middleware.ts
 
 import { NextRequest, NextResponse } from "next/server";
-import { canAccess, parseSessao } from "@/app/utils/permissoes";
+import { canAccess, paginaInicial, parseSessao } from "@/app/utils/permissoes";
 
 export function middleware(request: NextRequest) {
 
@@ -10,9 +10,9 @@ export function middleware(request: NextRequest) {
     const token = request.cookies.get("token")?.value;
     const sessao = parseSessao(request.cookies.get("sessao")?.value);
 
-    //logado na tela de login vai direto pro dashboard
+    //logado na tela de login vai direto pra sua página inicial
     if (pathname === "/") {
-        if (token) return NextResponse.redirect(new URL("/pages", request.url));
+        if (token) return NextResponse.redirect(new URL(paginaInicial(sessao), request.url));
         return NextResponse.next();
     }
 
@@ -23,9 +23,9 @@ export function middleware(request: NextRequest) {
         return response;
     }
 
-    //sem permissão na rota vai pro dashboard
-    if (sessao && !canAccess(pathname, sessao)) {
-        return NextResponse.redirect(new URL("/pages", request.url));
+    //sem permissão na rota vai pra sua página inicial
+    if (sessao && !canAccess(pathname, sessao) && pathname !== paginaInicial(sessao)) {
+        return NextResponse.redirect(new URL(paginaInicial(sessao), request.url));
     }
 
     return NextResponse.next();

@@ -10,10 +10,13 @@ import {
     AccordionTrigger
 } from '../../../../components/ui/accordion'
 import { GoArrowRight } from 'react-icons/go'
+import { canAccess } from '../../../utils/permissoes'
+import { ISessao } from '../../../types/auth/auth'
 
 const ReuniaoCollapse: React.FC<{
-    isExpanded: boolean
-}> = ({ isExpanded }) => {
+    isExpanded: boolean,
+    sessao: ISessao | null
+}> = ({ isExpanded, sessao }) => {
 
     const pathname = usePathname()
 
@@ -26,11 +29,13 @@ const ReuniaoCollapse: React.FC<{
             label: 'Análise',
             href: '/pages/relatorios/analise',
         },
-    ]
+    ].filter(item => canAccess(item.href, sessao))
 
     const isActive = items.some(
         item => pathname === item.href
     )
+
+    if (items.length === 0) return null
 
     return (
 

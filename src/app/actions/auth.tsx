@@ -7,10 +7,13 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { IActionResponse } from "./types";
 import { IMe, ISessao } from "../types/auth/auth";
+import { paginaInicial } from "../utils/permissoes";
 
 export async function loginAction(_: IActionResponse, formData: FormData): Promise<IActionResponse> {
   const email = formData.get("email");
   const senha = formData.get("senha");
+
+  let sessao: ISessao | null = null;
 
   try {
     const response = await api.post("/auth/login", {
@@ -21,7 +24,7 @@ export async function loginAction(_: IActionResponse, formData: FormData): Promi
     const token = response.data.access_token;
     const usuario = response.data.usuario;
 
-    const sessao: ISessao = {
+    sessao = {
       id_usuario: usuario.id_usuario,
       nome: usuario.nome,
       id_role: usuario.id_role,
@@ -54,8 +57,8 @@ export async function loginAction(_: IActionResponse, formData: FormData): Promi
     };
   }
 
-  redirect("/pages");
-  
+  redirect(paginaInicial(sessao));
+
 }
 
 export async function getMe(): Promise<IMe> {
