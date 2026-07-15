@@ -5,7 +5,7 @@ import centralMCI from '../../../../..//public/sidebar/centralMCI.png'
 import indicadores from '../../../../../public/sidebar/indicadores.png'
 import scoreboard from '../../../../../public/sidebar/scoreboard.png'
 import Image from 'next/image'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import CadastroCollapse from './cadastroCollapse'
@@ -17,6 +17,11 @@ const Sidebar: React.FC<{ sessao: ISessao | null }> = ({ sessao }) => {
     const [isExpanded, setIsExpanded] = useState(false);
 
     const pathname = usePathname()
+
+    //em telas touch (sem hover) o menu recolhe ao navegar
+    useEffect(() => {
+        if (window.matchMedia('(hover: none)').matches) setIsExpanded(false)
+    }, [pathname])
 
     const links = [
         {
@@ -68,6 +73,7 @@ const Sidebar: React.FC<{ sessao: ISessao | null }> = ({ sessao }) => {
             }
                 onMouseEnter={() => setIsExpanded(true)}
                 onMouseLeave={() => setIsExpanded(false)}
+                onClick={() => { if (!isExpanded) setIsExpanded(true) }}
             >
                 <ul>
                     <CadastroCollapse isExpanded={isExpanded} sessao={sessao} />

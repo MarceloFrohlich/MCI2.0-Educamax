@@ -46,11 +46,11 @@ const ScoreBoardCard: React.FC<IScoreBoardCardProps> = ({
                             <span>Medida {index + 1}: {previdencia.verbo} {previdencia.unidade_medida} de {previdencia.placar_inicial} para {previdencia.placar_desejado} até {formatDateBR(game.data_fim)}</span>
                             <span>Líder: {game.lider?.nome}</span>
                         </div>
-                        <div className='flex gap-4 justify-around w-full'>
-                            <div className="w-[50%] gap-4 justify-center ">
+                        <div className='flex flex-col lg:flex-row gap-4 justify-around w-full'>
+                            <div className="w-full lg:w-[50%] gap-4 justify-center ">
                                 <MciEvolutionChart data={data} graphHeight='h-80' />
                             </div>
-                            <div className='w-[23%] border-2 flex flex-col justify-around border-white shadow-2xl p-4 rounded-xl'>
+                            <div className='w-full lg:w-[23%] border-2 flex flex-col justify-around border-white shadow-2xl p-4 rounded-xl'>
                                 <div>
                                     <span className="font-bold text-lg">Relatar</span>
                                     <p className="text-sm ms-4">Realizado na última semana: {previdencia.atualizacoes.at(-1)?.placar_atual ?? '0'}</p>

@@ -22,7 +22,7 @@ const ReplyGame: React.FC<IReplyGameProps> = ({ game, copas }) => {
         <GlobalDialog
             open={open}
             onOpenChange={setOpen}
-            contentClassName="w-1/2"
+            contentClassName="w-[95%] md:w-1/2"
             trigger={
                 <Button
                     type="button"

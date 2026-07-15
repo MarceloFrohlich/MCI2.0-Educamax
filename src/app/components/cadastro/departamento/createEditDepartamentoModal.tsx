@@ -43,7 +43,7 @@ const CreateEditDepartamentoModal: React.FC<ICreateEditDepartametoModal> = ({ is
             open={open}
             onOpenChange={setOpen}
             title={isEditMode ? "Editar Departamento" : "Criar Novo Departamento"}
-            contentClassName="w-1/2"
+            contentClassName="w-[95%] md:w-1/2"
             trigger={
                 isEditMode ? (
                     <Button className="bg-transparent hover:cursor-pointer">

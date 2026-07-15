@@ -32,7 +32,7 @@ const UpdateGameCard: React.FC<UpdateGameCardProps> = ({ game }) => {
     )
 
     return (
-        <section className="w-[45%] border-2 border-white shadow-2xl h-60 rounded-xl p-4 relative">
+        <section className="w-full lg:w-[45%] border-2 border-white shadow-2xl h-60 rounded-xl p-4 relative">
             <div className="w-full justify-between flex">
                 <div className="flex flex-col gap-2 flex-1 leading-3">
                     <h1 className="font-bold">{game.copa.departamento.nome}</h1>
@@ -46,7 +46,7 @@ const UpdateGameCard: React.FC<UpdateGameCardProps> = ({ game }) => {
                     </div>
                 </div>
                 {!jogoIniciado && (
-                    <div className="flex gap-1 w-[10vw] items-center text-red-500 justify-start absolute right-0 top-4">
+                    <div className="flex gap-1 w-36 lg:w-[10vw] items-center text-red-500 justify-start absolute right-0 top-4">
                         <GoAlertFill className="size-8" />
                         <p className="text-[9px]">
                             Atualização de placar indisponível no momento
@@ -57,7 +57,7 @@ const UpdateGameCard: React.FC<UpdateGameCardProps> = ({ game }) => {
                     <div>
                         <GlobalDialog
                             trigger={<GoGraph size={20} className="text-(--textBaseColor) hover:cursor-pointer" />}
-                            contentClassName="w-4/6"
+                            contentClassName="w-[95%] md:w-4/6"
                             title="Acompanhamento visual"
                         >
                             <MeasureGraphs previdencias={game.previdencias} />

@@ -44,7 +44,7 @@ const CreateEditLeaderModal: React.FC<ICreateEditLeaderModalProps> = ({ isEditMo
             open={open}
             onOpenChange={setOpen}
             title={isEditMode ? "Editar Líder" : "Criar Novo Líder"}
-            contentClassName="w-1/4"
+            contentClassName="w-[95%] sm:w-1/2 md:w-1/4"
             trigger={
                 isEditMode ? (
                     <Button className="bg-transparent hover:cursor-pointer">

@@ -54,8 +54,8 @@ export const CentralAtualizacaoClient: React.FC<ICentralMCIClient> = ({ copas, d
     return (
         <>
 
-            <div className="flex gap-4 justify-between">
-                <div className='flex gap-4'>
+            <div className="flex flex-wrap gap-4 justify-between">
+                <div className='flex flex-wrap gap-4'>
                     <FilterCard
                         param="nome"
                         title="PESQUISAR POR NOME"
@@ -99,7 +99,7 @@ export const CentralAtualizacaoClient: React.FC<ICentralMCIClient> = ({ copas, d
                             onChange={(e) => handleFilterChange("id_copa", e.target.value)}
                             className="
                                 bg-white
-                                min-w-1/4
+                                w-full min-w-0 max-w-full md:w-auto md:min-w-1/4
                                 rounded-xl
                                 py-2
                                 px-4

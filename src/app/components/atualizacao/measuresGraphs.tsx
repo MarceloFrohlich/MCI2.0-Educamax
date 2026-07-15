@@ -62,9 +62,9 @@ const MeasureGraphs: React.FC<IMeasureGraphsProps> = ({ previdencias }) => {
                             duration: 0.35,
                             ease: "easeOut"
                         }}
-                        className="flex gap-4 w-full"
+                        className="flex flex-col md:flex-row gap-4 w-full"
                     >
-                        <div className="w-[60%] h-75">
+                        <div className="w-full md:w-[60%] h-75">
                             <MciEvolutionChart
                                 data={data}
                                 graphHeight="h-75"

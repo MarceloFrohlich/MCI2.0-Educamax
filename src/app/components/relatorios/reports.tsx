@@ -47,7 +47,7 @@ const Reports: React.FC<ICupFilter> = ({ copas }) => {
                     onChange={(e) => setIdCopa(e.target.value)}
                     className="
                         bg-white
-                        min-w-1/4
+                        w-full min-w-0 max-w-full md:w-auto md:min-w-1/4
                         rounded-xl
                         py-2
                         px-4

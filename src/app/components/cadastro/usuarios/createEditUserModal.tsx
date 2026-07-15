@@ -103,7 +103,7 @@ const CreateEditUserModal: React.FC<ICreateEditLeaderModalProps> = ({ isEditMode
             open={open}
             onOpenChange={setOpen}
             title={isEditMode ? "Editar Usuário" : "Criar Novo Usuário"}
-            contentClassName="w-1/2"
+            contentClassName="w-[95%] md:w-1/2"
             trigger={
                 isEditMode ? (
                     <Button className="bg-transparent hover:cursor-pointer">
@@ -125,7 +125,7 @@ const CreateEditUserModal: React.FC<ICreateEditLeaderModalProps> = ({ isEditMode
                         value={userData?.id_usuario}
                     />
                 )}
-                <div className="flex justify-between gap-4">
+                <div className="flex flex-col md:flex-row justify-between gap-4">
                     <div className="flex flex-col gap-2 w-full">
                         <label htmlFor="leaderName" className="block text-sm font-medium text-gray-700">
                             Nome do Usuário
@@ -180,8 +180,8 @@ const CreateEditUserModal: React.FC<ICreateEditLeaderModalProps> = ({ isEditMode
                     </div>
                 </div>
                 
-                <div 
-                className={`flex justify-between gap-4 ${isEditMode ? 'hidden' : ''}`}>
+                <div
+                className={`flex flex-col md:flex-row justify-between gap-4 ${isEditMode ? 'hidden' : ''}`}>
                     <div className="flex flex-col gap-2 w-full">
                         <label htmlFor="leaderName" className="block text-sm font-medium text-gray-700">
                             Senha
@@ -231,7 +231,7 @@ const CreateEditUserModal: React.FC<ICreateEditLeaderModalProps> = ({ isEditMode
                         />
                     </div>
                 </div>
-                <div className="flex justify-between gap-4">
+                <div className="flex flex-col md:flex-row justify-between gap-4">
                     <div className="flex flex-col gap-2 w-full">
                         <label htmlFor="leaderName" className="block text-sm font-medium text-gray-700">
                             Nível de usuário

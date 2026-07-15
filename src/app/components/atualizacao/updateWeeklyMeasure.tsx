@@ -47,7 +47,7 @@ const UpdateWeeklyMeasure: React.FC<UpdateWeeklyMeasureProps> = ({ measure, game
         <GlobalDialog title="Atualização semanal"
             open={open}
             onOpenChange={setOpen}
-            contentClassName="w-[33%] max-h-[80vh] overflow-y-auto"
+            contentClassName="w-[95%] sm:w-2/3 lg:w-[33%] max-h-[80vh] overflow-y-auto"
             trigger={isEditMode ? (
                 <div className={`w-full h-full ${semana.lancamento?.realizado > weeklyActivitiesCount ? "bg-[#112C46]" : "bg-red-500"} hover:cursor-pointer`} />
             ) : (

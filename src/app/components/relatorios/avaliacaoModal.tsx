@@ -37,7 +37,7 @@ const AvaliacaoModal: React.FC<IAvaliacaoModalProps> = ({ report, onSaved }) => 
             title="Atualização de resultado."
             open={open}
             onOpenChange={setOpen}
-            contentClassName="w-[33%]"
+            contentClassName="w-[95%] sm:w-2/3 lg:w-[33%]"
             trigger={
                 <Button
                     className="

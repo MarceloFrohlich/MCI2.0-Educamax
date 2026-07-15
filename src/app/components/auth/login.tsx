@@ -32,7 +32,7 @@ export default function Login() {
         flex items-center justify-center
       "
     >
-      <div className="h-2/3 w-1/4 bg-[#EEEEEE] rounded-3xl p-6 flex flex-col justify-between">
+      <div className="h-2/3 w-[90%] sm:w-2/3 lg:w-2/5 xl:w-1/4 bg-[#EEEEEE] rounded-3xl p-6 flex flex-col justify-between">
         <div className="flex gap-6 justify-center items-center">
           <Image src={logo} alt="logo" width={111} height={49.5} />
 
