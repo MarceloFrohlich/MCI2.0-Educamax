@@ -44,9 +44,12 @@ const Dashboard = async () => {
     return (
         <section className="mx-8 text-(--textBaseColor)">
 
-            <header className="w-full flex justify-between items-end mb-4">
+            <header className="w-full flex justify-between items-center mb-4">
                 <div className="w-1/8 text-(--textBaseColor)">Visão executiva da execução estratégica</div>
-                <ProgressBar value={`${Math.min(Math.round(execucaoGeral), 100)}%`} />
+                <div className="flex-1 flex flex-col gap-1.5">
+                    <ProgressBar value={`${Math.min(progresso, 100)}%`} rotulo={`semana · ${progresso}%`} />
+                    <ProgressBar value={`${Math.min(Math.round(execucaoGeral), 100)}%`} rotulo={`ano · ${Math.round(execucaoGeral)}%`} />
+                </div>
                 <div className="flex gap-8 text-(--textBaseColor)">
                     <p>{progresso}% PROG</p>
                     <p>{Math.round(dashboard.on_track.percentual)}% MCI</p>
