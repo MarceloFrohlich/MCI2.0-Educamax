@@ -1,9 +1,8 @@
 import React from "react";
 import logo from '../../../public/images/logoMci.svg'
 import Image from "next/image";
-// import { CiUser } from "react-icons/ci";
-// import { SlBell } from "react-icons/sl";
 import Sidebar from "../components/utils/sidebar/sidebar";
+import UserMenu from "../components/utils/userMenu";
 import { getSessao } from "../services/sessao";
 
 interface IMain {
@@ -20,11 +19,8 @@ const Main = async ({ children }: IMain) => {
             <div className="flex flex-col h-30 fixed w-full z-50">
                 <header className="px-5 pt-5 flex justify-between w-full">
                     <Image src={logo} alt="logo" width={39} height={17} />
-{/* 
-                    <div className="flex bg-[#F1FAFF] rounded-lg py-2 px-4 gap-4 justify-around shadow-xl">
-                        <CiUser className="text-xl hover:cursor-pointer" />
-                        <SlBell className="text-xl hover:cursor-pointer" />
-                    </div> */}
+
+                    <UserMenu sessao={sessao} />
                 </header>
                 <div>
                     <span className="block text-[9px] leading-2.5 ms-5 text-(--colorVariantBlue) font-bold py-5 ">

@@ -2,10 +2,11 @@
 'use server'
 
 import { api } from "../services/api";
+import { serverApi } from "../services/serverApi";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { IActionResponse } from "./types";
-import { ISessao } from "../types/auth/auth";
+import { IMe, ISessao } from "../types/auth/auth";
 
 export async function loginAction(_: IActionResponse, formData: FormData): Promise<IActionResponse> {
   const email = formData.get("email");
@@ -55,6 +56,22 @@ export async function loginAction(_: IActionResponse, formData: FormData): Promi
 
   redirect("/pages");
   
+}
+
+export async function getMe(): Promise<IMe> {
+
+  try {
+    const api = await serverApi();
+    const response = await api.get("/auth/me");
+    return response.data;
+  } catch (error: any) {
+    console.log("Error getting profile:", error);
+
+    throw new Error(
+      error.response?.data?.mensagem ||
+      "Erro ao buscar o perfil"
+    );
+  }
 }
 
 export async function logoutAction() {
