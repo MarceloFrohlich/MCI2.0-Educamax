@@ -1,4 +1,3 @@
-import { Ilancamento } from "../atualizacoes/atualizacoes";
 import { IDepartamento } from "../cadastros/cadastros";
 
 export interface ILeader {

@@ -20,7 +20,7 @@ interface IResumeGameCardProps {
 
 const ResumeGameCard: React.FC<
     IResumeGameCardProps
-> = ({ game, copas, open, setOpen }) => {
+> = ({ game, copas, setOpen }) => {
 
         const action = replicarJogoAction
     

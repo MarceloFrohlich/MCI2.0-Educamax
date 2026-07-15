@@ -1,6 +1,5 @@
 'use client';
 
-import { toast } from "sonner";
 import { CiEdit } from "react-icons/ci";
 import { Button } from "../../../../components/ui/button";
 import GlobalDialog from "../../utils/globalDialog";

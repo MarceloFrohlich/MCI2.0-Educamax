@@ -2,7 +2,7 @@
 
 import { CiMail } from "react-icons/ci"
 import { sendRecoveryCodeAction } from "../../actions/auth";
-import { useActionState, useEffect, useState } from "react";
+import { useActionState, useEffect } from "react";
 import { toast } from "sonner";
 import { IActionResponse } from "../../actions/types";
 

@@ -2,9 +2,7 @@
 
 import dashboard from '../../../../../public/sidebar/dashboard.png'
 import centralMCI from '../../../../..//public/sidebar/centralMCI.png'
-import compromissos from '../../../../../public/sidebar/compromissos.png'
 import indicadores from '../../../../../public/sidebar/indicadores.png'
-import reunioes from '../../../../../public/sidebar/reunioes.png'
 import scoreboard from '../../../../../public/sidebar/scoreboard.png'
 import Image from 'next/image'
 import { useState } from 'react'

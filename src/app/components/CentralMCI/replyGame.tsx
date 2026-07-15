@@ -14,7 +14,7 @@ interface IReplyGameProps {
     copas: ICup[]
 }
 
-const ReplyGame: React.FC<IReplyGameProps> = ({ game, departamentos, copas }) => {
+const ReplyGame: React.FC<IReplyGameProps> = ({ game, copas }) => {
 
     const [open, setOpen] = useState(false);
 

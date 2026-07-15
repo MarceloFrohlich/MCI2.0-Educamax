@@ -214,7 +214,7 @@ const CreateEditCupModal: React.FC<ICreateEditCupModalProps> = ({
                         placeholder="Selecione os departamentos"
                         className="text-(--textBaseColor)"
                         styles={{
-                            control: (base, state) => ({
+                            control: (base) => ({
                                 ...base,
                                 backgroundColor: "#fff",
                                 borderRadius: "0.75rem",

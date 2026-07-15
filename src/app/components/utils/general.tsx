@@ -1,5 +1,4 @@
 import { IPrevidencia } from "../../types/centralMCI/centralMCI";
-import { IMciEvolutionDataPoint } from "../../types/dashboard/dashboard";
 
 export const customStyles = {
     table: {
@@ -46,7 +45,7 @@ export function formatDateBR(date: string): string {
 }
 
 export function formatWeek(date: string): string {
-    const [year, month, day] = date.split('-');
+    const [, month, day] = date.split('-');
     return `${day}/${month}`;
 }
 

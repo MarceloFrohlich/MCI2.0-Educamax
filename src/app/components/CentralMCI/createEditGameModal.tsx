@@ -254,7 +254,7 @@ const CreateEditGameModal: React.FC<ICreateEditGameModalProps> = ({
                         placeholder="Selecione as copas"
                         className="text-(--textBaseColor)"
                         styles={{
-                            control: (base, state) => ({
+                            control: (base) => ({
                                 ...base,
                                 backgroundColor: "#fff",
                                 borderRadius: "0.75rem",
