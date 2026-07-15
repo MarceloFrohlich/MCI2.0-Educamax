@@ -9,8 +9,6 @@ export async function serverApi() {
 
     const token = cookieStore.get("token")?.value;
 
-    console.log("TOKEN:", token);
-
     return axios.create({
         baseURL: process.env.NEXT_PUBLIC_API_BASE_URL,
 

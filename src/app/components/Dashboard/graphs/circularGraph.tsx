@@ -46,7 +46,7 @@ const CircularGraph:React.FC<ICircularGraph> = ({value}) => {
   ];
 
   return (
-    <ResponsiveContainer width="100%" height="100%">
+    <ResponsiveContainer width="100%" height="100%" initialDimension={{ width: 200, height: 160 }}>
       <PieChart>
         <Pie
           data={data}

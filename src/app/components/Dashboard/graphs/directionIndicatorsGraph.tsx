@@ -46,7 +46,7 @@ export default function DirectionIndicatorsChart({ unidades }: { unidades: IDash
 
   return (
     <div className="w-full h-full -mx-6">
-      <ResponsiveContainer width="100%" height="100%">
+      <ResponsiveContainer width="100%" height="100%" initialDimension={{ width: 500, height: 220 }}>
         <BarChart data={data} barCategoryGap="20%">
           <CartesianGrid strokeDasharray="4 4" />
 

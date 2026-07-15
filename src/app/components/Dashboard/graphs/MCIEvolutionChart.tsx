@@ -58,7 +58,7 @@ const MciEvolutionChart: React.FC<IMciEvolutionChart> = ({
 }) => {
     return (
         <div className={`w-full ${graphHeight} -mx-2`}>
-            <ResponsiveContainer width="100%" height="100%">
+            <ResponsiveContainer width="100%" height="100%" initialDimension={{ width: 500, height: 200 }}>
                 <LineChart
                     key={JSON.stringify(data)}
                     data={data}
