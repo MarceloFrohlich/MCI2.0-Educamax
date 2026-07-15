@@ -4,6 +4,8 @@ import { CiEdit } from "react-icons/ci";
 import { Button } from "../../../../components/ui/button";
 import GlobalDialog from "../../utils/globalDialog";
 import { IDepartamento, IFilial, IFranqueadora, IUser } from "../../../types/cadastros/cadastros";
+import { ISessao } from "../../../types/auth/auth";
+import { NIVEL_FILIAL, NIVEL_FRANQUEADORA, ROLE_ADMIN_GLOBAL } from "../../../utils/permissoes";
 import { useEffect, useState } from "react";
 import { createUsuarioAction, updateUsuarioAction } from "../../../actions/cadastros/usuarios";
 import { useServerAction } from "../../../hooks/useServerAction";
@@ -15,16 +17,53 @@ interface ICreateEditLeaderModalProps {
     departamentos: IDepartamento[]
     franqueadoras: IFranqueadora[]
     filiais: IFilial[]
+    sessao: ISessao | null
 }
 
 
-const CreateEditUserModal: React.FC<ICreateEditLeaderModalProps> = ({ isEditMode = false, userData, departamentos, filiais, franqueadoras }) => {
+const CreateEditUserModal: React.FC<ICreateEditLeaderModalProps> = ({ isEditMode = false, userData, departamentos, filiais, franqueadoras, sessao }) => {
 
     const [nivelPermissao, setNivelPermissao] = useState<string>(
         isEditMode
             ? userData?.nivel?.id_nivel?.toString() ?? ''
             : ''
     );
+
+    const ehGlobal = sessao?.id_role === ROLE_ADMIN_GLOBAL;
+
+    //admin local não cria admin global
+    const rolesDisponiveis = [
+        { valor: '1', rotulo: 'Admin Global' },
+        { valor: '2', rotulo: 'Admin Local' },
+        { valor: '3', rotulo: 'Usuário' },
+    ].filter(role => ehGlobal || role.valor !== '1');
+
+    //só cria usuários do próprio nível pra baixo na hierarquia
+    const nivelMinimo = ehGlobal ? 0 : sessao?.id_nivel ?? 0;
+    const niveisDisponiveis = [
+        { valor: '1', rotulo: 'Franqueadora' },
+        { valor: '2', rotulo: 'Filial' },
+        { valor: '3', rotulo: 'Departamento/Setor' },
+    ].filter(nivel => Number(nivel.valor) >= nivelMinimo);
+
+    //relações limitadas à cadeia do admin logado
+    const franqueadorasVisiveis = ehGlobal
+        ? franqueadoras
+        : franqueadoras.filter(f => f.id_franqueadora === sessao?.relacao);
+
+    const filiaisVisiveis = ehGlobal
+        ? filiais
+        : sessao?.id_nivel === NIVEL_FRANQUEADORA
+            ? filiais.filter(f => f.id_franqueadora === sessao.relacao)
+            : filiais.filter(f => f.id_filial === sessao?.relacao);
+
+    const departamentosVisiveis = ehGlobal
+        ? departamentos
+        : sessao?.id_nivel === NIVEL_FRANQUEADORA
+            ? departamentos.filter(d => d.filial?.id_franqueadora === sessao.relacao)
+            : sessao?.id_nivel === NIVEL_FILIAL
+                ? departamentos.filter(d => d.id_filial === sessao.relacao)
+                : departamentos.filter(d => d.id_departamento === sessao?.relacao);
 
     const [relacao, setRelacao] = useState(
         userData?.relacao ?? ''
@@ -210,14 +249,14 @@ const CreateEditUserModal: React.FC<ICreateEditLeaderModalProps> = ({ isEditMode
                             defaultValue={isEditMode ? userData?.id_role : ""}
                         >
                             <option value=''>Selecione</option>
-                            <option value='1'>Local Admin</option>
-                            <option value='2'>Usuário</option>
-
+                            {rolesDisponiveis.map(role => (
+                                <option key={role.valor} value={role.valor}>{role.rotulo}</option>
+                            ))}
                         </select>
                     </div>
                     <div className="flex flex-col gap-2 w-full">
                         <label htmlFor="leaderName" className="block text-sm font-medium text-gray-700">
-                            Nome de permissões
+                            Nível de permissões
                         </label>
                         <select
                             className="
@@ -239,9 +278,9 @@ const CreateEditUserModal: React.FC<ICreateEditLeaderModalProps> = ({ isEditMode
                             name="nivelPermissao"
                         >
                             <option value=''>Selecione</option>
-                            <option value='1'>Franqueadora</option>
-                            <option value='2'>Filial</option>
-                            <option value='3'>Departamento/Setor</option>
+                            {niveisDisponiveis.map(nivel => (
+                                <option key={nivel.valor} value={nivel.valor}>{nivel.rotulo}</option>
+                            ))}
                         </select>
                     </div>
                 </div>
@@ -272,7 +311,7 @@ const CreateEditUserModal: React.FC<ICreateEditLeaderModalProps> = ({ isEditMode
                             defaultValue={isEditMode ? userData?.relacao : ""}
                         >
                             <option value=''>Selecione</option>
-                            {franqueadoras && franqueadoras.map(franqueadora => (
+                            {franqueadorasVisiveis.map(franqueadora => (
                                 <option key={franqueadora.id_franqueadora} value={franqueadora.id_franqueadora}>{franqueadora.nome}</option>
                             ))}
                         </select>
@@ -304,7 +343,7 @@ const CreateEditUserModal: React.FC<ICreateEditLeaderModalProps> = ({ isEditMode
                             defaultValue={isEditMode ? userData?.relacao : ""}
                         >
                             <option value=''>Selecione</option>
-                            {filiais && filiais.map(filial => (
+                            {filiaisVisiveis.map(filial => (
                                 <option key={filial.id_filial} value={filial.id_filial}>{filial.nome}</option>
                             ))}
                         </select>
@@ -336,7 +375,7 @@ const CreateEditUserModal: React.FC<ICreateEditLeaderModalProps> = ({ isEditMode
                             defaultValue={isEditMode ? userData?.relacao : ""}
                         >
                             <option value=''>Selecione</option>
-                            {departamentos && departamentos.map(departamento => (
+                            {departamentosVisiveis.map(departamento => (
                                 <option key={departamento.id_departamento} value={departamento.id_departamento}>{departamento.nome}</option>
                             ))}
                         </select>

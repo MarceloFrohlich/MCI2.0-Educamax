@@ -129,7 +129,7 @@ const UpdateWeeklyMeasure: React.FC<UpdateWeeklyMeasureProps> = ({ measure, game
                                 name="entrevistaqtd"
                                 type="text"
                                 placeholder="Entrevistas realizadas"
-                                defaultValue={semana.lancamento?.plp.entrevistaqtd ?? ""}
+                                defaultValue={semana.lancamento?.plp?.entrevistaqtd ?? ""}
                                 className="bg-white rounded-xl py-2 ps-4 placeholder:text-slate-400 focus:outline-none                  transition-colors border-2 border-(--textBaseColor)/50 text-(--textBaseColor) w-full"
                             />
                         </div>
@@ -143,7 +143,7 @@ const UpdateWeeklyMeasure: React.FC<UpdateWeeklyMeasureProps> = ({ measure, game
                                 name="promotores"
                                 type="text"
                                 placeholder="Quantidade de promotores"
-                                defaultValue={semana.lancamento?.plp.promotores ?? ""}
+                                defaultValue={semana.lancamento?.plp?.promotores ?? ""}
                                 className="bg-white rounded-xl py-2 ps-4 placeholder:text-slate-400 focus:outline-none                  transition-colors border-2 border-(--textBaseColor)/50 text-(--textBaseColor) w-full"
                             />
                         </div>
@@ -157,7 +157,7 @@ const UpdateWeeklyMeasure: React.FC<UpdateWeeklyMeasureProps> = ({ measure, game
                                 name="neutros"
                                 type="text"
                                 placeholder="Quantidade de neutros"
-                                defaultValue={semana.lancamento?.plp.neutros ?? ""}
+                                defaultValue={semana.lancamento?.plp?.neutros ?? ""}
                                 className="bg-white rounded-xl py-2 ps-4 placeholder:text-slate-400 focus:outline-none                  transition-colors border-2 border-(--textBaseColor)/50 text-(--textBaseColor) w-full"
                             />
                         </div>
@@ -171,7 +171,7 @@ const UpdateWeeklyMeasure: React.FC<UpdateWeeklyMeasureProps> = ({ measure, game
                                 name="detratores"
                                 type="text"
                                 placeholder="Quantidade de detratores"
-                                defaultValue={semana.lancamento?.plp.detratores ?? ""}
+                                defaultValue={semana.lancamento?.plp?.detratores ?? ""}
                                 className="bg-white rounded-xl py-2 ps-4 placeholder:text-slate-400 focus:outline-none                  transition-colors border-2 border-(--textBaseColor)/50 text-(--textBaseColor) w-full"
                             />
                         </div>

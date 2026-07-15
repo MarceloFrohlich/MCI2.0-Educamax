@@ -15,19 +15,22 @@ import {
 import { customStyles } from "../../utils/general";
 import { deleteUsuarioAction } from "../../../actions/cadastros/usuarios";
 import DeleteModal from "../../utils/deleteModal";
+import { ISessao } from "../../../types/auth/auth";
 
 interface IManageUsersDataTable {
     usuarios: IUser[]
     departamentos: IDepartamento[]
     franqueadoras: IFranqueadora[]
     filiais: IFilial[]
+    sessao: ISessao | null
 }
 
 const ManageUsersDataTable: React.FC<IManageUsersDataTable> = ({
     usuarios,
     departamentos,
     filiais,
-    franqueadoras
+    franqueadoras,
+    sessao
 }) => {
 
     const parseUser = (user: any): IUser => {
@@ -145,6 +148,7 @@ const ManageUsersDataTable: React.FC<IManageUsersDataTable> = ({
                     <div className="flex">
                         <CreateEditUserModal
                             isEditMode={true}
+                            sessao={sessao}
                             departamentos={departamentos}
                             filiais={filiais}
                             franqueadoras={franqueadoras}
