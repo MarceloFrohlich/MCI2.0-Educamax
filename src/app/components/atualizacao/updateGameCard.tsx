@@ -7,6 +7,7 @@ import { useState } from "react"
 import { GoAlertFill, GoGraph } from "react-icons/go"
 import GlobalDialog from "../utils/globalDialog"
 import MeasureGraphs from "./measuresGraphs"
+import { formatDateBR } from "../utils/general"
 
 interface UpdateGameCardProps {
     game: IGame
@@ -37,7 +38,7 @@ const UpdateGameCard: React.FC<UpdateGameCardProps> = ({ game }) => {
                     <h1 className="font-bold">{game.copa.departamento.nome}</h1>
                     <h1 className="font-bold">JOGO: <span>{game.nome}</span></h1>
                     <div className="flex justify-between items-center">
-                        <p className="text-[12px]">Descrição: {game.verbo} {game.medida} de {game.de} para {game.para} até {game.data_fim}</p>
+                        <p className="text-[12px]">Descrição: {game.verbo} {game.medida} de {game.de} para {game.para} até {formatDateBR(game.data_fim)}</p>
                         <div className="flex flex-col items-end gap-1">
                             <span>Líder</span>
                             <span className="font-bold text-sm">{game.lider?.nome}</span>
@@ -81,7 +82,7 @@ const UpdateGameCard: React.FC<UpdateGameCardProps> = ({ game }) => {
                     {selectedMedida && (
                         <div className="flex flex-col items-center absolute top-4 right-6 w-[65%]">
                             <span className="text-[14px] text-center leading-3">
-                                {selectedMedida.verbo} {selectedMedida.unidade_medida} de {selectedMedida.placar_desejado} entre {selectedMedida.data_inicio} e {selectedMedida.data_fim}
+                                {selectedMedida.verbo} {selectedMedida.unidade_medida} de {selectedMedida.placar_desejado} entre {formatDateBR(selectedMedida.data_inicio)} e {formatDateBR(selectedMedida.data_fim)}
                             </span>
 
                             <div className="absolute h-20 top-8 max-w-[99%] left-4 overflow-x-auto custom-scrollbar">
