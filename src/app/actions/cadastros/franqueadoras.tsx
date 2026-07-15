@@ -1,6 +1,7 @@
 'use server'
 
 import { revalidatePath } from "next/cache";
+import { logDev } from "../../utils/getErrorMessage";
 import { serverApi } from "../../services/serverApi";
 import { IFranqueadora } from "../../types/cadastros/cadastros";
 import { IActionResponse } from "../types";
@@ -25,7 +26,7 @@ export async function createFranqueadoraAction(
         };
 
     } catch (error: any) {
-        console.log("Error creating franqueadora:", error);
+        logDev("Error creating franqueadora:", error);
         return {
             success: false,
             errorMessage:
@@ -58,7 +59,7 @@ export async function updateFranqueadoraAction(
         };
 
     } catch (error: any) {
-        console.log("Error updating franqueadora:", error);
+        logDev("Error updating franqueadora:", error);
         return {
             success: false,
             errorMessage:
@@ -75,7 +76,7 @@ export async function getAllFranqueadoras(): Promise<IFranqueadora[]> {
         const response = await api.get("/franqueadoras");
         return response.data;
     } catch (error: any) {
-        console.log(
+        logDev(
             "Error getting franqueadoras:",
             error
         );
@@ -110,7 +111,7 @@ export async function deleteFranqueadoraAction(
 
     } catch (error: any) {
 
-        console.log(
+        logDev(
             "Error deleting franqueadora:",
             error
         );

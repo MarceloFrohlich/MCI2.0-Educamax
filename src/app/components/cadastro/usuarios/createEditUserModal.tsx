@@ -65,9 +65,15 @@ const CreateEditUserModal: React.FC<ICreateEditLeaderModalProps> = ({ isEditMode
                 ? departamentos.filter(d => d.id_filial === sessao.relacao)
                 : departamentos.filter(d => d.id_departamento === sessao?.relacao);
 
-    const [relacao, setRelacao] = useState(
-        userData?.relacao ?? ''
-    );
+    //no listar da api, relacao vira o rótulo do tipo; o uuid real está na entidade_relacao
+    const relacaoInicial = () => {
+        if (!userData?.entidade_relacao) return '';
+        if (userData.relacao === 'franqueadora') return userData.entidade_relacao.id_franqueadora;
+        if (userData.relacao === 'filial') return userData.entidade_relacao.id_filial;
+        return userData.entidade_relacao.id_departamento;
+    };
+
+    const [relacao, setRelacao] = useState(relacaoInicial);
 
     const [open, setOpen] = useState(false);
 
@@ -308,7 +314,6 @@ const CreateEditUserModal: React.FC<ICreateEditLeaderModalProps> = ({ isEditMode
                             onChange={(e) => setRelacao(e.target.value)}
                             id="relacao1"
                             name="relacao"
-                            defaultValue={isEditMode ? userData?.relacao : ""}
                         >
                             <option value=''>Selecione</option>
                             {franqueadorasVisiveis.map(franqueadora => (
@@ -340,7 +345,6 @@ const CreateEditUserModal: React.FC<ICreateEditLeaderModalProps> = ({ isEditMode
                             onChange={(e) => setRelacao(e.target.value)}
                             id="relacao2"
                             name="relacao"
-                            defaultValue={isEditMode ? userData?.relacao : ""}
                         >
                             <option value=''>Selecione</option>
                             {filiaisVisiveis.map(filial => (
@@ -372,7 +376,6 @@ const CreateEditUserModal: React.FC<ICreateEditLeaderModalProps> = ({ isEditMode
                             onChange={(e) => setRelacao(e.target.value)}
                             id="relacao3"
                             name="relacao"
-                            defaultValue={isEditMode ? userData?.relacao : ""}
                         >
                             <option value=''>Selecione</option>
                             {departamentosVisiveis.map(departamento => (

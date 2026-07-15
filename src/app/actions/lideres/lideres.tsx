@@ -1,6 +1,7 @@
 'use server'
 
 import { revalidatePath } from "next/cache";
+import { logDev } from "../../utils/getErrorMessage";
 
 import { serverApi } from "../../services/serverApi";
 import { IActionResponse } from "../types";
@@ -24,7 +25,7 @@ export async function createLiderAction(
             successMessage: "Lider criado com sucesso",
         };
     } catch (error: any) {
-        console.log(
+        logDev(
             "Error creating lider:",
             error
         );
@@ -55,7 +56,7 @@ export async function updateLiderAction(
         };
 
     } catch (error: any) {
-        console.log(
+        logDev(
             "Error updating lider:",
             error
         );
@@ -75,7 +76,7 @@ export async function getAllLideres(): Promise<ILeader[]> {
             await api.get("/lideres");
         return response.data;
     } catch (error: any) {
-        console.log(
+        logDev(
             "Error getting leaders:",
             error
         );
@@ -105,7 +106,7 @@ export async function deleteLiderAction(
         };
 
     } catch (error: any) {
-        console.log(
+        logDev(
             "Error deleting lider:",
             error
         );

@@ -2,6 +2,7 @@
 'use server'
 
 import { api } from "../services/api";
+import { logDev } from "../utils/getErrorMessage";
 import { serverApi } from "../services/serverApi";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
@@ -40,14 +41,15 @@ export async function loginAction(_: IActionResponse, formData: FormData): Promi
       secure: process.env.NODE_ENV === "production",
       sameSite: "lax",
       path: "/",
+      maxAge: 60 * 60 * 8, //mesma validade do jwt (8h)
     } as const;
 
     cookieStore.set("token", token, cookieOptions);
     cookieStore.set("sessao", JSON.stringify(sessao), cookieOptions);
 
   } catch (error: any) {
-    console.log("Login error:", error);
-        console.log(error.response?.data);
+    logDev("Login error:", error);
+        logDev(error.response?.data);
 
     return {
       success: false,
@@ -68,7 +70,7 @@ export async function getMe(): Promise<IMe> {
     const response = await api.get("/auth/me");
     return response.data;
   } catch (error: any) {
-    console.log("Error getting profile:", error);
+    logDev("Error getting profile:", error);
 
     throw new Error(
       error.response?.data?.mensagem ||
@@ -101,8 +103,8 @@ export async function sendRecoveryCodeAction(
     };
 
   } catch (error: any) {
-    console.log("Error sending password:", error);
-        console.log(error.response?.data);
+    logDev("Error sending password:", error);
+        logDev(error.response?.data);
     return {
       success: false,
       errorMessage:
@@ -130,8 +132,8 @@ export async function passwordRecovery(
     };
 
   } catch (error: any) {
-    console.log("Error recovering password:", error);
-    console.log(error.response?.data);
+    logDev("Error recovering password:", error);
+    logDev(error.response?.data);
     return {
       success: false,
       errorMessage:

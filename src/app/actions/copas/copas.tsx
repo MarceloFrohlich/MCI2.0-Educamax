@@ -1,6 +1,7 @@
 'use server'
 
 import { revalidatePath } from "next/cache";
+import { logDev } from "../../utils/getErrorMessage";
 
 import { serverApi } from "../../services/serverApi";
 import { IActionResponse } from "../types";
@@ -33,7 +34,7 @@ export async function createCopaAction(
             successMessage: "Copa criada com sucesso",
         };
     } catch (error: any) {
-        console.log(
+        logDev(
             "Error creating copa:",
             error
         );
@@ -75,7 +76,7 @@ export async function updateCopaAction(
         };
 
     } catch (error: any) {
-        console.log(
+        logDev(
             "Error updating copa:",
             error
         );
@@ -95,7 +96,7 @@ export async function getAllCopas(): Promise<ICup[]> {
             await api.get("/copas");
         return response.data;
     } catch (error: any) {
-        console.log(
+        logDev(
             "Error getting copas:",
             error
         );
@@ -126,7 +127,7 @@ export async function deleteCopaAction(
         };
 
     } catch (error: any) {
-        console.log(
+        logDev(
             "Error deleting copa:",
             error
         );

@@ -41,6 +41,19 @@ export function parseSessao(cookie: string | undefined): ISessao | null {
     }
 }
 
+//lê o exp do payload do jwt (sem validar assinatura - isso é papel da api)
+export function tokenExpirado(token: string | undefined): boolean {
+    if (!token) return true;
+
+    try {
+        const payload = token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/');
+        const { exp } = JSON.parse(atob(payload));
+        return !exp || exp * 1000 < Date.now();
+    } catch {
+        return true;
+    }
+}
+
 export function canAccess(pathname: string, sessao: ISessao | null): boolean {
     if (sessao?.id_role === ROLE_ADMIN_GLOBAL) return true;
 

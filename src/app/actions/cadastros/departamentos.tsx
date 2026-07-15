@@ -1,6 +1,7 @@
 'use server'
 
 import { revalidatePath } from "next/cache";
+import { logDev } from "../../utils/getErrorMessage";
 
 import { serverApi } from "../../services/serverApi";
 import { IDepartamento } from "../../types/cadastros/cadastros";
@@ -27,7 +28,7 @@ export async function createDepartamentoAction(
             successMessage: "Departamento criado com sucesso",
         };
     } catch (error: any) {
-        console.log(
+        logDev(
             "Error creating departamento:",
             error
         );
@@ -67,7 +68,7 @@ export async function updateDepartamentoAction(
         };
 
     } catch (error: any) {
-        console.log(
+        logDev(
             "Error updating departamento:",
             error
         );
@@ -87,7 +88,7 @@ export async function getAllDepartamentos(): Promise<IDepartamento[]> {
             await api.get("/departamentos");
         return response.data;
     } catch (error: any) {
-        console.log(
+        logDev(
             "Error getting departamentos:",
             error
         );
@@ -118,7 +119,7 @@ export async function deleteDepartamentoAction(
         };
 
     } catch (error: any) {
-        console.log(
+        logDev(
             "Error deleting departamento:",
             error
         );

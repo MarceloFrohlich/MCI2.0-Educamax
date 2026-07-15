@@ -1,6 +1,7 @@
 'use server'
 
 import { revalidatePath } from "next/cache";
+import { logDev } from "../../utils/getErrorMessage";
 import { serverApi } from "../../services/serverApi";
 import { IUser } from "../../types/cadastros/cadastros";
 import { IActionResponse } from "../types";
@@ -28,7 +29,7 @@ export async function createUsuarioAction(
         };
 
     } catch (error: any) {
-        console.log("Error creating usuario:", error);
+        logDev("Error creating usuario:", error);
         return {
             success: false,
             errorMessage:
@@ -62,7 +63,7 @@ export async function updateUsuarioAction(
         };
 
     } catch (error: any) {
-        console.log("Error updating usuario:", error);
+        logDev("Error updating usuario:", error);
         return {
             success: false,
             errorMessage:
@@ -79,7 +80,7 @@ export async function getAllUsuarios(): Promise<IUser[]> {
         const response = await api.get("/usuarios");
         return response.data;
     } catch (error: any) {
-        console.log(
+        logDev(
             "Error getting usuarios:",
             error
         );
@@ -103,7 +104,7 @@ export async function deleteUsuarioAction(
         revalidatePath(
             "/pages/cadastros/usuarios"
         );
-        console.log("DELETE RESPONSE:", response.data);
+        logDev("DELETE RESPONSE:", response.data);
         return {
             success: true,
             successMessage: "usuario removida com sucesso",
@@ -111,7 +112,7 @@ export async function deleteUsuarioAction(
 
     } catch (error: any) {
 
-        console.log(
+        logDev(
             "Error deleting usuario:",
             error
         );

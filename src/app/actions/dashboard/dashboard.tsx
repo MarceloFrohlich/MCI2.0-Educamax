@@ -1,6 +1,7 @@
 'use server'
 
 import { serverApi } from "../../services/serverApi";
+import { logDev } from "../../utils/getErrorMessage";
 import { IDashboard } from "../../types/dashboard/dashboard";
 
 export async function getDashboard(): Promise<IDashboard> {
@@ -10,7 +11,7 @@ export async function getDashboard(): Promise<IDashboard> {
         const response = await api.get("/dashboard");
         return response.data;
     } catch (error: any) {
-        console.log("Error getting dashboard:", error);
+        logDev("Error getting dashboard:", error);
 
         throw new Error(
             error.response?.data?.message ||

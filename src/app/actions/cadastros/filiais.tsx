@@ -1,6 +1,7 @@
 'use server'
 
 import { revalidatePath } from "next/cache";
+import { logDev } from "../../utils/getErrorMessage";
 
 import { serverApi } from "../../services/serverApi";
 import { IFilial } from "../../types/cadastros/cadastros";
@@ -27,7 +28,7 @@ export async function createFilialAction(
             successMessage: "Filial criada com sucesso",
         };
     } catch (error: any) {
-        console.log(
+        logDev(
             "Error creating filial:",
             error
         );
@@ -67,7 +68,7 @@ export async function updateFilialAction(
         };
 
     } catch (error: any) {
-        console.log(
+        logDev(
             "Error updating filial:",
             error
         );
@@ -87,7 +88,7 @@ export async function getAllFiliais(): Promise<IFilial[]> {
             await api.get("/filiais");
         return response.data;
     } catch (error: any) {
-        console.log(
+        logDev(
             "Error getting filiais:",
             error
         );
@@ -118,7 +119,7 @@ export async function deleteFilialAction(
         };
 
     } catch (error: any) {
-        console.log(
+        logDev(
             "Error deleting filial:",
             error
         );

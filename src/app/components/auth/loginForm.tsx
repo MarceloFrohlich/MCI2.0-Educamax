@@ -58,9 +58,11 @@ const LoginForm: React.FC<ILoginForm> = ({ changeState }) => {
                 focus:outline-none
                 transition-colors
               "
-                        type="text"
+                        type="email"
                         name="email"
                         placeholder="Seu email"
+                        autoComplete="email"
+                        suppressHydrationWarning
                     />
 
                     <CiMail
@@ -96,6 +98,8 @@ const LoginForm: React.FC<ILoginForm> = ({ changeState }) => {
                         type='password'
                         name='senha'
                         placeholder="Senha"
+                        autoComplete="current-password"
+                        suppressHydrationWarning
                     />
                     <FaLock
                         className="
