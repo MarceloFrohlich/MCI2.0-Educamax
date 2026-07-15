@@ -60,7 +60,7 @@ const Dashboard = async () => {
                 <div className="w-[70%] flex flex-col gap-4">
                     <div className="h-58 flex gap-6">
                         <div className="w-1/4 bg-[#F0F4F9] h-full shadow-xl px-6 py-2 rounded-4xl">
-                            <h1 className="font-semibold text-(--textBaseColor) text-[14px]">Progresso<InfoTooltip texto={infos.progresso} /></h1>
+                            <h1 className="font-semibold text-(--textBaseColor) text-[14px] flex justify-between items-center">Progresso<InfoTooltip texto={infos.progresso} /></h1>
                             <div className="flex justify-center gap-4 items-center mt-1">
                                 <p className="text-4xl">{progresso}%</p>
                                 <p className="text-[12.5px] font-semibold leading-3.5">Falta {faltaSemana}% para concluir a semana</p>
@@ -69,7 +69,7 @@ const Dashboard = async () => {
 
                         </div>
                         <div className="w-1/4 bg-[#F0F4F9] h-full shadow-xl px-6 py-2 rounded-4xl">
-                            <h1 className="font-semibold text-(--textBaseColor) text-[14px]">MCI On Tracks<InfoTooltip texto={infos.onTrack} /></h1>
+                            <h1 className="font-semibold text-(--textBaseColor) text-[14px] flex justify-between items-center">MCI On Tracks<InfoTooltip texto={infos.onTrack} /></h1>
                             <p className="text-[12px] text-center leading-3 mt-1"><span className="font-semibold text-(--textYellowColor)">{formatVariacao(dashboard.on_track.variacao)}</span> do que a <span className="font-semibold text-(--textYellowColor)">semana passada</span></p>
                             <div className="h-40">
                                 <ExpandableGraph titulo="MCI On Tracks">
@@ -79,12 +79,12 @@ const Dashboard = async () => {
 
                         </div>
                         <div className="w-1/4 bg-[#F0F4F9] h-full shadow-xl px-6 py-2 rounded-4xl">
-                            <h1 className="font-semibold text-(--textBaseColor) text-[14px]">MCIs Ativas<InfoTooltip texto={infos.mcisAtivas} /></h1>
+                            <h1 className="font-semibold text-(--textBaseColor) text-[14px] flex justify-between items-center">MCIs Ativas<InfoTooltip texto={infos.mcisAtivas} /></h1>
                             <p className="text-[12px] text-center leading-3 mt-1"><span className="font-semibold text-(--textYellowColor)">{dashboard.mcis.ativas} MCIs</span> ativas com {dashboard.mcis.concluidas} concluída{dashboard.mcis.concluidas === 1 ? '' : 's'}</p>
                             <ActiveMciBars lista={dashboard.mcis.lista} />
                         </div>
                         <div className="w-1/4 bg-[#F0F4F9] h-full shadow-xl px-6 py-2 rounded-4xl">
-                            <h1 className="font-semibold text-(--textBaseColor) text-[14px]">Compromissos<InfoTooltip texto={infos.compromissos} posicao="direita" /></h1>
+                            <h1 className="font-semibold text-(--textBaseColor) text-[14px] flex justify-between items-center">Compromissos<InfoTooltip texto={infos.compromissos} posicao="direita" /></h1>
                             <div className="mt-1">
                                 <p className="text-[12px] text-center leading-3"><span className="font-semibold text-(--textYellowColor)">{formatVariacao(dashboard.compromissos.variacao)}</span> do que a semana passada</p>
                                 <p className="text-[12px] text-center leading-3"><span className="font-semibold text-(--textYellowColor)">{dashboard.compromissos.concluidos_nesta_semana} compromisso{dashboard.compromissos.concluidos_nesta_semana === 1 ? ' concluido' : 's concluidos'}</span> nesta semana</p>
@@ -99,7 +99,7 @@ const Dashboard = async () => {
                     <div className="h-72 flex gap-6">
                         <div className="w-1/2 rounded-4xl bg-[#F0F4F9] h-full px-6 py-2 shadow-xl">
                             <div className="flex justify-between mb-4">
-                                <h1 className="font-semibold text-(--textBaseColor) text-[14px]">Evolução das MCIs<InfoTooltip texto={infos.evolucaoLinha} /></h1>
+                                <h1 className="font-semibold text-(--textBaseColor) text-[14px] w-full flex justify-between items-center">Evolução das MCIs<InfoTooltip texto={infos.evolucaoLinha} /></h1>
                             </div>
                             <ExpandableGraph
                                 titulo="Evolução das MCIs — Meta × Atual por semana"
@@ -109,8 +109,8 @@ const Dashboard = async () => {
                             </ExpandableGraph>
                         </div>
                         <div className="w-1/2 rounded-4xl bg-[#F0F4F9] h-full px-6 py-2 shadow-xl flex flex-col">
-                            <h1 className="font-semibold text-[14px] mb-2">
-                                Evolução das MCIs<InfoTooltip texto={infos.evolucaoBarras} />
+                            <h1 className="font-semibold text-[14px] mb-2 flex justify-between items-center">
+                                Evolução das MCIs<InfoTooltip texto={infos.evolucaoBarras} posicao="direita" />
                             </h1>
 
                             <div className="flex-1 min-h-0">
@@ -124,7 +124,7 @@ const Dashboard = async () => {
                 <div className="w-[30%]">
                     <div className="h-134 flex flex-col gap-4 ">
                         <div className="h-1/4 bg-[#F0F4F9] rounded-4xl shadow-xl px-6 py-2">
-                            <h1 className="font-semibold text-(--textBaseColor) text-[14px]">Engajamento Total<InfoTooltip texto={infos.engajamento} posicao="direita" /></h1>
+                            <h1 className="font-semibold text-(--textBaseColor) text-[14px] flex justify-between items-center">Engajamento Total<InfoTooltip texto={infos.engajamento} posicao="direita" /></h1>
                             <div className="flex justify-center items-end gap-12 mt-4 mb-2">
                                 <p className="text-4xl">{dashboard.engajamento.nota}</p>
                                 <p className="text-[12px] text-left leading-3"><span className="font-semibold text-(--textYellowColor)">{formatVariacao(dashboard.engajamento.variacao)} </span> do que a <br /> semana passada</p>
@@ -136,7 +136,7 @@ const Dashboard = async () => {
                         </div>
                         <div className="h-full rounded-4xl bg-[#F0F4F9] shadow-xl flex flex-col overflow-hidden">
                             <div className="px-6 py-4">
-                                <h1 className="font-semibold text-(--textBaseColor) text-[14px]">
+                                <h1 className="font-semibold text-(--textBaseColor) text-[14px] flex justify-between items-center">
                                     Alertas & Avisos<InfoTooltip texto={infos.alertas} posicao="direita" />
                                 </h1>
                             </div>
