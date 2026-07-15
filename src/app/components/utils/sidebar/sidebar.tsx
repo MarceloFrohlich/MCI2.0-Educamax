@@ -12,8 +12,10 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import CadastroCollapse from './cadastroCollapse'
 import ReuniaoCollapse from './reuniaoCollapse'
+import { canAccess } from '../../../utils/permissoes'
+import { ISessao } from '../../../types/auth/auth'
 
-const Sidebar: React.FC = () => {
+const Sidebar: React.FC<{ sessao: ISessao | null }> = ({ sessao }) => {
     const [isExpanded, setIsExpanded] = useState(false);
 
     const pathname = usePathname()
@@ -70,8 +72,8 @@ const Sidebar: React.FC = () => {
                 onMouseLeave={() => setIsExpanded(false)}
             >
                 <ul>
-                    <CadastroCollapse isExpanded={isExpanded} />
-                    {links.map(link => {
+                    <CadastroCollapse isExpanded={isExpanded} sessao={sessao} />
+                    {links.filter(link => canAccess(link.href, sessao)).map(link => {
 
                         const active =
                             pathname === link.href ||
