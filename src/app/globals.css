@@ -76,6 +76,16 @@
   scrollbar-color: #94a3b8 transparent;
 }
 
+/* mantém o scroll mas esconde a barra */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
 @layer base {
   * {
     box-sizing: border-box;

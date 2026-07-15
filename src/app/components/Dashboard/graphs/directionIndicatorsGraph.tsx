@@ -11,15 +11,39 @@ import {
   Legend,
 } from "recharts";
 
-const data = [
-  { name: "PE", meta: 180, resultado: 200 },
-  { name: "VR", meta: 90, resultado: 99 },
-  { name: "LQ", meta: 140, resultado: 152 },
-  { name: "RA", meta: 98, resultado: 115 },
-  { name: "F-up", meta: 130, resultado: 148 },
-];
+import { IDashboardUnidade } from "../../../types/dashboard/dashboard";
 
-export default function DirectionIndicatorsChart() {
+const CustomTooltip = ({ active, payload }: any) => {
+  if (!active || !payload?.length) return null;
+
+  return (
+    <div className="bg-slate-900 text-white px-3 py-2 rounded-md text-xs shadow-lg">
+      <div className="text-slate-400 mb-2 font-medium">
+        {payload[0].payload.nome}
+      </div>
+
+      <div className="flex flex-col gap-1">
+        {payload.map((item: any) => (
+          <div key={item.dataKey} className="flex justify-between gap-6">
+            <span className="text-slate-300">
+              {item.dataKey === "meta" ? "Meta" : "Resultado"}
+            </span>
+            <span className="font-semibold">{Number(item.value).toFixed(1)}%</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+export default function DirectionIndicatorsChart({ unidades }: { unidades: IDashboardUnidade[] }) {
+  const data = unidades.map(unidade => ({
+    name: unidade.sigla,
+    nome: unidade.nome,
+    meta: unidade.meta,
+    resultado: unidade.resultado,
+  }));
+
   return (
     <div className="w-full h-full -mx-6">
       <ResponsiveContainer width="100%" height="100%">
@@ -32,11 +56,11 @@ export default function DirectionIndicatorsChart() {
           />
 
           <YAxis
-            domain={[0, 300]}
+            domain={[0, 'auto']}
             tick={{ fill: "#94a3b8", fontSize: 12 }}
           />
 
-          <Tooltip />
+          <Tooltip content={<CustomTooltip />} />
 
           <Legend
             verticalAlign="bottom"
@@ -63,4 +87,3 @@ export default function DirectionIndicatorsChart() {
     </div>
   );
 }
-
