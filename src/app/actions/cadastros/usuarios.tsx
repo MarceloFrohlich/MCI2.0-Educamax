@@ -16,8 +16,6 @@ export async function createUsuarioAction(
         await api.post("/usuarios", {
             nome: formData.get('nome'),
             email: formData.get('email'),
-            senha: formData.get('senha'),
-            confirmacao_senha: formData.get('confirmaSenha'),
             id_role: Number(formData.get('nivelUsuario')),
             id_nivel: Number(formData.get('nivelPermissao')),
             relacao: formData.get('relacao'),
@@ -25,7 +23,7 @@ export async function createUsuarioAction(
         revalidatePath("/pages/cadastros/usuarios");
         return {
             success: true,
-            successMessage: "usuario criada com sucesso",
+            successMessage: "Usuário criado! O convite foi enviado por e-mail",
         };
 
     } catch (error: any) {
@@ -69,6 +67,26 @@ export async function updateUsuarioAction(
             errorMessage:
                 error.response?.data?.message ||
                 "Erro ao atualizar usuario",
+        };
+    }
+}
+
+export async function reenviarConviteAction(id: string): Promise<IActionResponse> {
+
+    try {
+        const api = await serverApi();
+        await api.post(`/usuarios/${id}/reenviar-convite`);
+        return {
+            success: true,
+            successMessage: "Convite enviado com sucesso",
+        };
+    } catch (error: any) {
+        logDev("Error resending invite:", error);
+        return {
+            success: false,
+            errorMessage:
+                error.response?.data?.message ||
+                "Erro ao enviar o convite",
         };
     }
 }

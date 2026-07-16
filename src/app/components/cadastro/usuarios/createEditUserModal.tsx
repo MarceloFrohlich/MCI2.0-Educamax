@@ -179,57 +179,11 @@ const CreateEditUserModal: React.FC<ICreateEditLeaderModalProps> = ({ isEditMode
                     </div>
                 </div>
                 
-                <div
-                className={`flex flex-col md:flex-row justify-between gap-4 ${isEditMode ? 'hidden' : ''}`}>
-                    <div className="flex flex-col gap-2 w-full">
-                        <label htmlFor="leaderName" className="block text-sm font-medium text-gray-700">
-                            Senha
-                        </label>
-                        <input
-                            className="
-                            bg-white
-                            w-full
-                            rounded-xl
-                            py-2
-                            ps-4
-                            placeholder:text-slate-400
-                            focus:outline-none
-                            transition-colors
-                            border-2
-                            border-(--textBaseColor)/50
-                            text-(--textBaseColor)
-"
-                            type='password'
-                            id="senha"
-                            name="senha"
-                            placeholder="Digite uma senha segura"
-                        />
-                    </div>
-                    <div className={`flex flex-col gap-2 w-full ${isEditMode ? 'hidden' : ''}`}>
-                        <label htmlFor="leaderName" className="block text-sm font-medium text-gray-700">
-                            Confirme sua senha
-                        </label>
-                        <input
-                            className="
-                            bg-white
-                            w-full
-                            rounded-xl
-                            py-2
-                            ps-4
-                            placeholder:text-slate-400
-                            focus:outline-none
-                            transition-colors
-                            border-2
-                            border-(--textBaseColor)/50
-                            text-(--textBaseColor)
-                            "
-                            type='password'
-                            id="confirmaSenha"
-                            name="confirmaSenha"
-                            placeholder="Repita sua senha"
-                        />
-                    </div>
-                </div>
+                {!isEditMode && (
+                    <p className="text-sm text-(--textBaseColor)/60">
+                        O usuário receberá um convite por e-mail para definir a própria senha (link válido por 2 dias).
+                    </p>
+                )}
                 <div className="flex flex-col md:flex-row justify-between gap-4">
                     <div className="flex flex-col gap-2 w-full">
                         <label htmlFor="leaderName" className="block text-sm font-medium text-gray-700">

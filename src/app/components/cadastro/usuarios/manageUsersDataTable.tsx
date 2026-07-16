@@ -13,9 +13,11 @@ import {
 } from "../../../types/cadastros/cadastros";
 
 import { customStyles } from "../../utils/general";
-import { deleteUsuarioAction } from "../../../actions/cadastros/usuarios";
+import { deleteUsuarioAction, reenviarConviteAction } from "../../../actions/cadastros/usuarios";
 import DeleteModal from "../../utils/deleteModal";
 import { ISessao } from "../../../types/auth/auth";
+import { CiMail } from "react-icons/ci";
+import { toast } from "sonner";
 
 interface IManageUsersDataTable {
     usuarios: IUser[]
@@ -145,7 +147,20 @@ const ManageUsersDataTable: React.FC<IManageUsersDataTable> = ({
 
             cell: (row) => {
                 return (
-                    <div className="flex">
+                    <div className="flex items-center">
+                        <button
+                            type="button"
+                            title="Reenviar convite de definição de senha"
+                            onClick={async () => {
+                                const resultado = await reenviarConviteAction(row.id_usuario);
+                                if (resultado.success) toast.success(resultado.successMessage);
+                                else toast.error(resultado.errorMessage);
+                            }}
+                            className="hover:cursor-pointer px-2"
+                        >
+                            <CiMail className="text-(--colorVariantBlue) size-5" />
+                        </button>
+
                         <CreateEditUserModal
                             isEditMode={true}
                             sessao={sessao}
