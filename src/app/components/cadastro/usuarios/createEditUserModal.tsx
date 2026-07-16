@@ -31,12 +31,11 @@ const CreateEditUserModal: React.FC<ICreateEditLeaderModalProps> = ({ isEditMode
 
     const ehGlobal = sessao?.id_role === ROLE_ADMIN_GLOBAL;
 
-    //admin local não cria admin global
+    //admin global é conta de sistema (seed) - não se cria/promove pelo sistema
     const rolesDisponiveis = [
-        { valor: '1', rotulo: 'Admin Global' },
         { valor: '2', rotulo: 'Admin Local' },
         { valor: '3', rotulo: 'Usuário' },
-    ].filter(role => ehGlobal || role.valor !== '1');
+    ];
 
     //só cria usuários do próprio nível pra baixo na hierarquia
     const nivelMinimo = ehGlobal ? 0 : sessao?.id_nivel ?? 0;
