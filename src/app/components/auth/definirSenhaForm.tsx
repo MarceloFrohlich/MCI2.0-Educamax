@@ -3,10 +3,11 @@
 import Image from "next/image";
 import Link from "next/link";
 import logo from "../../../../public/images/logoMci.svg";
-import { useActionState } from "react";
+import { useActionState, useState } from "react";
 import { FaLock } from "react-icons/fa";
 import { passwordRecovery } from "../../actions/auth";
 import { IActionResponse } from "../../actions/types";
+import CriteriosSenha, { senhaAtendeCriterios } from "../utils/criteriosSenha";
 
 interface IDefinirSenhaForm {
     email: string
@@ -23,6 +24,9 @@ const DefinirSenhaForm: React.FC<IDefinirSenhaForm> = ({ email, codigo }) => {
         passwordRecovery,
         initialState
     );
+
+    const [senha, setSenha] = useState('');
+    const [senhaEmFoco, setSenhaEmFoco] = useState(false);
 
     const linkInvalido = !email || !codigo;
 
@@ -101,6 +105,10 @@ const DefinirSenhaForm: React.FC<IDefinirSenhaForm> = ({ email, codigo }) => {
                                 name="newPassword"
                                 placeholder="Nova senha"
                                 autoComplete="new-password"
+                                value={senha}
+                                onChange={evento => setSenha(evento.target.value)}
+                                onFocus={() => setSenhaEmFoco(true)}
+                                onBlur={() => setSenhaEmFoco(false)}
                             />
                             <FaLock
                                 className="
@@ -115,6 +123,8 @@ const DefinirSenhaForm: React.FC<IDefinirSenhaForm> = ({ email, codigo }) => {
                                 "
                             />
                         </div>
+
+                        <CriteriosSenha senha={senha} visivel={senhaEmFoco} />
 
                         <div className="relative">
                             <input
@@ -155,9 +165,9 @@ const DefinirSenhaForm: React.FC<IDefinirSenhaForm> = ({ email, codigo }) => {
                         )}
 
                         <button
-                            disabled={pending}
+                            disabled={pending || !senhaAtendeCriterios(senha)}
                             type="submit"
-                            className="bg-(--colorVariantBlue) w-full rounded-3xl text-white py-2 cursor-pointer hover:bg-(--colorVariantBlue)/80 duration-300"
+                            className="bg-(--colorVariantBlue) w-full rounded-3xl text-white py-2 cursor-pointer hover:bg-(--colorVariantBlue)/80 duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
                         >
                             {pending ? "Salvando..." : "Definir senha"}
                         </button>

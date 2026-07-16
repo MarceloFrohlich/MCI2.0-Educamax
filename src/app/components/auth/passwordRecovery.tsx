@@ -1,10 +1,11 @@
 'use client'
 
-import { useActionState, useEffect } from "react";
+import { useActionState, useEffect, useState } from "react";
 import { passwordRecovery } from "../../actions/auth";
 import { toast } from "sonner";
 import { CiMail } from "react-icons/ci";
 import { IActionResponse } from "../../actions/types";
+import CriteriosSenha, { senhaAtendeCriterios } from "../utils/criteriosSenha";
 
 interface IPasswordRecovery {
     email: string
@@ -21,6 +22,9 @@ const PasswordRecovery: React.FC<IPasswordRecovery> = ({ email, resetStates }) =
         passwordRecovery,
         initialState
     );
+
+    const [senha, setSenha] = useState('');
+    const [senhaEmFoco, setSenhaEmFoco] = useState(false);
 
     useEffect(() => {
         if (state.success === true && state.successMessage) {
@@ -104,6 +108,11 @@ const PasswordRecovery: React.FC<IPasswordRecovery> = ({ email, resetStates }) =
                         type="password"
                         name="newPassword"
                         placeholder="Nova senha"
+                        autoComplete="new-password"
+                        value={senha}
+                        onChange={evento => setSenha(evento.target.value)}
+                        onFocus={() => setSenhaEmFoco(true)}
+                        onBlur={() => setSenhaEmFoco(false)}
                     />
 
                     <CiMail
@@ -120,6 +129,7 @@ const PasswordRecovery: React.FC<IPasswordRecovery> = ({ email, resetStates }) =
                     "
                     />
                 </div>
+                <CriteriosSenha senha={senha} visivel={senhaEmFoco} />
             </div>
             <div className="flex flex-col gap-3 text-(--textBaseColor)">
                 <div className="relative">
@@ -140,6 +150,7 @@ const PasswordRecovery: React.FC<IPasswordRecovery> = ({ email, resetStates }) =
                         type="password"
                         name="passValidation"
                         placeholder="Repita sua senha"
+                        autoComplete="new-password"
                     />
 
                     <CiMail
@@ -159,9 +170,9 @@ const PasswordRecovery: React.FC<IPasswordRecovery> = ({ email, resetStates }) =
             </div>
 
             <button
-                disabled={pending}
+                disabled={pending || !senhaAtendeCriterios(senha)}
                 type="submit"
-                className="bg-(--colorVariantBlue) w-full rounded-3xl text-white py-2 cursor-pointer"
+                className="bg-(--colorVariantBlue) w-full rounded-3xl text-white py-2 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
             >{pending ? "Alterando..." : "Alterar"}</button>
         </form>
     )
