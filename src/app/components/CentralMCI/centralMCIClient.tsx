@@ -50,36 +50,9 @@ export const CentralMCIClient: React.FC<ICentralMCIClient> = ({ copas, departame
                     <CreateEditGameModal leaders={lideres} copas={copas} />
                     <ManageLeaderModal leader={lideres} />
                 </div>
-                <div className="flex gap-4 justify-end items-center flex-1 z-20">
-                    <label
-                        htmlFor="copas"
-                        className="text-sm font-medium text-gray-700"
-                    >
-                        Filtrar por Copa
-                    </label>
-                    <select
-                        onChange={(e) => handleFilterChange("id_copa", e.target.value)}
-                        className="
-                                bg-white
-                                w-full min-w-0 max-w-full md:w-auto md:min-w-1/4
-                                rounded-xl
-                                py-2
-                                px-4
-                                focus:outline-none
-                                transition-colors
-                                border-2
-                                border-(--textBaseColor)/50
-                                text-(--textBaseColor)
-                            ">
-                        <option value=''>Selecione</option>
-                        {copas && copas.map((copa: ICup) => (
-                            <option key={copa.id_copa} value={copa.id_copa}>{`${copa.departamento.nome} - ${copa.nome}`}</option>
-                        ))}
-                    </select>
-                </div>
             </div>
 
-            <div className="flex gap-4">
+            <div className="flex flex-wrap gap-4">
                 <FilterCard
                     param="nome"
                     title="PESQUISAR POR NOME"
@@ -107,6 +80,18 @@ export const CentralMCIClient: React.FC<ICentralMCIClient> = ({ copas, departame
                     options={lideres.map((l: any) => ({
                         value: String(l.id_lider),
                         label: l.nome,
+                    }))}
+                    onChange={handleFilterChange}
+                />
+
+                <FilterCard
+                    param="id_copa"
+                    type="select"
+                    title="COPA"
+                    value={filters.id_copa}
+                    options={copas.map((copa: ICup) => ({
+                        value: String(copa.id_copa),
+                        label: `${copa.departamento.nome} - ${copa.nome}`,
                     }))}
                     onChange={handleFilterChange}
                 />
