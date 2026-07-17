@@ -29,6 +29,10 @@ const ReuniaoCollapse: React.FC<{
             label: 'Análise',
             href: '/pages/relatorios/analise',
         },
+        {
+            label: 'Logs',
+            href: '/pages/relatorios/logs',
+        },
     ].filter(item => canAccess(item.href, sessao))
 
     const isActive = items.some(
