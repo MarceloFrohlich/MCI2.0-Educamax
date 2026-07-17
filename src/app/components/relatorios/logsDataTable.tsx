@@ -4,32 +4,27 @@ import { useMemo, useState } from "react";
 import DataTable, { TableColumn } from "react-data-table-component";
 import { ILog } from "../../types/logs/logs";
 import { customStyles } from "../utils/general";
-
-const selectClasses = `
-    bg-white
-    rounded-xl
-    py-2
-    px-4
-    focus:outline-none
-    transition-colors
-    border-2
-    border-(--textBaseColor)/50
-    text-(--textBaseColor)
-`;
+import FilterCard from "../utils/filterCard";
 
 const LogsDataTable: React.FC<{ logs: ILog[] }> = ({ logs }) => {
-    const [metodo, setMetodo] = useState("");
-    const [resultado, setResultado] = useState("");
-    const [rota, setRota] = useState("");
+    const [filters, setFilters] = useState({
+        metodo: '',
+        resultado: '',
+        rota: ''
+    });
+
+    const handleFilterChange = (param: string, value: string) => {
+        setFilters(prev => ({ ...prev, [param]: value }));
+    };
 
     const logsFiltrados = useMemo(() => {
         return logs.filter(log => {
-            if (metodo && log.metodo !== metodo) return false;
-            if (resultado && String(log.sucesso) !== resultado) return false;
-            if (rota && !log.rota.toLowerCase().includes(rota.toLowerCase())) return false;
+            if (filters.metodo && log.metodo !== filters.metodo) return false;
+            if (filters.resultado && String(log.sucesso) !== filters.resultado) return false;
+            if (filters.rota && !log.rota.toLowerCase().includes(filters.rota.toLowerCase())) return false;
             return true;
         });
-    }, [logs, metodo, resultado, rota]);
+    }, [logs, filters]);
 
     const columns: TableColumn<ILog>[] = [
         {
@@ -111,35 +106,37 @@ const LogsDataTable: React.FC<{ logs: ILog[] }> = ({ logs }) => {
         <div className="flex flex-col gap-4">
 
             <div className="flex flex-wrap gap-4">
-                <select
-                    value={metodo}
-                    onChange={(e) => setMetodo(e.target.value)}
-                    className={selectClasses}
-                >
-                    <option value="">Todos os métodos</option>
-                    <option value="POST">POST</option>
-                    <option value="PUT">PUT</option>
-                    <option value="PATCH">PATCH</option>
-                    <option value="DELETE">DELETE</option>
-                    <option value="GET">GET</option>
-                </select>
+                <FilterCard
+                    param="rota"
+                    title="PESQUISAR POR ROTA"
+                    value={filters.rota}
+                    onChange={handleFilterChange}
+                />
 
-                <select
-                    value={resultado}
-                    onChange={(e) => setResultado(e.target.value)}
-                    className={selectClasses}
-                >
-                    <option value="">Sucesso e erro</option>
-                    <option value="true">Somente sucesso</option>
-                    <option value="false">Somente erro</option>
-                </select>
+                <FilterCard
+                    param="metodo"
+                    type="select"
+                    title="MÉTODO"
+                    value={filters.metodo}
+                    options={[
+                        { value: 'POST', label: 'POST' },
+                        { value: 'PUT', label: 'PUT' },
+                        { value: 'PATCH', label: 'PATCH' },
+                        { value: 'DELETE', label: 'DELETE' },
+                    ]}
+                    onChange={handleFilterChange}
+                />
 
-                <input
-                    type="text"
-                    value={rota}
-                    onChange={(e) => setRota(e.target.value)}
-                    placeholder="Filtrar por rota"
-                    className={`${selectClasses} placeholder:text-slate-400`}
+                <FilterCard
+                    param="resultado"
+                    type="select"
+                    title="RESULTADO"
+                    value={filters.resultado}
+                    options={[
+                        { value: 'true', label: 'Sucesso' },
+                        { value: 'false', label: 'Erro' },
+                    ]}
+                    onChange={handleFilterChange}
                 />
             </div>
 
