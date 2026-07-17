@@ -6,6 +6,9 @@ import GlobalDialog from "../../utils/globalDialog";
 import { IFilial, IFranqueadora } from "../../../types/cadastros/cadastros";
 import { createFilialAction, updateFilialAction } from "../../../actions/cadastros/filiais";
 import { useServerAction } from "../../../hooks/useServerAction";
+import { useValidacaoForm } from "../../../hooks/useValidacaoForm";
+import { filialSchema } from "../../../schemas/cadastros";
+import ErroCampo from "../../utils/erroCampo";
 import { useEffect, useState } from "react";
 
 interface ICreateEditFilialModal {
@@ -27,6 +30,8 @@ const CreateEditFilialModal: React.FC<ICreateEditFilialModal> = ({ isEditMode = 
         formAction,
         pending
     } = useServerAction(action);
+
+    const { erros, validar } = useValidacaoForm(filialSchema);
 
     useEffect(() => {
         if (
@@ -56,7 +61,7 @@ const CreateEditFilialModal: React.FC<ICreateEditFilialModal> = ({ isEditMode = 
                 )
             }
         >
-            <form action={formAction} className="flex flex-col gap-4">
+            <form action={formAction} onSubmit={validar} noValidate className="flex flex-col gap-4">
 
                 {isEditMode && (
                     <input
@@ -98,6 +103,7 @@ const CreateEditFilialModal: React.FC<ICreateEditFilialModal> = ({ isEditMode = 
                             ))}
 
                         </select>
+                        <ErroCampo erro={erros.id_franqueadora} />
                     </div>
 
                     <div className="flex flex-col gap-2 w-full">
@@ -125,6 +131,7 @@ const CreateEditFilialModal: React.FC<ICreateEditFilialModal> = ({ isEditMode = 
                             placeholder="Nova Filial"
                             defaultValue={isEditMode ? filialData?.nome : ""}
                         />
+                        <ErroCampo erro={erros.nome} />
                     </div>
                 </div>
 

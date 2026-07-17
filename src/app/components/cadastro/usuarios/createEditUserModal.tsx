@@ -9,6 +9,9 @@ import { NIVEL_FILIAL, NIVEL_FRANQUEADORA, ROLE_ADMIN_GLOBAL } from "../../../ut
 import { useEffect, useState } from "react";
 import { createUsuarioAction, updateUsuarioAction } from "../../../actions/cadastros/usuarios";
 import { useServerAction } from "../../../hooks/useServerAction";
+import { useValidacaoForm } from "../../../hooks/useValidacaoForm";
+import { usuarioSchema } from "../../../schemas/cadastros";
+import ErroCampo from "../../utils/erroCampo";
 
 
 interface ICreateEditLeaderModalProps {
@@ -86,6 +89,8 @@ const CreateEditUserModal: React.FC<ICreateEditLeaderModalProps> = ({ isEditMode
         pending
     } = useServerAction(action);
 
+    const { erros, validar } = useValidacaoForm(usuarioSchema);
+
     useEffect(() => {
         if (
             state.success &&
@@ -115,7 +120,7 @@ const CreateEditUserModal: React.FC<ICreateEditLeaderModalProps> = ({ isEditMode
                 )
             }
         >
-            <form action={formAction} className="flex flex-col gap-4">
+            <form action={formAction} onSubmit={validar} noValidate className="flex flex-col gap-4">
 
                  {isEditMode && (
                     <input
@@ -150,6 +155,7 @@ const CreateEditUserModal: React.FC<ICreateEditLeaderModalProps> = ({ isEditMode
                             placeholder="Novo Usuário"
                             defaultValue={isEditMode ? userData?.nome : ""}
                         />
+                        <ErroCampo erro={erros.nome} />
                     </div>
                     <div className="flex flex-col gap-2 w-full">
                         <label htmlFor="leaderName" className="block text-sm font-medium text-gray-700">
@@ -176,6 +182,7 @@ const CreateEditUserModal: React.FC<ICreateEditLeaderModalProps> = ({ isEditMode
                             placeholder="seuemail@exemplo.com"
                             defaultValue={isEditMode ? userData?.email : ""}
                         />
+                        <ErroCampo erro={erros.email} />
                     </div>
                 </div>
                 
@@ -212,6 +219,7 @@ const CreateEditUserModal: React.FC<ICreateEditLeaderModalProps> = ({ isEditMode
                                 <option key={role.valor} value={role.valor}>{role.rotulo}</option>
                             ))}
                         </select>
+                        <ErroCampo erro={erros.nivelUsuario} />
                     </div>
                     <div className="flex flex-col gap-2 w-full">
                         <label htmlFor="leaderName" className="block text-sm font-medium text-gray-700">
@@ -241,6 +249,7 @@ const CreateEditUserModal: React.FC<ICreateEditLeaderModalProps> = ({ isEditMode
                                 <option key={nivel.valor} value={nivel.valor}>{nivel.rotulo}</option>
                             ))}
                         </select>
+                        <ErroCampo erro={erros.nivelPermissao} />
                     </div>
                 </div>
 
@@ -273,6 +282,7 @@ const CreateEditUserModal: React.FC<ICreateEditLeaderModalProps> = ({ isEditMode
                                 <option key={franqueadora.id_franqueadora} value={franqueadora.id_franqueadora}>{franqueadora.nome}</option>
                             ))}
                         </select>
+                        <ErroCampo erro={erros.relacao} />
                     </div>
                 )}
                 {nivelPermissao === '2' && (
@@ -304,6 +314,7 @@ const CreateEditUserModal: React.FC<ICreateEditLeaderModalProps> = ({ isEditMode
                                 <option key={filial.id_filial} value={filial.id_filial}>{filial.nome}</option>
                             ))}
                         </select>
+                        <ErroCampo erro={erros.relacao} />
                     </div>
                 )}
                 {nivelPermissao === '3' && (
@@ -335,6 +346,7 @@ const CreateEditUserModal: React.FC<ICreateEditLeaderModalProps> = ({ isEditMode
                                 <option key={departamento.id_departamento} value={departamento.id_departamento}>{departamento.nome}</option>
                             ))}
                         </select>
+                        <ErroCampo erro={erros.relacao} />
                     </div>
                 )}
 

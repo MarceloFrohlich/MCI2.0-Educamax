@@ -6,6 +6,9 @@ import { toast } from "sonner";
 import { CiMail } from "react-icons/ci";
 import { IActionResponse } from "../../actions/types";
 import CriteriosSenha, { senhaAtendeCriterios } from "../utils/criteriosSenha";
+import { useValidacaoForm } from "../../hooks/useValidacaoForm";
+import { redefinirSenhaSchema } from "../../schemas/auth";
+import ErroCampo from "../utils/erroCampo";
 
 interface IPasswordRecovery {
     email: string
@@ -22,6 +25,8 @@ const PasswordRecovery: React.FC<IPasswordRecovery> = ({ email, resetStates }) =
         passwordRecovery,
         initialState
     );
+
+    const { erros, validar } = useValidacaoForm(redefinirSenhaSchema);
 
     const [senha, setSenha] = useState('');
     const [senhaEmFoco, setSenhaEmFoco] = useState(false);
@@ -42,7 +47,7 @@ const PasswordRecovery: React.FC<IPasswordRecovery> = ({ email, resetStates }) =
 
 
     return (
-        <form action={formAction} className="flex-1 flex flex-col justify-around">
+        <form action={formAction} onSubmit={validar} noValidate className="flex-1 flex flex-col justify-around">
             <div className="flex flex-col gap-0">
                 <h1 className="text-lg font-bold">Recuperação de senha</h1>
             </div>
@@ -88,6 +93,8 @@ const PasswordRecovery: React.FC<IPasswordRecovery> = ({ email, resetStates }) =
               "
                     />
                 </div>
+
+                <ErroCampo erro={erros.code} />
             </div>
             <div className="flex flex-col gap-3 text-(--textBaseColor)">
                 <div className="relative">
@@ -130,6 +137,8 @@ const PasswordRecovery: React.FC<IPasswordRecovery> = ({ email, resetStates }) =
                     />
                 </div>
                 <CriteriosSenha senha={senha} visivel={senhaEmFoco} />
+
+                <ErroCampo erro={erros.newPassword} />
             </div>
             <div className="flex flex-col gap-3 text-(--textBaseColor)">
                 <div className="relative">
@@ -167,6 +176,8 @@ const PasswordRecovery: React.FC<IPasswordRecovery> = ({ email, resetStates }) =
               "
                     />
                 </div>
+
+                <ErroCampo erro={erros.passValidation} />
             </div>
 
             <button

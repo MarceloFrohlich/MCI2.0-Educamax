@@ -11,6 +11,9 @@ import TriggerButton from "../utils/triggerButton";
 import { PiVolleyball } from "react-icons/pi";
 import DirectionMeasuresModal from "./directionMeasuresModal";
 import { useServerAction } from "../../hooks/useServerAction";
+import { useValidacaoForm } from "../../hooks/useValidacaoForm";
+import { jogoSchema } from "../../schemas/centralmci";
+import ErroCampo from "../utils/erroCampo";
 import { createJogoAction, updatejogoAction } from "../../actions/jogos/jogos";
 import FormSubmitButton from "../utils/formSubmitButton";
 
@@ -43,6 +46,8 @@ const CreateEditGameModal: React.FC<ICreateEditGameModalProps> = ({
         formAction,
         pending
     } = useServerAction(action);
+
+    const { erros, validar } = useValidacaoForm(jogoSchema, ['selectedCopas']);
 
     useEffect(() => {
         if (!state.success) return;
@@ -119,6 +124,8 @@ const CreateEditGameModal: React.FC<ICreateEditGameModalProps> = ({
             <form
                 ref={formRef}
                 action={formAction}
+                onSubmit={validar}
+                noValidate
                 className="flex flex-col gap-4 max-h-[80vh] overflow-y-auto">
                 <div className="grid grid-cols-2 gap-4">
                     {selectedCopas.map((copas) => (
@@ -171,6 +178,8 @@ const CreateEditGameModal: React.FC<ICreateEditGameModalProps> = ({
                                 text-(--textBaseColor)
                             "
                         />
+
+                        <ErroCampo erro={erros.gameName} />
                     </div>
 
                     <div className="flex flex-col gap-2">
@@ -315,6 +324,8 @@ const CreateEditGameModal: React.FC<ICreateEditGameModalProps> = ({
                             }),
                         }}
                     />
+
+                    <ErroCampo erro={erros.selectedCopas} />
                 </div>
 
                 <div className="grid grid-cols-2 gap-4">
@@ -408,6 +419,8 @@ const CreateEditGameModal: React.FC<ICreateEditGameModalProps> = ({
                                 text-(--textBaseColor)
                             "
                         />
+
+                        <ErroCampo erro={erros.de} />
                     </div>
 
                     <div className="flex flex-col gap-2">
@@ -438,6 +451,8 @@ const CreateEditGameModal: React.FC<ICreateEditGameModalProps> = ({
                                 text-(--textBaseColor)
                             "
                         />
+
+                        <ErroCampo erro={erros.para} />
                     </div>
                 </div>
 
@@ -469,6 +484,8 @@ const CreateEditGameModal: React.FC<ICreateEditGameModalProps> = ({
                                 text-(--textBaseColor)
                             "
                         />
+
+                        <ErroCampo erro={erros.inicio} />
                     </div>
 
                     <div className="flex flex-col gap-2">
@@ -498,6 +515,8 @@ const CreateEditGameModal: React.FC<ICreateEditGameModalProps> = ({
                                 text-(--textBaseColor)
                             "
                         />
+
+                        <ErroCampo erro={erros.fim} />
                     </div>
                 </div>
 

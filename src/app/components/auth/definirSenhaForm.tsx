@@ -8,6 +8,9 @@ import { FaLock } from "react-icons/fa";
 import { passwordRecovery } from "../../actions/auth";
 import { IActionResponse } from "../../actions/types";
 import CriteriosSenha, { senhaAtendeCriterios } from "../utils/criteriosSenha";
+import { useValidacaoForm } from "../../hooks/useValidacaoForm";
+import { definirSenhaSchema } from "../../schemas/auth";
+import ErroCampo from "../utils/erroCampo";
 
 interface IDefinirSenhaForm {
     email: string
@@ -24,6 +27,8 @@ const DefinirSenhaForm: React.FC<IDefinirSenhaForm> = ({ email, codigo }) => {
         passwordRecovery,
         initialState
     );
+
+    const { erros, validar } = useValidacaoForm(definirSenhaSchema);
 
     const [senha, setSenha] = useState('');
     const [senhaEmFoco, setSenhaEmFoco] = useState(false);
@@ -75,7 +80,7 @@ const DefinirSenhaForm: React.FC<IDefinirSenhaForm> = ({ email, codigo }) => {
                 )}
 
                 {!linkInvalido && !state.success && (
-                    <form action={formAction} className="flex flex-col gap-4">
+                    <form action={formAction} onSubmit={validar} noValidate className="flex flex-col gap-4">
                         <div>
                             <h1 className="text-lg font-bold">Bem-vindo ao MCI!</h1>
                             <p className="text-sm text-(--textBaseColor)/70">
@@ -126,6 +131,8 @@ const DefinirSenhaForm: React.FC<IDefinirSenhaForm> = ({ email, codigo }) => {
 
                         <CriteriosSenha senha={senha} visivel={senhaEmFoco} />
 
+                        <ErroCampo erro={erros.newPassword} />
+
                         <div className="relative">
                             <input
                                 className="
@@ -159,6 +166,8 @@ const DefinirSenhaForm: React.FC<IDefinirSenhaForm> = ({ email, codigo }) => {
                                 "
                             />
                         </div>
+
+                        <ErroCampo erro={erros.passValidation} />
 
                         {state.success === false && state.errorMessage && (
                             <p className="text-sm text-red-600 text-center">{state.errorMessage}</p>

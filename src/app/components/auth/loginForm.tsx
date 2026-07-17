@@ -7,6 +7,9 @@ import { loginAction } from "../../actions/auth";
 import { toast } from "sonner";
 import { useActionState, useEffect } from "react";
 import { IActionResponse } from "../../actions/types";
+import { useValidacaoForm } from "../../hooks/useValidacaoForm";
+import { loginSchema } from "../../schemas/auth";
+import ErroCampo from "../utils/erroCampo";
 
 interface ILoginForm {
     changeState: () => void
@@ -22,6 +25,8 @@ const LoginForm: React.FC<ILoginForm> = ({ changeState }) => {
         initialState
     );
 
+    const { erros, validar } = useValidacaoForm(loginSchema);
+
     useEffect(() => {
         if (state.success === true && state.successMessage) {
             toast.success(state.success === true && state.successMessage);
@@ -36,7 +41,7 @@ const LoginForm: React.FC<ILoginForm> = ({ changeState }) => {
     state.errorMessage]);
 
     return (
-        <form action={formAction} className="h-full flex flex-col justify-around">
+        <form action={formAction} onSubmit={validar} noValidate className="h-full flex flex-col justify-around">
             <div className="flex flex-col gap-0">
                 <h1 className="text-lg font-bold">Bem vindo!</h1>
                 <p>Faça o seu login.</p>
@@ -80,6 +85,8 @@ const LoginForm: React.FC<ILoginForm> = ({ changeState }) => {
                     />
                 </div>
 
+                <ErroCampo erro={erros.email} />
+
                 <div className="relative">
                     <input
                         className="
@@ -115,6 +122,8 @@ const LoginForm: React.FC<ILoginForm> = ({ changeState }) => {
               "
                     />
                 </div>
+
+                <ErroCampo erro={erros.senha} />
             </div>
 
             <button

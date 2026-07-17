@@ -5,6 +5,9 @@ import { sendRecoveryCodeAction } from "../../actions/auth";
 import { useActionState, useEffect } from "react";
 import { toast } from "sonner";
 import { IActionResponse } from "../../actions/types";
+import { useValidacaoForm } from "../../hooks/useValidacaoForm";
+import { recuperarSenhaSchema } from "../../schemas/auth";
+import ErroCampo from "../utils/erroCampo";
 
 interface ISendRecoveryCode {
     changeState: () => void
@@ -28,6 +31,8 @@ const SendRecoveryCode: React.FC<ISendRecoveryCode> = ({
         initialState
     );
 
+    const { erros, validar } = useValidacaoForm(recuperarSenhaSchema);
+
     useEffect(() => {
         if (state.success === true && state.successMessage) {
             toast.success(state.success === true && state.successMessage);
@@ -43,7 +48,7 @@ const SendRecoveryCode: React.FC<ISendRecoveryCode> = ({
     state.errorMessage]);
 
     return (
-        <form action={formAction} className="flex-1 flex flex-col justify-around">
+        <form action={formAction} onSubmit={validar} noValidate className="flex-1 flex flex-col justify-around">
             <div className="flex flex-col gap-0">
                 <h1 className="text-lg font-bold">Recuperação de senha</h1>
             </div>
@@ -89,6 +94,8 @@ const SendRecoveryCode: React.FC<ISendRecoveryCode> = ({
               "
                     />
                 </div>
+
+                <ErroCampo erro={erros.emailRecovery} />
             </div>
 
             <button

@@ -6,6 +6,9 @@ import GlobalDialog from "../utils/globalDialog";
 import { ILeader } from "../../types/centralMCI/centralMCI";
 import { createLiderAction, updateLiderAction } from "../../actions/lideres/lideres";
 import { useServerAction } from "../../hooks/useServerAction";
+import { useValidacaoForm } from "../../hooks/useValidacaoForm";
+import { liderSchema } from "../../schemas/centralmci";
+import ErroCampo from "../utils/erroCampo";
 import { useEffect, useState } from "react";
 import FormSubmitButton from "../utils/formSubmitButton";
 
@@ -26,6 +29,8 @@ const CreateEditLeaderModal: React.FC<ICreateEditLeaderModalProps> = ({ isEditMo
         formAction,
         pending
     } = useServerAction(action);
+
+    const { erros, validar } = useValidacaoForm(liderSchema);
 
     useEffect(() => {
 
@@ -57,7 +62,7 @@ const CreateEditLeaderModal: React.FC<ICreateEditLeaderModalProps> = ({ isEditMo
                 )
             }
         >
-            <form action={formAction}>
+            <form action={formAction} onSubmit={validar} noValidate>
                 <div className="flex flex-col gap-2">
 
                     {isEditMode && (
@@ -92,6 +97,7 @@ const CreateEditLeaderModal: React.FC<ICreateEditLeaderModalProps> = ({ isEditMo
                         placeholder="Novo Lider"
                         defaultValue={isEditMode ? leaderData?.nome : ""}
                     />
+                    <ErroCampo erro={erros.newleader} />
                 </div>
 
                 <div className="flex justify-end">

@@ -6,6 +6,9 @@ import { Button } from "../../../components/ui/button"
 import { IRelatorio } from "../../types/relatorios/relatorios"
 import { avaliarMciAction } from "../../actions/relatorios/relatorios"
 import { useServerAction } from "../../hooks/useServerAction"
+import { useValidacaoForm } from "../../hooks/useValidacaoForm"
+import { avaliacaoSchema } from "../../schemas/relatorios"
+import ErroCampo from "../utils/erroCampo"
 import FormSubmitButton from "../utils/formSubmitButton"
 
 interface IAvaliacaoModalProps {
@@ -24,6 +27,8 @@ const AvaliacaoModal: React.FC<IAvaliacaoModalProps> = ({ report, onSaved }) => 
         formAction,
         pending
     } = useServerAction(action);
+
+    const { erros, validar } = useValidacaoForm(avaliacaoSchema);
 
     useEffect(() => {
         if (state.success === true && state.successMessage) {
@@ -57,7 +62,7 @@ const AvaliacaoModal: React.FC<IAvaliacaoModalProps> = ({ report, onSaved }) => 
                 </Button>
             }
         >
-            <form action={formAction} className="flex flex-col gap-4">
+            <form action={formAction} onSubmit={validar} noValidate className="flex flex-col gap-4">
 
                 <input
                     type="hidden"
@@ -74,11 +79,12 @@ const AvaliacaoModal: React.FC<IAvaliacaoModalProps> = ({ report, onSaved }) => 
                         id="valor"
                         name="valor"
                         type="number"
-                        required
                         placeholder="Valor atual do MCI"
                         defaultValue={report.status?.valor ?? ""}
                         className="bg-white rounded-xl py-2 ps-4 placeholder:text-slate-400 focus:outline-none transition-colors border-2 border-(--textBaseColor)/50 text-(--textBaseColor) w-full"
                     />
+
+                    <ErroCampo erro={erros.valor} />
                 </div>
 
                 <div className="flex w-full justify-end">

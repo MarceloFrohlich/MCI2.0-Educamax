@@ -10,6 +10,8 @@ import { Button } from "../../../components/ui/button";
 import GlobalDialog from "../utils/globalDialog";
 
 import { IPrevidenciaForm } from "../../types/centralMCI/centralMCI";
+import { medidaSchema } from "../../schemas/centralmci";
+import ErroCampo from "../utils/erroCampo";
 
 interface IDirectionMeasuresModalProps {
     measures: IPrevidenciaForm[];
@@ -56,6 +58,11 @@ const DirectionMeasuresModal: React.FC<
         setOpen,
     ] = useState(false);
 
+    const [
+        erros,
+        setErros,
+    ] = useState<Record<string, string>>({});
+
     const measuresRef = useRef(measures);
     measuresRef.current = measures;
 
@@ -78,6 +85,8 @@ const DirectionMeasuresModal: React.FC<
         setFormData(
             createEmptyMeasure()
         );
+
+        setErros({});
 
     }, [open, selectedIndex]);
 
@@ -104,6 +113,32 @@ const DirectionMeasuresModal: React.FC<
     };
 
     const handleSaveMeasure = () => {
+
+        // valida o estado controlado antes de salvar no pai
+        const resultado = medidaSchema.safeParse({
+            ...formData,
+            placar_desejado: String(formData.placar_desejado ?? ''),
+            data_inicio: formData.data_inicio ?? '',
+            data_fim: formData.data_fim ?? '',
+            inativo_de: formData.inativo_de ?? '',
+            inativo_ate: formData.inativo_ate ?? '',
+        });
+
+        if (!resultado.success) {
+
+            const novos: Record<string, string> = {};
+
+            resultado.error.issues.forEach((issue) => {
+                const campo = String(issue.path[0] ?? '');
+                if (!novos[campo]) novos[campo] = issue.message;
+            });
+
+            setErros(novos);
+
+            return;
+        }
+
+        setErros({});
 
         setMeasures((prev) => {
 
@@ -299,6 +334,8 @@ const DirectionMeasuresModal: React.FC<
                         "
                     />
 
+                    <ErroCampo erro={erros.placar_desejado} />
+
                 </div>
 
                 <div className="grid grid-cols-2 gap-4">
@@ -330,6 +367,8 @@ const DirectionMeasuresModal: React.FC<
                             "
                         />
 
+                        <ErroCampo erro={erros.data_inicio} />
+
                     </div>
 
                     <div className="flex flex-col gap-2">
@@ -359,6 +398,8 @@ const DirectionMeasuresModal: React.FC<
                             "
                         />
 
+                        <ErroCampo erro={erros.data_fim} />
+
                     </div>
 
                 </div>
@@ -387,59 +428,71 @@ const DirectionMeasuresModal: React.FC<
 
                 <div className="grid grid-cols-2 gap-4">
 
-                    <input
-                        type="date"
-                        disabled={
-                            !formData.excluir_periodo
-                        }
-                        value={
-                            formData.inativo_de ?? ""
-                        }
-                        onChange={(e) =>
-                            handleChange(
-                                "inativo_de",
-                                e.target.value
-                            )
-                        }
-                        className="
-                            bg-white
-                            w-full
-                            rounded-xl
-                            py-2
-                            px-4
-                            border-2
-                            border-(--textBaseColor)/50
-                            focus:outline-none
-                            disabled:opacity-50
-                        "
-                    />
+                    <div className="flex flex-col gap-2">
 
-                    <input
-                        type="date"
-                        disabled={
-                            !formData.excluir_periodo
-                        }
-                        value={
-                            formData.inativo_ate ?? ""
-                        }
-                        onChange={(e) =>
-                            handleChange(
-                                "inativo_ate",
-                                e.target.value
-                            )
-                        }
-                        className="
-                            bg-white
-                            w-full
-                            rounded-xl
-                            py-2
-                            px-4
-                            border-2
-                            border-(--textBaseColor)/50
-                            focus:outline-none
-                            disabled:opacity-50
-                        "
-                    />
+                        <input
+                            type="date"
+                            disabled={
+                                !formData.excluir_periodo
+                            }
+                            value={
+                                formData.inativo_de ?? ""
+                            }
+                            onChange={(e) =>
+                                handleChange(
+                                    "inativo_de",
+                                    e.target.value
+                                )
+                            }
+                            className="
+                                bg-white
+                                w-full
+                                rounded-xl
+                                py-2
+                                px-4
+                                border-2
+                                border-(--textBaseColor)/50
+                                focus:outline-none
+                                disabled:opacity-50
+                            "
+                        />
+
+                        <ErroCampo erro={erros.inativo_de} />
+
+                    </div>
+
+                    <div className="flex flex-col gap-2">
+
+                        <input
+                            type="date"
+                            disabled={
+                                !formData.excluir_periodo
+                            }
+                            value={
+                                formData.inativo_ate ?? ""
+                            }
+                            onChange={(e) =>
+                                handleChange(
+                                    "inativo_ate",
+                                    e.target.value
+                                )
+                            }
+                            className="
+                                bg-white
+                                w-full
+                                rounded-xl
+                                py-2
+                                px-4
+                                border-2
+                                border-(--textBaseColor)/50
+                                focus:outline-none
+                                disabled:opacity-50
+                            "
+                        />
+
+                        <ErroCampo erro={erros.inativo_ate} />
+
+                    </div>
 
                 </div>
 

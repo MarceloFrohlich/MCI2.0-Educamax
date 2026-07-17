@@ -6,6 +6,9 @@ import GlobalDialog from "../../utils/globalDialog";
 import { IFranqueadora } from "../../../types/cadastros/cadastros";
 import { createFranqueadoraAction, updateFranqueadoraAction } from "../../../actions/cadastros/franqueadoras";
 import { useServerAction } from "../../../hooks/useServerAction";
+import { useValidacaoForm } from "../../../hooks/useValidacaoForm";
+import { franqueadoraSchema } from "../../../schemas/cadastros";
+import ErroCampo from "../../utils/erroCampo";
 import { useEffect, useState } from "react";
 
 interface ICreateEditLeaderModalProps {
@@ -27,6 +30,8 @@ const CreateEditFranqueadoraModal: React.FC<ICreateEditLeaderModalProps> = ({
         formAction,
         pending
     } = useServerAction(action);
+
+    const { erros, validar } = useValidacaoForm(franqueadoraSchema);
 
     useEffect(() => {
 
@@ -72,6 +77,8 @@ const CreateEditFranqueadoraModal: React.FC<ICreateEditLeaderModalProps> = ({
         >
             <form
                 action={formAction}
+                onSubmit={validar}
+                noValidate
                 className="flex flex-col gap-4"
             >
 
@@ -116,6 +123,8 @@ const CreateEditFranqueadoraModal: React.FC<ICreateEditLeaderModalProps> = ({
                                 : ""
                         }
                     />
+
+                    <ErroCampo erro={erros.nome} />
                 </div>
 
                 <div className="flex justify-end">

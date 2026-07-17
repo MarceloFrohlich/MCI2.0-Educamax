@@ -24,6 +24,8 @@ import {
 
 import { useServerAction } from "../../hooks/useServerAction";
 import DeleteModal from "../utils/deleteModal";
+import ErroCampo from "../utils/erroCampo";
+import { medidaSchema } from "../../schemas/centralmci";
 
 interface ICreateEditPrevidenciaProps {
     game: IGame;
@@ -74,6 +76,11 @@ const CreateEditPrevidencia: React.FC<
         ] = useState<IPrevidenciaForm>(
             createEmptyMeasure()
         );
+
+        const [
+            erros,
+            setErros,
+        ] = useState<Record<string, string>>({});
 
         useEffect(() => {
 
@@ -132,6 +139,38 @@ const CreateEditPrevidencia: React.FC<
 
         };
 
+        // valida o estado controlado antes da server action
+        const validar = (
+            e: React.FormEvent<HTMLFormElement>
+        ) => {
+
+            const resultado = medidaSchema.safeParse({
+                ...formData,
+                placar_desejado: String(formData.placar_desejado ?? ''),
+                data_inicio: formData.data_inicio ?? '',
+                data_fim: formData.data_fim ?? '',
+                inativo_de: formData.inativo_de ?? '',
+                inativo_ate: formData.inativo_ate ?? '',
+            });
+
+            if (resultado.success) {
+                setErros({});
+                return;
+            }
+
+            e.preventDefault();
+
+            const novos: Record<string, string> = {};
+
+            resultado.error.issues.forEach((issue) => {
+                const campo = String(issue.path[0] ?? '');
+                if (!novos[campo]) novos[campo] = issue.message;
+            });
+
+            setErros(novos);
+
+        };
+
         const isUpdate =
             !!formData.id_previdencia;
 
@@ -174,6 +213,8 @@ const CreateEditPrevidencia: React.FC<
 
                 <form
                     action={formAction}
+                    onSubmit={validar}
+                    noValidate
                     className="
                     flex
                     flex-col
@@ -336,51 +377,65 @@ const CreateEditPrevidencia: React.FC<
                         "
                         />
 
+                        <ErroCampo erro={erros.placar_desejado} />
+
                     </div>
 
                     <div className="grid grid-cols-2 gap-4">
 
-                        <input
-                            type="date"
-                            value={
-                                formData.data_inicio
-                            }
-                            onChange={(e) =>
-                                handleChange(
-                                    "data_inicio",
-                                    e.target.value
-                                )
-                            }
-                            className="
-                            bg-white
-                            rounded-xl
-                            py-2
-                            px-4
-                            border-2
-                            border-(--textBaseColor)/50
-                        "
-                        />
+                        <div className="flex flex-col gap-2">
 
-                        <input
-                            type="date"
-                            value={
-                                formData.data_fim
-                            }
-                            onChange={(e) =>
-                                handleChange(
-                                    "data_fim",
-                                    e.target.value
-                                )
-                            }
-                            className="
-                            bg-white
-                            rounded-xl
-                            py-2
-                            px-4
-                            border-2
-                            border-(--textBaseColor)/50
-                        "
-                        />
+                            <input
+                                type="date"
+                                value={
+                                    formData.data_inicio
+                                }
+                                onChange={(e) =>
+                                    handleChange(
+                                        "data_inicio",
+                                        e.target.value
+                                    )
+                                }
+                                className="
+                                bg-white
+                                rounded-xl
+                                py-2
+                                px-4
+                                border-2
+                                border-(--textBaseColor)/50
+                            "
+                            />
+
+                            <ErroCampo erro={erros.data_inicio} />
+
+                        </div>
+
+                        <div className="flex flex-col gap-2">
+
+                            <input
+                                type="date"
+                                value={
+                                    formData.data_fim
+                                }
+                                onChange={(e) =>
+                                    handleChange(
+                                        "data_fim",
+                                        e.target.value
+                                    )
+                                }
+                                className="
+                                bg-white
+                                rounded-xl
+                                py-2
+                                px-4
+                                border-2
+                                border-(--textBaseColor)/50
+                            "
+                            />
+
+                            <ErroCampo erro={erros.data_fim} />
+
+                        </div>
 
                     </div>
 
@@ -408,55 +463,67 @@ const CreateEditPrevidencia: React.FC<
 
                     <div className="grid grid-cols-2 gap-4">
 
-                        <input
-                            type="date"
-                            disabled={
-                                !formData.excluir_periodo
-                            }
-                            value={
-                                formData.inativo_de
-                            }
-                            onChange={(e) =>
-                                handleChange(
-                                    "inativo_de",
-                                    e.target.value
-                                )
-                            }
-                            className="
-                            bg-white
-                            rounded-xl
-                            disabled:opacity-50
-                            py-2
-                            px-4
-                            border-2
-                            border-(--textBaseColor)/50
-                        "
-                        />
+                        <div className="flex flex-col gap-2">
 
-                        <input
-                            type="date"
-                            disabled={
-                                !formData.excluir_periodo
-                            }
-                            value={
-                                formData.inativo_ate
-                            }
-                            onChange={(e) =>
-                                handleChange(
-                                    "inativo_ate",
-                                    e.target.value
-                                )
-                            }
-                            className="
-                            bg-white
-                            rounded-xl
-                            py-2
-                            px-4
-                            disabled:opacity-50
-                            border-2
-                            border-(--textBaseColor)/50
-                        "
-                        />
+                            <input
+                                type="date"
+                                disabled={
+                                    !formData.excluir_periodo
+                                }
+                                value={
+                                    formData.inativo_de
+                                }
+                                onChange={(e) =>
+                                    handleChange(
+                                        "inativo_de",
+                                        e.target.value
+                                    )
+                                }
+                                className="
+                                bg-white
+                                rounded-xl
+                                disabled:opacity-50
+                                py-2
+                                px-4
+                                border-2
+                                border-(--textBaseColor)/50
+                            "
+                            />
+
+                            <ErroCampo erro={erros.inativo_de} />
+
+                        </div>
+
+                        <div className="flex flex-col gap-2">
+
+                            <input
+                                type="date"
+                                disabled={
+                                    !formData.excluir_periodo
+                                }
+                                value={
+                                    formData.inativo_ate
+                                }
+                                onChange={(e) =>
+                                    handleChange(
+                                        "inativo_ate",
+                                        e.target.value
+                                    )
+                                }
+                                className="
+                                bg-white
+                                rounded-xl
+                                py-2
+                                px-4
+                                disabled:opacity-50
+                                border-2
+                                border-(--textBaseColor)/50
+                            "
+                            />
+
+                            <ErroCampo erro={erros.inativo_ate} />
+
+                        </div>
 
                     </div>
 

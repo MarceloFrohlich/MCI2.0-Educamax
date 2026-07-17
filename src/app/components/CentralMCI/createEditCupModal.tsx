@@ -10,6 +10,9 @@ import { IDepartamento } from "../../types/cadastros/cadastros";
 import FormSubmitButton from "../utils/formSubmitButton";
 import { createCopaAction, updateCopaAction } from "../../actions/copas/copas";
 import { useServerAction } from "../../hooks/useServerAction";
+import { useValidacaoForm } from "../../hooks/useValidacaoForm";
+import { copaSchema } from "../../schemas/centralmci";
+import ErroCampo from "../utils/erroCampo";
 
 interface ICreateEditCupModalProps {
     isEditMode?: boolean;
@@ -41,6 +44,8 @@ const CreateEditCupModal: React.FC<ICreateEditCupModalProps> = ({
         formAction,
         pending
     } = useServerAction(action);
+
+    const { erros, validar } = useValidacaoForm(copaSchema, ['departamentos']);
 
     useEffect(() => {
         if (
@@ -96,7 +101,7 @@ const CreateEditCupModal: React.FC<ICreateEditCupModalProps> = ({
                 )
             }
         >
-            <form action={formAction} className="flex flex-col gap-4">
+            <form action={formAction} onSubmit={validar} noValidate className="flex flex-col gap-4">
                 <div className="grid grid-cols-2 gap-4">
                     {selectedDepartments.map((department) => (
                         <input
@@ -144,6 +149,8 @@ const CreateEditCupModal: React.FC<ICreateEditCupModalProps> = ({
                                 text-(--textBaseColor)
                             "
                         />
+
+                        <ErroCampo erro={erros.cupName} />
                     </div>
 
                     <div className="flex flex-col gap-2">
@@ -184,6 +191,8 @@ const CreateEditCupModal: React.FC<ICreateEditCupModalProps> = ({
                                 </option>
                             ))}
                         </select>
+
+                        <ErroCampo erro={erros.leader} />
                     </div>
                 </div>
 
@@ -275,6 +284,8 @@ const CreateEditCupModal: React.FC<ICreateEditCupModalProps> = ({
                             }),
                         }}
                     />
+
+                    <ErroCampo erro={erros.departamentos} />
                 </div>
 
                 <div className="grid grid-cols-2 gap-4">
@@ -306,6 +317,8 @@ const CreateEditCupModal: React.FC<ICreateEditCupModalProps> = ({
                                 text-(--textBaseColor)
                             "
                         />
+
+                        <ErroCampo erro={erros.verbo} />
                     </div>
 
                     <div className="flex flex-col gap-2">
@@ -336,6 +349,8 @@ const CreateEditCupModal: React.FC<ICreateEditCupModalProps> = ({
                                 text-(--textBaseColor)
                             "
                         />
+
+                        <ErroCampo erro={erros.medida} />
                     </div>
                 </div>
 
@@ -368,6 +383,8 @@ const CreateEditCupModal: React.FC<ICreateEditCupModalProps> = ({
                                 text-(--textBaseColor)
                             "
                         />
+
+                        <ErroCampo erro={erros.de} />
                     </div>
 
                     <div className="flex flex-col gap-2">
@@ -398,6 +415,8 @@ const CreateEditCupModal: React.FC<ICreateEditCupModalProps> = ({
                                 text-(--textBaseColor)
                             "
                         />
+
+                        <ErroCampo erro={erros.para} />
                     </div>
                 </div>
 
@@ -428,6 +447,8 @@ const CreateEditCupModal: React.FC<ICreateEditCupModalProps> = ({
                                 text-(--textBaseColor)
                             "
                         />
+
+                        <ErroCampo erro={erros.start_date} />
                     </div>
 
                     <div className="flex flex-col gap-2">
@@ -456,6 +477,8 @@ const CreateEditCupModal: React.FC<ICreateEditCupModalProps> = ({
                                 text-(--textBaseColor)
                             "
                         />
+
+                        <ErroCampo erro={erros.end_date} />
                     </div>
                 </div>
 

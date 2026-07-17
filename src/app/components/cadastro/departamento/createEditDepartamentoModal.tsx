@@ -6,6 +6,9 @@ import GlobalDialog from "../../utils/globalDialog";
 import { IDepartamento, IFilial } from "../../../types/cadastros/cadastros";
 import { useEffect, useState } from "react";
 import { useServerAction } from "../../../hooks/useServerAction";
+import { useValidacaoForm } from "../../../hooks/useValidacaoForm";
+import { departamentoSchema } from "../../../schemas/cadastros";
+import ErroCampo from "../../utils/erroCampo";
 import { createDepartamentoAction, updateDepartamentoAction } from "../../../actions/cadastros/departamentos";
 
 interface ICreateEditDepartametoModal {
@@ -26,6 +29,8 @@ const CreateEditDepartamentoModal: React.FC<ICreateEditDepartametoModal> = ({ is
         formAction,
         pending
     } = useServerAction(action);
+
+    const { erros, validar } = useValidacaoForm(departamentoSchema);
 
     useEffect(() => {
         if (
@@ -56,7 +61,7 @@ const CreateEditDepartamentoModal: React.FC<ICreateEditDepartametoModal> = ({ is
                 )
             }
         >
-            <form action={formAction} className="flex flex-col gap-4">
+            <form action={formAction} onSubmit={validar} noValidate className="flex flex-col gap-4">
 
                 {isEditMode && (
                     <input
@@ -98,6 +103,7 @@ const CreateEditDepartamentoModal: React.FC<ICreateEditDepartametoModal> = ({ is
                             ))}
 
                         </select>
+                        <ErroCampo erro={erros.id_filial} />
                     </div>
 
                     <div className="flex flex-col gap-2 w-full">
@@ -125,6 +131,7 @@ const CreateEditDepartamentoModal: React.FC<ICreateEditDepartametoModal> = ({ is
                             placeholder="Novo Departamento"
                             defaultValue={isEditMode ? departamentoData?.nome : ""}
                         />
+                        <ErroCampo erro={erros.departamento} />
                     </div>
                 </div>
 

@@ -7,6 +7,9 @@ import { IGame, IPrevidencia, ISemana } from "../../types/centralMCI/centralMCI"
 import { useEffect, useState } from "react"
 import { atualizacaoSemanalAction } from "../../actions/jogos/jogos"
 import { useServerAction } from "../../hooks/useServerAction"
+import { useValidacaoForm } from "../../hooks/useValidacaoForm"
+import { lancamentoSchema } from "../../schemas/atualizacao"
+import ErroCampo from "../utils/erroCampo"
 import FormSubmitButton from "../utils/formSubmitButton"
 import { toast } from "sonner"
 
@@ -29,6 +32,8 @@ const UpdateWeeklyMeasure: React.FC<UpdateWeeklyMeasureProps> = ({ measure, game
         formAction,
         pending
     } = useServerAction(action);
+
+    const { erros, validar } = useValidacaoForm(lancamentoSchema);
 
     useEffect(() => {
         if (state.success === true && state.successMessage) {
@@ -55,7 +60,7 @@ const UpdateWeeklyMeasure: React.FC<UpdateWeeklyMeasureProps> = ({ measure, game
 
             )}
         >
-            <form action={formAction} className="flex flex-col gap-4">
+            <form action={formAction} onSubmit={validar} noValidate className="flex flex-col gap-4">
 
                 <input
                     type="hidden"
@@ -95,6 +100,8 @@ const UpdateWeeklyMeasure: React.FC<UpdateWeeklyMeasureProps> = ({ measure, game
                         defaultValue={semana.lancamento?.realizado ?? ""}
                         className="bg-white rounded-xl py-2 ps-4 placeholder:text-slate-400 focus:outline-none transition-colors border-2 border-(--textBaseColor)/50 text-(--textBaseColor) w-full"
                     />
+
+                    <ErroCampo erro={erros.realizado} />
                 </div>
                 <div className="flex flex-col gap-2">
                     <label htmlFor="realizado" className="text-sm font-medium text-gray-700">
@@ -109,6 +116,8 @@ const UpdateWeeklyMeasure: React.FC<UpdateWeeklyMeasureProps> = ({ measure, game
                         defaultValue={semana.lancamento?.compromisso ?? ""}
                         className="bg-white rounded-xl py-2 ps-4 placeholder:text-slate-400 focus:outline-none                  transition-colors border-2 border-(--textBaseColor)/50 text-(--textBaseColor) w-full"
                     />
+
+                    <ErroCampo erro={erros.compromisso} />
                 </div>
 
                 {game && game.tem_plp && (
@@ -132,6 +141,8 @@ const UpdateWeeklyMeasure: React.FC<UpdateWeeklyMeasureProps> = ({ measure, game
                                 defaultValue={semana.lancamento?.plp?.entrevistaqtd ?? ""}
                                 className="bg-white rounded-xl py-2 ps-4 placeholder:text-slate-400 focus:outline-none                  transition-colors border-2 border-(--textBaseColor)/50 text-(--textBaseColor) w-full"
                             />
+
+                            <ErroCampo erro={erros.entrevistaqtd} />
                         </div>
                         <div className="flex flex-col gap-2">
                             <label htmlFor="realizado" className="text-sm font-medium text-gray-700">
@@ -146,6 +157,8 @@ const UpdateWeeklyMeasure: React.FC<UpdateWeeklyMeasureProps> = ({ measure, game
                                 defaultValue={semana.lancamento?.plp?.promotores ?? ""}
                                 className="bg-white rounded-xl py-2 ps-4 placeholder:text-slate-400 focus:outline-none                  transition-colors border-2 border-(--textBaseColor)/50 text-(--textBaseColor) w-full"
                             />
+
+                            <ErroCampo erro={erros.promotores} />
                         </div>
                         <div className="flex flex-col gap-2">
                             <label htmlFor="realizado" className="text-sm font-medium text-gray-700">
@@ -160,6 +173,8 @@ const UpdateWeeklyMeasure: React.FC<UpdateWeeklyMeasureProps> = ({ measure, game
                                 defaultValue={semana.lancamento?.plp?.neutros ?? ""}
                                 className="bg-white rounded-xl py-2 ps-4 placeholder:text-slate-400 focus:outline-none                  transition-colors border-2 border-(--textBaseColor)/50 text-(--textBaseColor) w-full"
                             />
+
+                            <ErroCampo erro={erros.neutros} />
                         </div>
                         <div className="flex flex-col gap-2">
                             <label htmlFor="realizado" className="text-sm font-medium text-gray-700">
@@ -174,6 +189,8 @@ const UpdateWeeklyMeasure: React.FC<UpdateWeeklyMeasureProps> = ({ measure, game
                                 defaultValue={semana.lancamento?.plp?.detratores ?? ""}
                                 className="bg-white rounded-xl py-2 ps-4 placeholder:text-slate-400 focus:outline-none                  transition-colors border-2 border-(--textBaseColor)/50 text-(--textBaseColor) w-full"
                             />
+
+                            <ErroCampo erro={erros.detratores} />
                         </div>
                     </div>
                 )}
