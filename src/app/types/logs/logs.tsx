@@ -7,4 +7,5 @@ export interface ILog {
     sucesso: boolean
     mensagem_erro: string | null
     usuario: string | null
+    payload: Record<string, unknown> | null
 }

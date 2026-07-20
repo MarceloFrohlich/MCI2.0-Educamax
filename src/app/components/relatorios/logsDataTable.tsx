@@ -6,11 +6,23 @@ import { ILog } from "../../types/logs/logs";
 import { customStyles } from "../utils/general";
 import FilterCard from "../utils/filterCard";
 
+const LogPayload: React.FC<{ data: ILog }> = ({ data }) => {
+    if (!data.payload) return null;
+
+    return (
+        <pre className="mx-4 my-2 max-h-80 overflow-auto rounded-md bg-slate-900 p-4 text-xs text-slate-100">
+            {JSON.stringify(data.payload, null, 2)}
+        </pre>
+    );
+};
+
 const LogsDataTable: React.FC<{ logs: ILog[] }> = ({ logs }) => {
     const [filters, setFilters] = useState({
         metodo: '',
         resultado: '',
-        rota: ''
+        rota: '',
+        dataInicio: '',
+        dataFim: ''
     });
 
     const handleFilterChange = (param: string, value: string) => {
@@ -18,10 +30,18 @@ const LogsDataTable: React.FC<{ logs: ILog[] }> = ({ logs }) => {
     };
 
     const logsFiltrados = useMemo(() => {
+        const inicio = filters.dataInicio ? new Date(`${filters.dataInicio}T00:00:00`) : null;
+        const fim = filters.dataFim ? new Date(`${filters.dataFim}T23:59:59.999`) : null;
+
         return logs.filter(log => {
             if (filters.metodo && log.metodo !== filters.metodo) return false;
             if (filters.resultado && String(log.sucesso) !== filters.resultado) return false;
             if (filters.rota && !log.rota.toLowerCase().includes(filters.rota.toLowerCase())) return false;
+
+            const dataLog = new Date(log.data_hora);
+            if (inicio && dataLog < inicio) return false;
+            if (fim && dataLog > fim) return false;
+
             return true;
         });
     }, [logs, filters]);
@@ -138,6 +158,22 @@ const LogsDataTable: React.FC<{ logs: ILog[] }> = ({ logs }) => {
                     ]}
                     onChange={handleFilterChange}
                 />
+
+                <FilterCard
+                    param="dataInicio"
+                    type="date"
+                    title="DATA INÍCIO"
+                    value={filters.dataInicio}
+                    onChange={handleFilterChange}
+                />
+
+                <FilterCard
+                    param="dataFim"
+                    type="date"
+                    title="DATA FIM"
+                    value={filters.dataFim}
+                    onChange={handleFilterChange}
+                />
             </div>
 
             <div className="w-full max-h-[80vh] rounded-lg shadow-[0_10px_35px_rgba(93,120,183,0.22)]">
@@ -148,6 +184,9 @@ const LogsDataTable: React.FC<{ logs: ILog[] }> = ({ logs }) => {
                     pagination
                     customStyles={customStyles}
                     noDataComponent={<div>Nenhum log registrado</div>}
+                    expandableRows
+                    expandableRowsComponent={LogPayload}
+                    expandableRowDisabled={(row) => !row.payload}
                     paginationPerPage={10}
                     paginationRowsPerPageOptions={[10, 25, 50]}
 

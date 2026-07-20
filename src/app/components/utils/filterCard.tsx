@@ -8,7 +8,7 @@ interface FilterOption {
 interface IFilterCardProps {
     title: React.ReactNode;
     param: string;
-    type?: 'text' | 'select';
+    type?: 'text' | 'select' | 'date';
     placeholder?: string;
     options?: FilterOption[];
     value?: string;
@@ -125,6 +125,23 @@ const FilterCard: React.FC<IFilterCardProps> = ({
                             </option>
                         ))}
                     </select>
+                ) : type === 'date' ? (
+                    <input
+                        type="date"
+                        value={value}
+                        onChange={(e) =>
+                            onChange(param, e.target.value)
+                        }
+                        className="
+                            w-full
+                            bg-transparent
+                            border-b
+                            border-amber-400
+                            pb-2
+                            outline-none
+                            text-(--textYellowColor)
+                        "
+                    />
                 ) : (
                     <input
                         type="text"
