@@ -54,6 +54,7 @@ const LogsDataTable: React.FC<{ logs: ILog[] }> = ({ logs }) => {
             cell: (row) => new Date(row.data_hora).toLocaleString("pt-BR", {
                 dateStyle: "short",
                 timeStyle: "short",
+                timeZone: "America/Sao_Paulo",
             }),
             grow: 1,
         },
