@@ -22,9 +22,10 @@ const rotasUsuarioComum = ["/pages/atualizacao", "/pages/perfil"];
 //rota sem regra = liberada para qualquer logado (a api já devolve os dados filtrados)
 export const regrasRotas: IRegraRota[] = [
     { prefixo: "/pages/relatorios/logs", roles: [ROLE_ADMIN_GLOBAL] },
-    { prefixo: "/pages/cadastros/usuarios", roles: [ROLE_ADMIN_GLOBAL, ROLE_ADMIN_LOCAL] },
-    { prefixo: "/pages/cadastros/franqueadoras", niveis: [NIVEL_FRANQUEADORA] },
-    { prefixo: "/pages/cadastros/filiais", niveis: [NIVEL_FRANQUEADORA, NIVEL_FILIAL] },
+    { prefixo: "/pages/cadastros/franqueadoras", roles: [ROLE_ADMIN_GLOBAL] },
+    { prefixo: "/pages/cadastros/filiais", niveis: [NIVEL_FRANQUEADORA] },
+    { prefixo: "/pages/cadastros/departamentos", niveis: [NIVEL_FRANQUEADORA, NIVEL_FILIAL] },
+    { prefixo: "/pages/cadastros/usuarios", niveis: [NIVEL_FRANQUEADORA] },
 ];
 
 //usuário comum entra direto na atualização semanal; demais perfis no dashboard

@@ -35,27 +35,28 @@ describe("canAccess", () => {
         expect(canAccess("/pages/relatorios", comum)).toBe(false);
     });
 
-    it("admin de franqueadora cadastra os três", () => {
+    it("admin de franqueadora cadastra filial, departamento e usuário, mas não franqueadora", () => {
         const franqueadora = sessao({ id_nivel: 1 });
-        expect(canAccess("/pages/cadastros/franqueadoras", franqueadora)).toBe(true);
+        expect(canAccess("/pages/cadastros/franqueadoras", franqueadora)).toBe(false);
         expect(canAccess("/pages/cadastros/filiais", franqueadora)).toBe(true);
         expect(canAccess("/pages/cadastros/departamentos", franqueadora)).toBe(true);
         expect(canAccess("/pages/cadastros/usuarios", franqueadora)).toBe(true);
     });
 
-    it("admin de filial só filial pra baixo", () => {
+    it("admin de filial só cadastra departamento", () => {
         const filial = sessao({ id_nivel: 2 });
         expect(canAccess("/pages/cadastros/franqueadoras", filial)).toBe(false);
-        expect(canAccess("/pages/cadastros/filiais", filial)).toBe(true);
+        expect(canAccess("/pages/cadastros/filiais", filial)).toBe(false);
         expect(canAccess("/pages/cadastros/departamentos", filial)).toBe(true);
+        expect(canAccess("/pages/cadastros/usuarios", filial)).toBe(false);
     });
 
-    it("admin de departamento só departamento", () => {
+    it("admin de departamento não cadastra nada", () => {
         const departamento = sessao({ id_nivel: 3 });
         expect(canAccess("/pages/cadastros/franqueadoras", departamento)).toBe(false);
         expect(canAccess("/pages/cadastros/filiais", departamento)).toBe(false);
-        expect(canAccess("/pages/cadastros/departamentos", departamento)).toBe(true);
-        expect(canAccess("/pages/cadastros/usuarios", departamento)).toBe(true);
+        expect(canAccess("/pages/cadastros/departamentos", departamento)).toBe(false);
+        expect(canAccess("/pages/cadastros/usuarios", departamento)).toBe(false);
     });
 
     it("rota sem regra é liberada para admins", () => {

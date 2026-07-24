@@ -91,3 +91,23 @@ um segundo cookie de sessão no login com `id_role`/`id_nivel`/`relacao` (o payl
 
 Para restringir uma rota nova: adicionar uma linha em `regrasRotas` — menu e
 bloqueio de rota acompanham juntos.
+
+## 5. Regra de cadastro em cadeia (ajustado em 2026-07-24)
+
+Quem pode acessar cada tela de `Cadastro` no front (`regrasRotas` em
+`src/app/utils/permissoes.tsx`), independente do que a API venha a liberar:
+
+| Tela | Quem acessa |
+|---|---|
+| Franqueadora | só admin global (TI) |
+| Filiais | franqueadora |
+| Departamentos | franqueadora ou filial |
+| Usuários | franqueadora (cadastra só dentro da própria cadeia — escopo já vem da API) |
+
+Departamento não acessa nenhuma tela de `Cadastro` (nem entidades, nem usuários).
+Admin global sempre passa (bypass em `canAccess`), independente da tabela acima.
+
+**Atenção:** a doc original (seção 1) registra que hoje `/usuarios/*` na API é
+`@Roles(1)` (admin global apenas). Se isso não tiver sido atualizado na API para
+liberar franqueadora, o front vai mostrar o menu/permitir a rota mas a API vai
+devolver 403 ao tentar salvar — checar/ajustar isso no `mci-api` também.
