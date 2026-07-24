@@ -40,13 +40,14 @@ const CreateEditUserModal: React.FC<ICreateEditLeaderModalProps> = ({ isEditMode
         { valor: '3', rotulo: 'Usuário' },
     ];
 
-    //só cria usuários do próprio nível pra baixo na hierarquia
-    const nivelMinimo = ehGlobal ? 0 : sessao?.id_nivel ?? 0;
+    //só cria usuários de nível abaixo do próprio (nunca no mesmo nível do admin local)
+    const nivelMinimo = ehGlobal ? 0 : (sessao?.id_nivel ?? 0) + 1;
+    const nivelAtualDoAlvo = userData?.nivel?.id_nivel?.toString();
     const niveisDisponiveis = [
         { valor: '1', rotulo: 'Franqueadora' },
         { valor: '2', rotulo: 'Filial' },
         { valor: '3', rotulo: 'Departamento/Setor' },
-    ].filter(nivel => Number(nivel.valor) >= nivelMinimo);
+    ].filter(nivel => Number(nivel.valor) >= nivelMinimo || (isEditMode && nivel.valor === nivelAtualDoAlvo));
 
     //relações limitadas à cadeia do admin logado
     const franqueadorasVisiveis = ehGlobal
