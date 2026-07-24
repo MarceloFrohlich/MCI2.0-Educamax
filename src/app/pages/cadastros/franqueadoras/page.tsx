@@ -7,7 +7,7 @@ const CadastroFranqueadora: React.FC = async () => {
     const franqueadoras = await getAllFranqueadoras();
 
     return (
-        <section className="mx-8 text-(--textBaseColor) relative z-50">
+        <section className="mx-8 text-(--textBaseColor)">
             <h1 className="font-bold">Cadastro de Franqueadoras</h1>
 
             <div className="my-4 w-full flex justify-end">

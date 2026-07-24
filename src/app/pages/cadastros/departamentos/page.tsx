@@ -9,7 +9,7 @@ const CadastroDepartamento: React.FC = async () => {
     const filiais = await getAllFiliais()
 
     return (
-        <section className="mx-8 text-(--textBaseColor) relative z-50">
+        <section className="mx-8 text-(--textBaseColor)">
             <h1 className="font-bold">Cadastro de Departamentos</h1>
 
             <div className="my-4 w-full flex justify-end">

@@ -15,7 +15,7 @@ const CadastroUsuarios: React.FC = async () => {
     const sessao = await getSessao()
 
     return (
-        <section className="mx-8 text-(--textBaseColor) relative z-50">
+        <section className="mx-8 text-(--textBaseColor)">
             <h1 className="font-bold">Cadastro de usuários</h1>
 
             <div className="my-4 w-full flex justify-end">
