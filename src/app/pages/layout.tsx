@@ -32,7 +32,7 @@ const Main = async ({ children }: IMain) => {
             </div>
 
             <Sidebar sessao={sessao} />
-            <section className=" bg-[linear-gradient(90deg,#DEE9EF_0%,#E4EBF1_98%)] ps-20 sm:ps-24 w-full absolute top-16">
+            <section className=" bg-[linear-gradient(90deg,#DEE9EF_0%,#E4EBF1_98%)] ps-20 sm:ps-24 w-full absolute top-30">
                     {children}
             </section>
         </section>
