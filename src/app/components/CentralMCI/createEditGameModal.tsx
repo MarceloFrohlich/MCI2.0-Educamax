@@ -271,6 +271,9 @@ const CreateEditGameModal: React.FC<ICreateEditGameModalProps> = ({
                                     ...base,
                                     fontWeight: 600,
                                     color: "#112C46",
+                                    backgroundColor: "#e2e8f0",
+                                    padding: "6px 12px",
+                                    marginBottom: 0,
                                 }),
 
                                 option: (base, state) => ({

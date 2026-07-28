@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import FilterCard from '../../components/utils/filterCard';
 import GameModal from '../../components/CentralMCI/gameModal';
 import { getJogosFiltrados } from '../../actions/jogos/jogos';
@@ -20,6 +20,13 @@ interface ICentralMCIClient {
 
 export const CentralMCIClient: React.FC<ICentralMCIClient> = ({ copas, departamentos, initialGames, lideres, usuarios }) => {
     const [games, setGames] = useState(initialGames);
+
+    // initialGames só chega atualizado depois que o Server Action revalida a
+    // rota (criar/editar/excluir/replicar jogo) e o Next re-renderiza o page.tsx
+    // pai — sem isso, o estado local ficava preso no primeiro carregamento.
+    useEffect(() => {
+        setGames(initialGames);
+    }, [initialGames]);
 
     const [filters, setFilters] = useState({
         nome: '',
