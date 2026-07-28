@@ -67,7 +67,7 @@ const Sidebar: React.FC<{ sessao: ISessao | null }> = ({ sessao }) => {
                     ${isExpanded ? 'w-52' : 'w-10'}
                     transition-[width]
                     duration-300
-                    top-30
+                    top-[var(--app-header-height,7.5rem)]
                     ease-in-out`
 
             }
