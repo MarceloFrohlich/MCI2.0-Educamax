@@ -18,7 +18,6 @@ export async function createCopaAction(
             ids_departamentos: formData
                 .getAll('departamentos')
                 .map((id) => id),
-            id_lider: formData.get('leader') || undefined,
             inicio: formData.get('start_date'),
             fim: formData.get('end_date'),
             verbo: formData.get('verbo'),
@@ -59,7 +58,6 @@ export async function updateCopaAction(
             ids_departamentos: formData
                 .getAll('departamentos')
                 .map((id) => id),
-            id_lider: formData.get('leader') || undefined,
             inicio: formData.get('start_date'),
             fim: formData.get('end_date'),
             verbo: formData.get('verbo'),

@@ -22,7 +22,6 @@ export const CentralMCIClient: React.FC<ICentralMCIClient> = ({ copas, departame
 
     const [filters, setFilters] = useState({
         nome: '',
-        id_lider: '',
         id_departamento: '',
         id_copa: ''
     });
@@ -46,7 +45,7 @@ export const CentralMCIClient: React.FC<ICentralMCIClient> = ({ copas, departame
         <>
             <div className="my-8 flex justify-between gap-4 relative">
                 <div className="flex ">
-                    <ManageCupModal leaders={lideres} departamentos={departamentos} copas={copas} />
+                    <ManageCupModal departamentos={departamentos} copas={copas} />
                     <CreateEditGameModal leaders={lideres} copas={copas} />
                     <ManageLeaderModal leader={lideres} />
                 </div>
@@ -68,18 +67,6 @@ export const CentralMCIClient: React.FC<ICentralMCIClient> = ({ copas, departame
                     options={departamentos.map((d: any) => ({
                         value: String(d.id_departamento),
                         label: d.nome,
-                    }))}
-                    onChange={handleFilterChange}
-                />
-
-                <FilterCard
-                    param="id_lider"
-                    type="select"
-                    title="LÍDER"
-                    value={filters.id_lider}
-                    options={lideres.map((l: any) => ({
-                        value: String(l.id_lider),
-                        label: l.nome,
                     }))}
                     onChange={handleFilterChange}
                 />

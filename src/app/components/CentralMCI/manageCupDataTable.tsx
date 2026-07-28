@@ -2,7 +2,7 @@
 
 import React from "react";
 import DataTable from "react-data-table-component";
-import { ICup, ILeader } from "../../types/centralMCI/centralMCI";
+import { ICup } from "../../types/centralMCI/centralMCI";
 import DeleteModal from "../utils/deleteModal";
 import CreateEditCupModal from "./createEditCupModal";
 import { IDepartamento } from "../../types/cadastros/cadastros";
@@ -10,13 +10,12 @@ import { deleteCopaAction } from "../../actions/copas/copas";
 import { formatDateBR } from "../utils/general";
 
 interface IManageCupDataTable {
-    leaders: ILeader[]
     departamentos: IDepartamento[]
     copas: ICup[]
 }
 
 const ManageCupDataTable: React.FC<IManageCupDataTable> = ({
-    leaders, departamentos, copas
+    departamentos, copas
 }) => {
     const columns = [
         {
@@ -32,13 +31,6 @@ const ManageCupDataTable: React.FC<IManageCupDataTable> = ({
             sortable: true,
             cell: (row: ICup) => row.departamento.nome,
             grow: 1.5,
-        },
-        {
-            name: "Lider",
-            selector: (row: ICup) => row.lider?.nome,
-            sortable: true,
-            cell: (row: ICup) => row.lider?.nome,
-            grow: 1,
         },
         {
             name: "Verbo",
@@ -90,7 +82,6 @@ const ManageCupDataTable: React.FC<IManageCupDataTable> = ({
                     <CreateEditCupModal
                         isEditMode={true}
                         cupData={row}
-                        leaders={leaders}
                         departamentos={departamentos}
                     />
                     <DeleteModal action={deleteCopaAction} id={row.id_copa}  />
@@ -106,8 +97,7 @@ const ManageCupDataTable: React.FC<IManageCupDataTable> = ({
             title={
                 <div className="w-full flex justify-end">
                     <CreateEditCupModal
-                        departamentos={departamentos}
-                        leaders={leaders} />
+                        departamentos={departamentos} />
                 </div>}
             columns={columns}
             data={copas}

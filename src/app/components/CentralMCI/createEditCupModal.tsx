@@ -3,7 +3,7 @@
 import { CiEdit } from "react-icons/ci";
 import { Button } from "../../../components/ui/button";
 import GlobalDialog from "../utils/globalDialog";
-import { ICup, ILeader } from "../../types/centralMCI/centralMCI";
+import { ICup } from "../../types/centralMCI/centralMCI";
 import Select from "react-select";
 import { useEffect, useState } from "react";
 import { IDepartamento } from "../../types/cadastros/cadastros";
@@ -17,7 +17,6 @@ import ErroCampo from "../utils/erroCampo";
 interface ICreateEditCupModalProps {
     isEditMode?: boolean;
     cupData?: ICup;
-    leaders: ILeader[];
     departamentos: IDepartamento[]
 }
 
@@ -29,7 +28,6 @@ interface ISelectOption {
 const CreateEditCupModal: React.FC<ICreateEditCupModalProps> = ({
     isEditMode = false,
     cupData,
-    leaders,
     departamentos
 }) => {
 
@@ -102,98 +100,54 @@ const CreateEditCupModal: React.FC<ICreateEditCupModalProps> = ({
             }
         >
             <form action={formAction} onSubmit={validar} noValidate className="flex flex-col gap-4">
-                <div className="grid grid-cols-2 gap-4">
-                    {selectedDepartments.map((department) => (
-                        <input
-                            key={department.value}
-                            type="hidden"
-                            name="departamentos"
-                            value={department.value}
-                        />
-                    ))}
+                {selectedDepartments.map((department) => (
+                    <input
+                        key={department.value}
+                        type="hidden"
+                        name="departamentos"
+                        value={department.value}
+                    />
+                ))}
 
-                    {isEditMode && (
-                        <input
-                            key={cupData?.id_copa}
-                            type="hidden"
-                            name="id"
-                            value={cupData?.id_copa}
-                        />
-                    )}
+                {isEditMode && (
+                    <input
+                        key={cupData?.id_copa}
+                        type="hidden"
+                        name="id"
+                        value={cupData?.id_copa}
+                    />
+                )}
 
-                    <div className="flex flex-col gap-2">
-                        <label
-                            htmlFor="cupName"
-                            className="text-sm font-medium text-gray-700"
-                        >
-                            Nome da Copa
-                        </label>
+                <div className="flex flex-col gap-2 w-full">
+                    <label
+                        htmlFor="cupName"
+                        className="text-sm font-medium text-gray-700"
+                    >
+                        Nome da Copa
+                    </label>
 
-                        <input
-                            id="cupName"
-                            name="cupName"
-                            type="text"
-                            placeholder="Nome da copa"
-                            defaultValue={cupData?.nome ?? ""}
-                            className="
-                                bg-white
-                                w-full
-                                rounded-xl
-                                py-2
-                                ps-4
-                                placeholder:text-slate-400
-                                focus:outline-none
-                                transition-colors
-                                border-2
-                                border-(--textBaseColor)/50
-                                text-(--textBaseColor)
-                            "
-                        />
+                    <input
+                        id="cupName"
+                        name="cupName"
+                        type="text"
+                        placeholder="Nome da copa"
+                        defaultValue={cupData?.nome ?? ""}
+                        className="
+                            bg-white
+                            w-full
+                            rounded-xl
+                            py-2
+                            ps-4
+                            placeholder:text-slate-400
+                            focus:outline-none
+                            transition-colors
+                            border-2
+                            border-(--textBaseColor)/50
+                            text-(--textBaseColor)
+                        "
+                    />
 
-                        <ErroCampo erro={erros.cupName} />
-                    </div>
-
-                    <div className="flex flex-col gap-2">
-                        <label
-                            htmlFor="leader"
-                            className="text-sm font-medium text-gray-700"
-                        >
-                            Líder
-                        </label>
-
-                        <select
-                            id="leader"
-                            name="leader"
-                            defaultValue={cupData?.id_lider ?? ""}
-                            className="
-                                bg-white
-                                w-full
-                                rounded-xl
-                                py-2
-                                px-4
-                                focus:outline-none
-                                transition-colors
-                                border-2
-                                border-(--textBaseColor)/50
-                                text-(--textBaseColor)
-                            "
-                        >
-                            <option value="">
-                                Selecione um líder
-                            </option>
-
-                            {leaders.map((leader) => (
-                                <option
-                                    key={leader.id_lider}
-                                    value={leader.id_lider}
-                                >
-                                    {leader.nome}
-                                </option>
-                            ))}
-                        </select>
-
-                        <ErroCampo erro={erros.leader} />
-                    </div>
+                    <ErroCampo erro={erros.cupName} />
                 </div>
 
                 <div className="flex flex-col gap-2">

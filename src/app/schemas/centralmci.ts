@@ -3,7 +3,6 @@ import { inteiro, numero, numeroOpcional, obrigatorio } from './campos'
 
 export const copaSchema = z.object({
     cupName: obrigatorio,
-    leader: z.string().optional(),
     verbo: obrigatorio,
     medida: obrigatorio,
     de: numero,
