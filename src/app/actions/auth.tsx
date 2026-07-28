@@ -8,7 +8,7 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { IActionResponse } from "./types";
 import { IMe, ISessao } from "../types/auth/auth";
-import { paginaInicial } from "../utils/permissoes";
+import { paginaInicial, parseSessao } from "../utils/permissoes";
 
 export async function loginAction(_: IActionResponse, formData: FormData): Promise<IActionResponse> {
   const email = formData.get("email");
@@ -76,6 +76,47 @@ export async function getMe(): Promise<IMe> {
       error.response?.data?.mensagem ||
       "Erro ao buscar o perfil"
     );
+  }
+}
+
+export async function getAnosDisponiveis(): Promise<number[]> {
+  try {
+    const api = await serverApi();
+    const response = await api.get("/auth/anos");
+    return response.data;
+  } catch (error: any) {
+    logDev("Error getting available years:", error);
+    return [new Date().getFullYear()];
+  }
+}
+
+export async function trocarAnoAction(ano: number): Promise<IActionResponse> {
+  try {
+    const api = await serverApi();
+    await api.patch("/auth/ano", { ano });
+
+    const cookieStore = await cookies();
+    const sessaoAtual = parseSessao(cookieStore.get("sessao")?.value);
+
+    if (sessaoAtual) {
+      cookieStore.set("sessao", JSON.stringify({ ...sessaoAtual, ano_ativo: ano }), {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "lax",
+        path: "/",
+        maxAge: 60 * 60 * 8,
+      });
+    }
+
+    return { success: true };
+  } catch (error: any) {
+    logDev("Error changing active year:", error);
+    logDev(error.response?.data);
+
+    return {
+      success: false,
+      errorMessage: error.response?.data?.mensagem || "Erro ao trocar o ano",
+    };
   }
 }
 
