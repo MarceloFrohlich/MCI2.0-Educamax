@@ -17,7 +17,8 @@ export async function createJogoAction(
         const api = await serverApi();
         await api.post("/jogos", {
             ids_copas: formData.getAll('selectedCopas'),
-            id_lider: formData.get('leader'),
+            id_lider: formData.get('leader') || null,
+            id_usuario_lider: formData.get('leaderUsuario') || null,
             nome: formData.get('gameName'),
             verbo: formData.get('verbo'),
             medida: formData.get('medida'),
@@ -70,7 +71,8 @@ export async function updatejogoAction(
         const api = await serverApi();
         await api.put(`/jogos/${formData.get('id')}`, {
             ids_copas: formData.getAll('selectedCopas'),
-            id_lider: formData.get('leader'),
+            id_lider: formData.get('leader') || null,
+            id_usuario_lider: formData.get('leaderUsuario') || null,
             nome: formData.get('gameName'),
             verbo: formData.get('verbo'),
             medida: formData.get('medida'),

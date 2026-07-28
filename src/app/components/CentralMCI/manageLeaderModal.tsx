@@ -15,7 +15,7 @@ const ManageLeaderModal: React.FC<IManageLeaderModal> = ({
     return (
         <GlobalDialog 
         trigger={ <TriggerButton><SlUserFollow className="size-5 pointer-events-none" /></TriggerButton>}
-        title="Gerenciamento de líderes"
+        title="Gerenciamento de líderes não usuários"
         contentClassName="w-[95%] md:w-1/3"
         >
             <ManageLeaderDataTable leaders={leader}  />

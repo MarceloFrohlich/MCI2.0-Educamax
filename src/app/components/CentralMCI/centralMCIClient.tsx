@@ -8,16 +8,17 @@ import ManageCupModal from './manageCupModal';
 import CreateEditGameModal from './createEditGameModal';
 import ManageLeaderModal from './manageLeaderModal';
 import { ICup, IGame, ILeader } from '../../types/centralMCI/centralMCI';
-import { IDepartamento } from '../../types/cadastros/cadastros';
+import { IDepartamento, IUser } from '../../types/cadastros/cadastros';
 
 interface ICentralMCIClient {
     initialGames: IGame[]
     lideres: ILeader[]
+    usuarios: IUser[]
     departamentos: IDepartamento[]
     copas: ICup[]
 }
 
-export const CentralMCIClient: React.FC<ICentralMCIClient> = ({ copas, departamentos, initialGames, lideres }) => {
+export const CentralMCIClient: React.FC<ICentralMCIClient> = ({ copas, departamentos, initialGames, lideres, usuarios }) => {
     const [games, setGames] = useState(initialGames);
 
     const [filters, setFilters] = useState({
@@ -46,7 +47,7 @@ export const CentralMCIClient: React.FC<ICentralMCIClient> = ({ copas, departame
             <div className="my-8 flex justify-between gap-4 relative">
                 <div className="flex ">
                     <ManageCupModal departamentos={departamentos} copas={copas} />
-                    <CreateEditGameModal leaders={lideres} copas={copas} />
+                    <CreateEditGameModal leaders={lideres} usuarios={usuarios} copas={copas} />
                     <ManageLeaderModal leader={lideres} />
                 </div>
             </div>
@@ -90,6 +91,7 @@ export const CentralMCIClient: React.FC<ICentralMCIClient> = ({ copas, departame
                         key={game.id_jogo}
                         game={game}
                         leaders={lideres}
+                        usuarios={usuarios}
                         departamentos={departamentos}
                         copas={copas}
                     />

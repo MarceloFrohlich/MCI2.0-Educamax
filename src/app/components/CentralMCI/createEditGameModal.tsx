@@ -6,6 +6,7 @@ import { ICup, IPrevidenciaForm } from "../../types/centralMCI/centralMCI";
 import { Button } from "../../../components/ui/button";
 import GlobalDialog from "../utils/globalDialog";
 import { IGame, ILeader } from "../../types/centralMCI/centralMCI";
+import { IUser } from "../../types/cadastros/cadastros";
 import Select from "react-select";
 import TriggerButton from "../utils/triggerButton";
 import { PiVolleyball } from "react-icons/pi";
@@ -21,6 +22,7 @@ interface ICreateEditGameModalProps {
     isEditMode?: boolean;
     gameData?: IGame;
     leaders: ILeader[];
+    usuarios: IUser[];
     copas: ICup[]
 }
 
@@ -34,6 +36,7 @@ const CreateEditGameModal: React.FC<ICreateEditGameModalProps> = ({
     gameData,
     copas,
     leaders = [],
+    usuarios = [],
 }) => {
     const action = isEditMode
         ? updatejogoAction
@@ -61,6 +64,7 @@ const CreateEditGameModal: React.FC<ICreateEditGameModalProps> = ({
 
         setDirectionMeasures([]);
         setSelectedCopas([]);
+        setLiderSelecionado(null);
         setStartDate("");
         setEndDate("");
 
@@ -82,6 +86,39 @@ const CreateEditGameModal: React.FC<ICreateEditGameModalProps> = ({
                 },
             ]
             : [])
+
+    const liderOptions = [
+        {
+            label: "Líderes usuário",
+            options: usuarios.map((usuario) => ({
+                value: `usuario:${usuario.id_usuario}`,
+                label: usuario.nome,
+            })),
+        },
+        {
+            label: "Líderes não usuário",
+            options: leaders.map((leader) => ({
+                value: `lider:${leader.id_lider}`,
+                label: leader.nome,
+            })),
+        },
+    ];
+
+    const [liderSelecionado, setLiderSelecionado] = useState<ISelectOption | null>(
+        gameData?.lider
+            ? gameData.lider.id_usuario
+                ? { value: `usuario:${gameData.lider.id_usuario}`, label: gameData.lider.nome }
+                : { value: `lider:${gameData.lider.id_lider}`, label: gameData.lider.nome }
+            : null
+    );
+
+    const tipoLiderSelecionado = liderSelecionado?.value.startsWith("usuario:")
+        ? "usuario"
+        : liderSelecionado?.value.startsWith("lider:")
+            ? "lider"
+            : null;
+
+    const idLiderSelecionado = liderSelecionado?.value.split(":")[1] ?? "";
 
     const [open, setOpen] = useState(false);
 
@@ -190,36 +227,68 @@ const CreateEditGameModal: React.FC<ICreateEditGameModalProps> = ({
                             Líder
                         </label>
 
-                        <select
-                            id="leader"
-                            name="leader"
-                            defaultValue={gameData?.lider?.id_lider ?? ""}
-                            className="
-                                bg-white
-                                w-full
-                                rounded-xl
-                                py-2
-                                px-4
-                                focus:outline-none
-                                transition-colors
-                                border-2
-                                border-(--textBaseColor)/50
-                                text-(--textBaseColor)
-                            "
-                        >
-                            <option value="">
-                                Selecione um líder
-                            </option>
+                        <input type="hidden" name="leader" value={tipoLiderSelecionado === "lider" ? idLiderSelecionado : ""} />
+                        <input type="hidden" name="leaderUsuario" value={tipoLiderSelecionado === "usuario" ? idLiderSelecionado : ""} />
 
-                            {leaders && leaders.map((leader) => (
-                                <option
-                                    key={leader.id_lider}
-                                    value={leader.id_lider}
-                                >
-                                    {leader.nome}
-                                </option>
-                            ))}
-                        </select>
+                        <Select
+                            inputId="leader"
+                            isClearable
+                            value={liderSelecionado}
+                            onChange={(value) => setLiderSelecionado(value as ISelectOption | null)}
+                            options={liderOptions}
+                            placeholder="Selecione um líder"
+                            className="text-(--textBaseColor)"
+                            styles={{
+                                control: (base) => ({
+                                    ...base,
+                                    backgroundColor: "#fff",
+                                    borderRadius: "0.75rem",
+                                    border: "2px solid rgba(17, 44, 70, 0.5)",
+                                    minHeight: "44px",
+                                    boxShadow: "none",
+                                    paddingLeft: "0.25rem",
+                                    transition: "all .2s ease",
+                                    cursor: "pointer",
+
+                                    "&:hover": {
+                                        border: "2px solid rgba(17, 44, 70, 0.7)",
+                                    },
+                                }),
+
+                                placeholder: (base) => ({
+                                    ...base,
+                                    color: "#94a3b8",
+                                }),
+
+                                menu: (base) => ({
+                                    ...base,
+                                    borderRadius: "0.75rem",
+                                    overflow: "hidden",
+                                    zIndex: 9999,
+                                }),
+
+                                groupHeading: (base) => ({
+                                    ...base,
+                                    fontWeight: 600,
+                                    color: "#112C46",
+                                }),
+
+                                option: (base, state) => ({
+                                    ...base,
+                                    backgroundColor: state.isFocused
+                                        ? "rgba(52, 119, 221, 0.1)"
+                                        : "#fff",
+                                    color: "#112C46",
+                                    cursor: "pointer",
+                                }),
+                            }}
+                        />
+
+                        {tipoLiderSelecionado === "lider" && (
+                            <span className="text-sm text-red-600">
+                                Líderes não usuários não receberão notificações sobre atualizações
+                            </span>
+                        )}
                     </div>
                 </div>
 

@@ -3,6 +3,7 @@ import { IDepartamento } from "../cadastros/cadastros";
 export interface ILeader {
     id_lider: string
     id_franqueadora: string
+    id_usuario?: string | null
     nome: string
     data_criacao: string
     data_atualizacao: string

@@ -2,7 +2,7 @@ import { ICup, IGame, ILeader } from "../../types/centralMCI/centralMCI";
 import CreateEditGameModal from "./createEditGameModal";
 import DeleteModal from "../utils/deleteModal";
 import ReplyGame from "./replyGame";
-import { IDepartamento } from "../../types/cadastros/cadastros";
+import { IDepartamento, IUser } from "../../types/cadastros/cadastros";
 import CreateEditPrevidencia from "./createEditPrevidencia";
 import { deletejogoAction } from "../../actions/jogos/jogos";
 import { formatDateBR } from "../utils/general";
@@ -12,9 +12,10 @@ interface IGameModalProps {
     copas: ICup[]
     departamentos: IDepartamento[]
     leaders: ILeader[]
+    usuarios: IUser[]
 }
 
-const GameModal: React.FC<IGameModalProps> = ({ game, copas, departamentos, leaders }) => {
+const GameModal: React.FC<IGameModalProps> = ({ game, copas, departamentos, leaders, usuarios }) => {
 
 
     return (
@@ -65,7 +66,7 @@ const GameModal: React.FC<IGameModalProps> = ({ game, copas, departamentos, lead
             </div>
 
             <div className="flex flex-col justify-around opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                <CreateEditGameModal isEditMode={true} gameData={game} copas={copas} leaders={leaders} />
+                <CreateEditGameModal isEditMode={true} gameData={game} copas={copas} leaders={leaders} usuarios={usuarios} />
                 <CreateEditPrevidencia
                     game={game}
                 />
