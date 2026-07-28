@@ -13,7 +13,7 @@ export interface ILeader {
 export interface ICup {
     id_copa: string
     id_departamento: string
-    id_lider: string
+    id_lider: string | null
     nome: string
     objetivo: string
     inicio: string
@@ -26,7 +26,7 @@ export interface ICup {
     data_atualizacao: string
     deletado_em: string
     departamento: IDepartamento
-    lider: ILeader
+    lider: ILeader | null
 }
 
 export interface IDirectionMeasure {
